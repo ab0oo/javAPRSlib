@@ -17,6 +17,10 @@
  * along with AVRS; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
+ * 
+ * Large segments of this code were taken from Matti Aarnio at 
+ * http://repo.ham.fi/websvn/java-aprs-fap/
+ * I appreciate the base work Matti did - JohnG
  */
 package net.ab0oo.aprs;
 import java.util.regex.Pattern;
@@ -197,11 +201,9 @@ public class PositionParser {
 		for (int i = 0; i < 6; ++i) {
 			c = destcall[i];
 			if ('A' <= c && c <= 'J') {
-				destcall2[i] = (char) (c - ('A' - '0')); // cast silences
-															// warning
+				destcall2[i] = (char) (c - ('A' - '0')); // cast silences warning
 			} else if ('P' <= c && c <= 'Y') {
-				destcall2[i] = (char) (c - ('P' - '0')); // cast silences
-															// warning
+				destcall2[i] = (char) (c - ('P' - '0')); // cast silences warning
 			} else if ('K' == c || 'L' == c || 'Z' == c) {
 				destcall2[i] = '_';
 			} else
@@ -285,7 +287,6 @@ public class PositionParser {
 		return new Position((double) lat, (double) lng, posAmbiguity,
 				(char) msgBody[1 + 7], (char) msgBody[1 + 6]);
 	}
-//   KE5UCT-2 ->     S2TT8X	at 32.748000,-7.452000	KE5UCT-2>S2TT8X,WIDE1-1,WIDE2-1,qAR,KB5ASY-10:`}7(l"`k/"6>}MT-RTG
 
 	public Position parseNMEA(byte[] msgBody) throws Exception {
 		String[] nmea = commaSplit.split(new String(msgBody));
@@ -470,7 +471,6 @@ public class PositionParser {
 		// A compressed position is always 13 characters long.
 		// Make sure we get at least 13 characters and that they are ok.
 		// Also check the allowed base-91 characters at the same time.
-		// System.out.print("COMP:");
 		if (msgBody.length < cursor + 13) {
 			throw new UnparsablePositionException(
 					"Compressed position too short");
@@ -501,7 +501,6 @@ public class PositionParser {
 				+ ((float) (lng1 * 91 * 91 * 91 + lng2 * 91 * 91 + lng3 * 91 + lng4) / 190463.0F);
 		return new Position(lat, lng, 0, (char) msgBody[cursor + 0],
 				(char) msgBody[cursor + 9]);
-		// fillPos(fap, lat, lng, symTable, symCode, 0);
 	}
 
 	private double parseDegMin(char[] txt, int cursor, int degSize, int len,

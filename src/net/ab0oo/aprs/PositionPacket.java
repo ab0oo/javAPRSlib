@@ -19,7 +19,7 @@
  * USA
 
  *  Please note that significant portions of this code were taken from the JAVA FAP
- *  conversion found on SourceForge
+ *  conversion by Matti Aarnio at http://repo.ham.fi/websvn/java-aprs-fap/
  */
 package net.ab0oo.aprs;
 

@@ -18,7 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
 
- *  This code lifted blatantly and directly from the JAVA FAP translation on SourceForge.
+ *  This code lifted blatantly and directly from the JAVA FAP translation done
+ *  by Matti Aarnio at http://repo.ham.fi/websvn/java-aprs-fap/
  */
 
 package net.ab0oo.aprs;
