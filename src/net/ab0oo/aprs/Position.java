@@ -144,18 +144,18 @@ public class Position {
 		this.symbolCode = symbolCode;
 	}
 	
-	public static String getDMS(double dd, boolean latitude) {
+	public static String getDMS(double decimalDegree, boolean isLatitude) {
 			// define variables local to this method
 			double dfFrac;			// fraction after decimal
 			double dfSec;			// fraction converted to seconds
 
 			// Get degrees by chopping off at the decimal
-			Double dfDegree = Math.floor( dd );
+			Double chopDegree = Math.floor( decimalDegree );
 			// correction required since floor() is not the same as int()
-			if ( dfDegree < 0 )
-				dfDegree = dfDegree + 1;
+			if ( chopDegree < 0 )
+				chopDegree = chopDegree + 1;
 			// Get fraction after the decimal
-			dfFrac = Math.abs( dd - dfDegree );
+			dfFrac = Math.abs( decimalDegree - chopDegree );
 			// Convert this fraction to seconds (without minutes)
 			dfSec = dfFrac * 3600;
 			// Determine number of whole minutes in the fraction
@@ -168,18 +168,18 @@ public class Position {
 				dfSecond = 0d;
 			}
 			if ( Math.rint( dfMinute ) == 60 ) {
-				if ( dfDegree < 0 )
-					dfDegree = dfDegree - 1;
+				if ( chopDegree < 0 )
+					chopDegree = chopDegree - 1;
 				else // ( dfDegree => 0 )
-					dfDegree = dfDegree + 1;
+					chopDegree = chopDegree + 1;
 
 				dfMinute = 0d;
 			}
-			dfDegree = Math.abs(dfDegree);
-			if ( latitude ) {
-				return String.format("%02.0f%02.0f.%02.0f%s", dfDegree,dfMinute,dfSecond, ( dd < 0 ? "S" : "N"));
+			chopDegree = Math.abs(chopDegree);
+			if ( isLatitude ) {
+				return String.format("%02.0f%02.0f.%02.0f%s", chopDegree,dfMinute,dfSecond, ( decimalDegree < 0 ? "S" : "N"));
 			} else {
-				return String.format("%03.0f%02.0f.%02.0f%s", dfDegree,dfMinute,dfSecond, ( dd < 0 ? "W" : "E"));
+				return String.format("%03.0f%02.0f.%02.0f%s", chopDegree,dfMinute,dfSecond, ( decimalDegree < 0 ? "W" : "E"));
 			}
 	}
 	

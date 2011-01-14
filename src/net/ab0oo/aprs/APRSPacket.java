@@ -53,6 +53,15 @@ public class APRSPacket {
             this.dti= (char)' ';
         }
     }
+    
+    public static final String getBaseCall(String callsign) {
+    	int sepIdx = callsign.indexOf('-');
+    	if ( sepIdx > -1 ) {
+    		return callsign.substring(0,sepIdx);
+    	} else {
+    		return callsign;
+    	}
+    }
 
     /**
      * @return the source

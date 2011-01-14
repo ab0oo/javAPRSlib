@@ -58,11 +58,11 @@ public class MessagePacket extends InformationField {
         String lcMsg = messageBody.toLowerCase();
         if ( lcMsg.startsWith("ack") ) {
         	isAck = true;
-        	messageNumber = messageBody.substring(3,messageBody.length());
+        	this.messageNumber = messageBody.substring(3,messageBody.length());
         }
         if ( lcMsg.startsWith("rej") ) {
         	isRej = true;
-        	messageNumber = messageBody.substring(3,messageBody.length());
+        	this.messageNumber = messageBody.substring(3,messageBody.length());
         }
     }
     
@@ -80,7 +80,7 @@ public class MessagePacket extends InformationField {
      * @return the messageBody
      */
     public String getMessageBody() {
-        return messageBody;
+        return this.messageBody;
     }
 
     /**
