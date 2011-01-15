@@ -76,7 +76,8 @@ public class Parser {
     		case ';':
     			if (bodyBytes.length > 29) {
     				//System.out.println("Parsing an OBJECT");
-    				//parseObject(bodyBytes);
+					type = APRSTypes.T_OBJECT;
+    				infoField = new ObjectPacket(bodyBytes);
     			} else {
     				hasFault = true; // too short for an object
     			}
