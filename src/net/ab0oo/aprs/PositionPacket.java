@@ -38,7 +38,11 @@ public class PositionPacket extends InformationField {
 			// (char)packet.length >= 9 ?
 			type = APRSTypes.T_POSITION;
 			position = PositionParser.parseMICe(msgBody, destinationField);
-			cursor = 14;
+			cursor = 10;
+			if (cursor < msgBody.length && (msgBody[cursor] == '>' || msgBody[cursor] == ']' || msgBody[cursor] == '`'))
+				cursor++;
+			if (cursor < msgBody.length && msgBody[cursor] == '"')
+				cursor += 4;
 			break;
 		case '!':
 			if (msgBody[1] == 'U' && // "$ULT..." -- Ultimeter 2000 weather
@@ -92,7 +96,7 @@ public class PositionPacket extends InformationField {
 
 		}
 		if (cursor > 0 && cursor < msgBody.length) {
-			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8");
+			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
 		}
 	}
 

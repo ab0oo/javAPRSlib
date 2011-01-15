@@ -32,9 +32,8 @@ import java.util.regex.Pattern;
 public class PositionParser {
 	private static Pattern commaSplit = Pattern.compile(",");
 
-	public static Position parseUncompressed(byte[] msgBody) throws Exception {
+	public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
 		// System.out.print("UN: ");
-		int cursor = 1;
 
 		if (msgBody[0] == '/' || msgBody[0] == '@') {
 			// With a prepended timestamp, jump over it.
@@ -126,6 +125,10 @@ public class PositionParser {
 		} catch (Exception e) {
 			throw new Exception(e);
 		}
+	}
+
+	public static Position parseUncompressed(byte[] msgBody) throws Exception {
+			return parseUncompressed(msgBody, 1);
 	}
 
 	public static Position parseMICe(byte[] msgBody, final String destinationCall)
