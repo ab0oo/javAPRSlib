@@ -36,6 +36,7 @@ public class PositionPacket extends InformationField {
 		case '\'' :
 		case '`': // Possibly MICe
 			// (char)packet.length >= 9 ?
+			type = APRSTypes.T_POSITION;
 			position = positionParser.parseMICe(msgBody, destinationField);
 			break;
 		case '!':
@@ -79,6 +80,7 @@ public class PositionPacket extends InformationField {
 			}
 		case '$':
 			if (msgBody.length > 10) {
+				type = APRSTypes.T_POSITION;
 				position = positionParser.parseNMEA(msgBody);
 			} else {
 				hasFault = true;
