@@ -26,7 +26,6 @@ package net.ab0oo.aprs;
 
 public class PositionPacket extends InformationField {
 	private Position position;
-	private static PositionParser positionParser = new PositionParser();
 
 	public PositionPacket(byte[] msgBody, String destinationField)
 			throws Exception {
@@ -37,7 +36,7 @@ public class PositionPacket extends InformationField {
 		case '`': // Possibly MICe
 			// (char)packet.length >= 9 ?
 			type = APRSTypes.T_POSITION;
-			position = positionParser.parseMICe(msgBody, destinationField);
+			position = PositionParser.parseMICe(msgBody, destinationField);
 			break;
 		case '!':
 			if (msgBody[1] == 'U' && // "$ULT..." -- Ultimeter 2000 weather
@@ -69,10 +68,10 @@ public class PositionPacket extends InformationField {
 				char posChar = (char) msgBody[cursor];
 				if (validSymTableCompressed(posChar)) { /* [\/\\A-Za-j] */
 					// compressed position packet
-					position = positionParser.parseCompressed(msgBody, cursor);
+					position = PositionParser.parseCompressed(msgBody, cursor);
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
-					position = positionParser.parseUncompressed(msgBody);
+					position = PositionParser.parseUncompressed(msgBody);
 				} else {
 					hasFault = true;
 				}
@@ -81,7 +80,7 @@ public class PositionPacket extends InformationField {
 		case '$':
 			if (msgBody.length > 10) {
 				type = APRSTypes.T_POSITION;
-				position = positionParser.parseNMEA(msgBody);
+				position = PositionParser.parseNMEA(msgBody);
 			} else {
 				hasFault = true;
 			}

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 public class PositionParser {
 	private static Pattern commaSplit = Pattern.compile(",");
 
-	public Position parseUncompressed(byte[] msgBody) throws Exception {
+	public static Position parseUncompressed(byte[] msgBody) throws Exception {
 		// System.out.print("UN: ");
 		int cursor = 1;
 
@@ -128,7 +128,7 @@ public class PositionParser {
 		}
 	}
 
-	public Position parseMICe(byte[] msgBody, final String destinationCall)
+	public static Position parseMICe(byte[] msgBody, final String destinationCall)
 			throws Exception {
 		// Check that the destination call exists and is
 		// of the right size for mic-e
@@ -288,7 +288,7 @@ public class PositionParser {
 				(char) msgBody[1 + 7], (char) msgBody[1 + 6]);
 	}
 
-	public Position parseNMEA(byte[] msgBody) throws Exception {
+	public static Position parseNMEA(byte[] msgBody) throws Exception {
 		String[] nmea = commaSplit.split(new String(msgBody));
 		String lats = null; // Strings of Lat/Lon
 		String lngs = null;
@@ -467,7 +467,7 @@ public class PositionParser {
 		}
 	}
 
-	public Position parseCompressed(byte[] msgBody, int cursor) throws Exception {
+	public static Position parseCompressed(byte[] msgBody, int cursor) throws Exception {
 		// A compressed position is always 13 characters long.
 		// Make sure we get at least 13 characters and that they are ok.
 		// Also check the allowed base-91 characters at the same time.
@@ -503,7 +503,7 @@ public class PositionParser {
 				(char) msgBody[cursor + 9]);
 	}
 
-	private double parseDegMin(char[] txt, int cursor, int degSize, int len,
+	private static double parseDegMin(char[] txt, int cursor, int degSize, int len,
 			boolean decimalDot) throws Exception {
 		if (txt == null || txt.length < cursor + degSize + 2)
 			throw new Exception("Too short degmin data");
@@ -549,7 +549,7 @@ public class PositionParser {
 	 * '\\') return true; if ('A' <= c && c <= 'Z') return true; if ('a' <= c &&
 	 * c <= 'j') return true; return false; }
 	 */
-	private boolean validSymTableUncompressed(char c) {
+	private static boolean validSymTableUncompressed(char c) {
 		if (c == '/' || c == '\\')
 			return true;
 		if ('A' <= c && c <= 'Z')
