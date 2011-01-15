@@ -67,6 +67,7 @@ public class Parser {
         	case '=':
         	case '@':
         	case '`': 
+        	case '\'':
         		infoField = new PositionPacket(bodyBytes,dest);
         		break;
         	case ':':
