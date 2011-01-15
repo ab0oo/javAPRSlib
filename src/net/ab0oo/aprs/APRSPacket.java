@@ -37,8 +37,8 @@ public class APRSPacket {
     private APRSTypes type;
     
     public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, InformationField info) {
-        this.sourceCall=source;
-        this.destinationCall=destination;
+        this.sourceCall=source.toUpperCase();
+        this.destinationCall=destination.toUpperCase();
         if ( digipeaters == null ) {
         	Digipeater aprsIs = new Digipeater("TCPIP*");
         	this.digipeaters = new ArrayList<Digipeater>();

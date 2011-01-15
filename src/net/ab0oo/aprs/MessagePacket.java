@@ -45,7 +45,7 @@ public class MessagePacket extends InformationField {
         if ( msgSpc < 1 ) {
         	this.targetCallsign = "UNKNOWN";
         } else {
-        	targetCallsign = message.substring(1,msgSpc).trim();
+        	targetCallsign = message.substring(1,msgSpc).trim().toUpperCase();
         }
         int msgNumberIdx = message.lastIndexOf('{');
         this.messageNumber="0";
