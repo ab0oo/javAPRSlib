@@ -35,6 +35,7 @@ public abstract class InformationField {
 	protected boolean hasFault = false;
     protected boolean canMessage = false;
     DataExtension extension = null;
+	protected String comment = "";
 
     public InformationField() {
     }
@@ -73,6 +74,13 @@ public abstract class InformationField {
         byte[] returnArray = new byte[end-start];
         System.arraycopy(rawBytes, start, returnArray, 0, end-start);
         return returnArray;
+    }
+    
+	/**
+	 * @return the comment string which was embedded in the packet
+	 */
+    public String getComment() {
+        return comment;
     }
     
     public String getBody() {

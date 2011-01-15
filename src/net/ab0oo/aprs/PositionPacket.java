@@ -31,12 +31,14 @@ public class PositionPacket extends InformationField {
 			throws Exception {
 		super(msgBody);
 		char packetType = (char) msgBody[0];
+		int cursor = 0;
 		switch (packetType) {
 		case '\'' :
 		case '`': // Possibly MICe
 			// (char)packet.length >= 9 ?
 			type = APRSTypes.T_POSITION;
 			position = PositionParser.parseMICe(msgBody, destinationField);
+			cursor = 14;
 			break;
 		case '!':
 			if (msgBody[1] == 'U' && // "$ULT..." -- Ultimeter 2000 weather
@@ -59,7 +61,7 @@ public class PositionPacket extends InformationField {
 				// timestamp
 
 				type = APRSTypes.T_POSITION;
-				int cursor = 1;
+				cursor = 1;
 
 				if (packetType == '/' || packetType == '@') {
 					// With a prepended timestamp, jump over it.
@@ -69,9 +71,11 @@ public class PositionPacket extends InformationField {
 				if (validSymTableCompressed(posChar)) { /* [\/\\A-Za-j] */
 					// compressed position packet
 					position = PositionParser.parseCompressed(msgBody, cursor);
+					cursor += 12;
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
 					position = PositionParser.parseUncompressed(msgBody);
+					cursor += 19;
 				} else {
 					hasFault = true;
 				}
@@ -86,6 +90,9 @@ public class PositionPacket extends InformationField {
 			}
 			break;
 
+		}
+		if (cursor > 0 && cursor < msgBody.length) {
+			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8");
 		}
 	}
 
