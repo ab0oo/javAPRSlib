@@ -5,7 +5,6 @@ public class ObjectPacket extends InformationField {
 	private boolean live = true;
 	private Position position;
 	private DataExtension extension = null;
-	private String comment;
 
 	public ObjectPacket( String objectName, boolean live, Position position, String comment) {
 		this.objectName = objectName;
@@ -68,20 +67,6 @@ public class ObjectPacket extends InformationField {
 	 */
 	public void setExtension(DataExtension extension) {
 		this.extension = extension;
-	}
-
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
-	 * @param comment the comment to set
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public String toString() {
