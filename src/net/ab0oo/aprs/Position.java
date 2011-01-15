@@ -145,41 +145,17 @@ public class Position {
 	}
 	
 	public static String getDMS(double decimalDegree, boolean isLatitude) {
-			// define variables local to this method
-			double dfFrac;			// fraction after decimal
-			double dfSec;			// fraction converted to seconds
-
-			// Get degrees by chopping off at the decimal
-			Double chopDegree = Math.floor( decimalDegree );
-			// correction required since floor() is not the same as int()
-			if ( chopDegree < 0 )
-				chopDegree = chopDegree + 1;
-			// Get fraction after the decimal
-			dfFrac = Math.abs( decimalDegree - chopDegree );
-			// Convert this fraction to seconds (without minutes)
-			dfSec = dfFrac * 3600;
-			// Determine number of whole minutes in the fraction
-			Double dfMinute = Math.floor( dfSec / 60 );
-			// Put the remainder in seconds
-			Double dfSecond = dfSec - dfMinute * 60;
-			// Fix round off errors
-			if ( Math.rint( dfSecond ) == 60 ) {
-				dfMinute = dfMinute + 1;
-				dfSecond = 0d;
-			}
-			if ( Math.rint( dfMinute ) == 60 ) {
-				if ( chopDegree < 0 )
-					chopDegree = chopDegree - 1;
-				else // ( dfDegree => 0 )
-					chopDegree = chopDegree + 1;
-
-				dfMinute = 0d;
-			}
-			chopDegree = Math.abs(chopDegree);
+			int minFrac = (int)Math.round(decimalDegree*6000); ///< degree in 1/100s of a minute
+			boolean negative = (minFrac < 0);
+			if (negative)
+					minFrac = -minFrac;
+			int deg = minFrac / 6000;
+			int min = (minFrac / 100) % 60;
+			minFrac = minFrac % 100;
 			if ( isLatitude ) {
-				return String.format("%02.0f%02.0f.%02.0f%s", chopDegree,dfMinute,dfSecond, ( decimalDegree < 0 ? "S" : "N"));
+				return String.format("%02d%02d.%02d%s", deg, min, minFrac, ( negative ? "S" : "N"));
 			} else {
-				return String.format("%03.0f%02.0f.%02.0f%s", chopDegree,dfMinute,dfSecond, ( decimalDegree < 0 ? "W" : "E"));
+				return String.format("%03d%02d.%02d%s", deg, min, minFrac, ( negative ? "W" : "E"));
 			}
 	}
 	
