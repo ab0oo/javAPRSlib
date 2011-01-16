@@ -99,6 +99,11 @@ public class PositionPacket extends InformationField {
 			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
 		}
 	}
+	public PositionPacket(Position position, String comment) {
+		this.position = position;
+		this.type = APRSTypes.T_POSITION;
+		this.comment = comment;
+	}
 
 	private boolean validSymTableCompressed(char c) {
 		if (c == '/' || c == '\\')
@@ -134,4 +139,7 @@ public class PositionPacket extends InformationField {
 		this.position = position;
 	}
 
+	public String toString() {
+		return "!" + position + comment;
+	}
 }
