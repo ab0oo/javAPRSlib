@@ -65,9 +65,11 @@ public class Parser {
         switch ( dti ) {
         	case '!':
         	case '=':
+        	case '/':
         	case '@':
-        	case '`': 
+        	case '`':
         	case '\'':
+        	case '$':
         		infoField = new PositionPacket(bodyBytes,dest);
         		break;
         	case ':':
