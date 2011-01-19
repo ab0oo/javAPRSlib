@@ -62,6 +62,25 @@ public class APRSPacket {
     		return callsign;
     	}
     }
+    
+    public static final String getSsid(String callsign) {
+    	int sepIdx = callsign.indexOf('-');
+    	if ( sepIdx > -1 ) {
+    		return callsign.substring(sepIdx+1);
+    	} else {
+    		return "0";
+    	}
+    }
+    
+    public String getIgate() {
+    	for ( int i=0; i<digipeaters.size(); i++) {
+    		Digipeater d = digipeaters.get(i);
+    		if ( d.getCallsign().equalsIgnoreCase("qar") && i<digipeaters.size()-1 ) {
+    			return digipeaters.get(i+1).toString();
+    		}
+    	}
+    	return "";
+    }
 
     /**
      * @return the source
