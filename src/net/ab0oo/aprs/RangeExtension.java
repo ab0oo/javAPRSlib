@@ -23,40 +23,29 @@ package net.ab0oo.aprs;
 import java.io.Serializable;
 
 /**
- * 
  * @author johng
- * 
+ *
  */
-public class CourseAndSpeedExtension extends DataExtension implements Serializable {
+public class RangeExtension extends DataExtension implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int course;
-	private int speed;
-	/**
-	 * @return the course
-	 */
-	public int getCourse() {
-		return course;
-	}
-	/**
-	 * @param course the course to set
-	 */
-	public void setCourse(int course) {
-		this.course = course;
-	}
-	/**
-	 * @return the speed
-	 */
-	public int getSpeed() {
-		return speed;
-	}
-	/**
-	 * @param speed the speed to set
-	 */
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
+	private int range;
 	
-	public String toString() {
-		return "Moving "+speed+" kts @ "+course+" deg";
+	public RangeExtension( int range ) {
+		this.setRange(range);
 	}
+
+	/**
+	 * @param range the range to set
+	 */
+	public void setRange(int range) {
+		this.range = range;
+	}
+
+	/**
+	 * @return the range
+	 */
+	public int getRange() {
+		return range;
+	}
+
 }

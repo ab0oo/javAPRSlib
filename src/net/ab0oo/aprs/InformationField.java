@@ -92,4 +92,11 @@ public abstract class InformationField {
 	public boolean isHasFault() {
 		return hasFault;
 	}
+
+	/**
+	 * @return the extension
+	 */
+	public final DataExtension getExtension() {
+		return extension;
+	}
 }

@@ -38,6 +38,7 @@ public class PositionPacket extends InformationField {
 			// (char)packet.length >= 9 ?
 			type = APRSTypes.T_POSITION;
 			position = PositionParser.parseMICe(msgBody, destinationField);
+			this.extension = PositionParser.parseMICeExtension(msgBody, destinationField);
 			cursor = 10;
 			if (cursor < msgBody.length && (msgBody[cursor] == '>' || msgBody[cursor] == ']' || msgBody[cursor] == '`'))
 				cursor++;
@@ -60,7 +61,6 @@ public class PositionPacket extends InformationField {
 
 				// Normal or compressed location packet, with or without
 				// timestamp, with or without messaging capability
-				//
 				// ! and / have messaging, / and @ have a prepended
 				// timestamp
 
@@ -75,10 +75,12 @@ public class PositionPacket extends InformationField {
 				if (validSymTableCompressed(posChar)) { /* [\/\\A-Za-j] */
 					// compressed position packet
 					position = PositionParser.parseCompressed(msgBody, cursor);
+					this.extension = PositionParser.parseCompressedExtension(msgBody, cursor);
 					cursor += 12;
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
 					position = PositionParser.parseUncompressed(msgBody);
+					this.extension = PositionParser.parseUncompressedExtension(msgBody, cursor);
 					cursor += 19;
 				} else {
 					hasFault = true;

@@ -4,7 +4,6 @@ public class ObjectPacket extends InformationField {
 	private String objectName;
 	private boolean live = true;
 	private Position position;
-	private DataExtension extension = null;
 
 	/** parse an APRS object message
 	 * @return new ObjectPacket instance with the parsed data
@@ -65,13 +64,6 @@ public class ObjectPacket extends InformationField {
 	 */
 	public void setPosition(Position position) {
 		this.position = position;
-	}
-
-	/**
-	 * @return the extension
-	 */
-	public DataExtension getExtension() {
-		return extension;
 	}
 
 	/**

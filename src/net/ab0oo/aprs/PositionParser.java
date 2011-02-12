@@ -112,16 +112,14 @@ public class PositionParser {
 			if (lath == 's' || lath == 'S')
 				latitude = 0.0F - latitude;
 			else if (lath != 'n' && lath != 'N')
-				throw new Exception("Bad lat sign character");
+				throw new Exception("Bad latitude sign character");
 
 			if (lngh == 'w' || lngh == 'W')
 				longitude = 0.0F - longitude;
 			else if (lngh != 'e' && lngh != 'E')
-				throw new Exception("Bad lng sign character");
+				throw new Exception("Bad longitude sign character");
 			return new Position(latitude, longitude, positionAmbiguity,
 					symbolTable, symbolCode);
-			// fillPos(fap, lat, lng, symTable, symCode, posAmbig);
-
 		} catch (Exception e) {
 			throw new Exception(e);
 		}
@@ -131,6 +129,46 @@ public class PositionParser {
 			return parseUncompressed(msgBody, 1);
 	}
 
+	public static DataExtension parseUncompressedExtension( byte[] msgBody, int cursor ) throws Exception {
+		DataExtension de = null;
+		if (msgBody[0] == '/' || msgBody[0] == '@') {
+			// With a prepended timestamp, jump over it.
+			cursor += 7;
+		}
+		// since the symbol code is position (cursor + 18), we start looking for
+		// extensions at position 19
+		if ( (char)msgBody[19 + cursor] == 'P' 
+			&& (char)msgBody[20 + cursor] == 'H'
+			&& (char)msgBody[21 + cursor] == 'G' ) {
+				PHGExtension phg = new PHGExtension();
+				phg.setPower((char)msgBody[22+cursor]);
+				phg.setHeight((char)msgBody[23+cursor]);
+				phg.setGain((char)msgBody[24+cursor]);
+				phg.setDirectivity((char)msgBody[25+cursor]);
+				de = phg;
+		} else if ( (char)msgBody[22 + cursor] == '/' && (char)msgBody[18+cursor] != '_' ) {
+			CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
+			
+			String courseString = new String( msgBody, cursor+19, 3);
+			String speedString = new String( msgBody, cursor+23, 3);
+			int course = 0;
+			int speed = 0;
+			try {
+				course = Integer.parseInt(courseString);
+				speed = Integer.parseInt(speedString);
+			} catch ( NumberFormatException nfe ) {
+				course = 0;
+				speed = 0;
+				System.err.println("Unable to parse course "+course+" or speed "+
+						speed+" into a valid course/speed for CS Extension");
+			}
+			cse.setCourse(course);
+			cse.setSpeed(speed);
+			de = cse;
+		}
+		return de;
+	}
+	
 	public static Position parseMICe(byte[] msgBody, final String destinationCall)
 			throws Exception {
 		// Check that the destination call exists and is
@@ -290,6 +328,24 @@ public class PositionParser {
 		return new Position((double) lat, (double) lng, posAmbiguity,
 				(char) msgBody[1 + 7], (char) msgBody[1 + 6]);
 	}
+	
+	public static CourseAndSpeedExtension parseMICeExtension(byte msgBody[], String destinationField) throws Exception {
+		CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
+		int sp = msgBody[1+3] - 28;
+		int dc= msgBody[1+4] - 28;
+		int se = msgBody[1+5] - 28;
+		// Decoded according to Chap 10, p 52 of APRS Spec 1.0
+		int speed = sp  * 10;
+		int q = (int)(dc / 10);
+		speed += q;
+		int r = (int)(dc % 10) * 100;
+		int course = r + se;
+		if ( course >= 400 ) course -= 400;
+		if ( speed >= 800 ) speed -= 800;
+		cse.setSpeed(speed);
+		cse.setCourse(course);
+		return cse;
+	}
 
 	public static Position parseNMEA(byte[] msgBody) throws Exception {
 		String[] nmea = commaSplit.split(new String(msgBody));
@@ -392,25 +448,18 @@ public class PositionParser {
 			// From Alinco EJ-41U Terminal Node Controller manual:
 			// 
 			// 5-4-7 $PNTS
-			// This is a private-sentence based on NMEA-0183. The data contains
-			// date,
-			// time, latitude, longitude, moving speed, direction, altitude plus
-			// a short
-			// message, group codes, and icon numbers. The EJ-41U does not
-			// analyze this
+			// This is a private-sentence based on NMEA-0183. The data contains date,
+			// time, latitude, longitude, moving speed, direction, altitude plus a short
+			// message, group codes, and icon numbers. The EJ-41U does not analyze this
 			// format but can re-structure it.
 			// The data contains the following information:
 			// l $PNTS Starts the $PNTS sentence
 			// l version
-			// l the registered information. [0]=normal geographical location
-			// data.
-			// This is the only data EJ-41U can re-structure. [s]=Initial
-			// position
+			// l the registered information. [0]=normal geographical location data.
+			// This is the only data EJ-41U can re-structure. [s]=Initial position
 			// for the course setting [E]=ending position for the course setting
-			// [1]=the course data between initial and ending [P]=the check
-			// point
-			// registration [A]=check data when the automatic position
-			// transmission
+			// [1]=the course data between initial and ending [P]=the check point
+			// registration [A]=check data when the automatic position transmission
 			// is set OFF [R]=check data when the course data or check point
 			// data is
 			// received.
@@ -423,11 +472,9 @@ public class PositionParser {
 			// NTSMRK command determines this character when EJ-41U is used.
 			// l A short message up to 20 bites. Use NTSMSG command to determine
 			// this message.
-			// l A group code: 3 letters with a combination of [0] to [9], [A]
-			// to [Z].
+			// l A group code: 3 letters with a combination of [0] to [9], [A] to [Z].
 			// Use NTSGRP command to determine.
-			// l Status: [1] for usable information, [0] for non-usable
-			// information.
+			// l Status: [1] for usable information, [0] for non-usable information.
 			// l *hh<CR><LF> the check-sum and end of PNTS sentence.
 
 			lats = nmea[7];
@@ -504,6 +551,25 @@ public class PositionParser {
 				+ ((float) (lng1 * 91 * 91 * 91 + lng2 * 91 * 91 + lng3 * 91 + lng4) / 190463.0F);
 		return new Position(lat, lng, 0, (char) msgBody[cursor + 0],
 				(char) msgBody[cursor + 9]);
+	}
+	
+	public static DataExtension parseCompressedExtension(byte[] msgBody, int cursor) throws Exception {
+		DataExtension de = null;
+		int c = (char) msgBody[cursor + 9] - 33;
+		if ( c >= (char)('!') && c <= (char)('z') ) {
+			// this is a compressed course/speed value
+			int s = (char) msgBody[cursor + 10] - 33;
+			CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
+			cse.setCourse( c * 4);
+			cse.setSpeed( (int)Math.round(Math.pow(1.08, s)-1) );
+			de = cse;
+		} else if ( c == (char)('{')) {
+			int s = (char) msgBody[cursor + 10] - 33;
+			s = (int)Math.round(2 * Math.pow(1.08, s));
+			RangeExtension re = new RangeExtension(s);
+			de = re;
+		}
+		return de;
 	}
 
 	private static double parseDegMin(char[] txt, int cursor, int degSize, int len,
