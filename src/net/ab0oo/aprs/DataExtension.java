@@ -33,5 +33,5 @@ package net.ab0oo.aprs;
  * Wind Direction and Speed
  */
 public abstract class DataExtension {
-
+	public abstract String toSAEString();
 }

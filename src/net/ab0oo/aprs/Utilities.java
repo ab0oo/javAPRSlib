@@ -20,47 +20,39 @@
  */
 package net.ab0oo.aprs;
 
-import java.io.Serializable;
-
 /**
- * 
  * @author johng
  * 
  */
-public class CourseAndSpeedExtension extends DataExtension implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private int course;
-	private int speed;
-	/**
-	 * @return the course
-	 */
-	public int getCourse() {
-		return course;
+public class Utilities {
+	public static void main(String[] args) {
+		if (args.length == 0) {
+			System.out.println("Usage:  AprsPass <callsign>");
+			System.exit(1);
+		}
 	}
-	/**
-	 * @param course the course to set
-	 */
-	public void setCourse(int course) {
-		this.course = course;
-	}
-	/**
-	 * @return the speed
-	 */
-	public int getSpeed() {
-		return speed;
-	}
-	/**
-	 * @param speed the speed to set
-	 */
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
-	
-	public String toString() {
-		return "Moving "+speed+" kts @ "+course+" deg";
+
+	public static int doHash(String callSign) {
+		short kKey = 0x73e2; // Straight from Steme Dimse himself
+		if (callSign.indexOf('-') > 0) {
+			callSign = callSign.substring(0, callSign.indexOf('-'));
+		}
+		callSign = callSign.toUpperCase();
+		short i = 0;
+		int hash = kKey;
+		int len = callSign.length();
+		while (i < len) {
+			hash ^= callSign.charAt(i) << 8;
+			if (i + 1 < len) {
+				hash ^= callSign.charAt(i + 1);
+			}
+			i += 2;
+		}
+		int code = hash & 0x7FFF;
+		return code;
 	}
 	
-	public String toSAEString() {
-		return "Moving "+Utilities.ktsToMph(speed)+" mph @ "+course+" deg";
+	public static int ktsToMph(int knots) {
+		return (int)Math.round(knots * 1.15077945);
 	}
 }
