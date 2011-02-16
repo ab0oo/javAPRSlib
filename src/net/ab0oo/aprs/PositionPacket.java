@@ -26,10 +26,12 @@ package net.ab0oo.aprs;
 
 public class PositionPacket extends InformationField {
 	private Position position;
+	private String positionSource;
 
 	public PositionPacket(byte[] msgBody, String destinationField)
 			throws Exception {
 		super(msgBody);
+		positionSource = "Unknown";
 		char packetType = (char) msgBody[0];
 		int cursor = 0;
 		switch (packetType) {
@@ -39,6 +41,7 @@ public class PositionPacket extends InformationField {
 			type = APRSTypes.T_POSITION;
 			position = PositionParser.parseMICe(msgBody, destinationField);
 			this.extension = PositionParser.parseMICeExtension(msgBody, destinationField);
+			positionSource = "MICe";
 			cursor = 10;
 			if (cursor < msgBody.length && (msgBody[cursor] == '>' || msgBody[cursor] == ']' || msgBody[cursor] == '`'))
 				cursor++;
@@ -76,11 +79,13 @@ public class PositionPacket extends InformationField {
 					// compressed position packet
 					position = PositionParser.parseCompressed(msgBody, cursor);
 					this.extension = PositionParser.parseCompressedExtension(msgBody, cursor);
+					positionSource = "Compressed";
 					cursor += 12;
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
 					position = PositionParser.parseUncompressed(msgBody);
 					this.extension = PositionParser.parseUncompressedExtension(msgBody, cursor);
+					positionSource = "Uncompressed";
 					cursor += 19;
 				} else {
 					hasFault = true;
@@ -91,6 +96,7 @@ public class PositionPacket extends InformationField {
 			if (msgBody.length > 10) {
 				type = APRSTypes.T_POSITION;
 				position = PositionParser.parseNMEA(msgBody);
+				positionSource = "NMEA";
 			} else {
 				hasFault = true;
 			}
@@ -143,5 +149,11 @@ public class PositionPacket extends InformationField {
 
 	public String toString() {
 		return "!" + position + comment;
+	}
+	/**
+	 * @return the positionSource
+	 */
+	public String getPositionSource() {
+		return positionSource;
 	}
 }

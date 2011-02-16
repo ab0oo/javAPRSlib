@@ -159,8 +159,8 @@ public class PositionParser {
 			} catch ( NumberFormatException nfe ) {
 				course = 0;
 				speed = 0;
-				System.err.println("Unable to parse course "+course+" or speed "+
-						speed+" into a valid course/speed for CS Extension");
+				System.err.println("Unable to parse course "+courseString+" or speed "+
+						speedString+" into a valid course/speed for CS Extension from "+new String(msgBody));
 			}
 			cse.setCourse(course);
 			cse.setSpeed(speed);
@@ -555,16 +555,30 @@ public class PositionParser {
 	
 	public static DataExtension parseCompressedExtension(byte[] msgBody, int cursor) throws Exception {
 		DataExtension de = null;
-		int c = (char) msgBody[cursor + 9] - 33;
-		if ( c >= (char)('!') && c <= (char)('z') ) {
+		if ( msgBody[cursor+9] == '_' ) {
+			// this is a weather report packet, and thus has no extension
+			return null;
+		}
+		int t = (char) msgBody[cursor + 12] - 33;
+		int nmeaSource = ( t & 0x18 ) >> 3;
+		if ( nmeaSource == 2) {
+			// this message came from a GPGGA sentance, and therefore has altitude
+			return null;
+		}
+		int c = (char) msgBody[cursor + 10] - 33;
+		if ( c+33 == ' ') {
+			// another special case, where csT is ignored
+			return null;
+		}
+		if ( c < 90 ) {
 			// this is a compressed course/speed value
-			int s = (char) msgBody[cursor + 10] - 33;
+			int s = (char) msgBody[cursor + 11] - 33;
 			CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
 			cse.setCourse( c * 4);
 			cse.setSpeed( (int)Math.round(Math.pow(1.08, s)-1) );
 			de = cse;
 		} else if ( c == (char)('{')) {
-			int s = (char) msgBody[cursor + 10] - 33;
+			int s = (char) msgBody[cursor + 11] - 33;
 			s = (int)Math.round(2 * Math.pow(1.08, s));
 			RangeExtension re = new RangeExtension(s);
 			de = re;
