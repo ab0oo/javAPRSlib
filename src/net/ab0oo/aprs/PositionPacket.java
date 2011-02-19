@@ -84,7 +84,11 @@ public class PositionPacket extends InformationField {
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
 					position = PositionParser.parseUncompressed(msgBody);
-					this.extension = PositionParser.parseUncompressedExtension(msgBody, cursor);
+					try {
+						this.extension = PositionParser.parseUncompressedExtension(msgBody, cursor);
+					} catch (ArrayIndexOutOfBoundsException oobex) {
+						this.extension = null;
+					}
 					positionSource = "Uncompressed";
 					cursor += 19;
 				} else {

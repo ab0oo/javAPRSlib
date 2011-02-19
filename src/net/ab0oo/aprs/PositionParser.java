@@ -131,21 +131,22 @@ public class PositionParser {
 
 	public static DataExtension parseUncompressedExtension( byte[] msgBody, int cursor ) throws Exception {
 		DataExtension de = null;
-		if (msgBody[0] == '/' || msgBody[0] == '@') {
-			// With a prepended timestamp, jump over it.
-			cursor += 7;
-		}
 		// since the symbol code is position (cursor + 18), we start looking for
 		// extensions at position 19
+		if ( msgBody.length <= 18+cursor ) { return null; }
 		if ( (char)msgBody[19 + cursor] == 'P' 
 			&& (char)msgBody[20 + cursor] == 'H'
 			&& (char)msgBody[21 + cursor] == 'G' ) {
 				PHGExtension phg = new PHGExtension();
-				phg.setPower((char)msgBody[22+cursor]);
-				phg.setHeight((char)msgBody[23+cursor]);
-				phg.setGain((char)msgBody[24+cursor]);
-				phg.setDirectivity((char)msgBody[25+cursor]);
-				de = phg;
+				try {
+					phg.setPower(Integer.parseInt(new String(msgBody,22+cursor,1)));
+					phg.setHeight(Integer.parseInt(new String(msgBody,23+cursor,1)));
+					phg.setGain(Integer.parseInt(new String(msgBody,24+cursor,1)));
+					phg.setDirectivity(Integer.parseInt(new String(msgBody,25+cursor,1)));
+					de = phg;
+				} catch ( NumberFormatException nfe ) {
+					de = null;
+				}
 		} else if ( (char)msgBody[22 + cursor] == '/' && (char)msgBody[18+cursor] != '_' ) {
 			CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
 			
