@@ -183,7 +183,7 @@ public class Position {
 				""+(char)lonchar1+(char)lonchar2+(char)lonchar3+(char)lonchar4+symbolCode+" sT";
 	}
 
-	public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
+	public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
 		    double earthRadius = 3958.75;
 		    double dLat = Math.toRadians(lat2-lat1);
 		    double dLng = Math.toRadians(lng2-lng1);
@@ -195,6 +195,14 @@ public class Position {
 
 		    return new Float(dist).floatValue();
     }
+	
+	public float distance(Position position2) {
+		double lat1 = this.getLatitude();
+		double lat2 = position2.getLatitude();
+		double lng1 = this.getLongitude();
+		double lng2 = position2.getLatitude();
+		return distFrom(lat1,lng1,lat2,lng2);
+	}
 	
 	public static void main(String[] args) {
 		Position pos = new Position();
