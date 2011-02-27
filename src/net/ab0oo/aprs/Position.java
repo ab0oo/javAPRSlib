@@ -45,6 +45,15 @@ public class Position {
 		this.symbolCode = sc;
 		this.timestamp = new Date();
 	}
+	
+	public Position(double lat, double lon) {
+		this.latitude = Math.round(lat * 100000) * 0.00001D;
+		this.longitude = Math.round(lon * 100000) * 0.00001D;
+		this.positionAmbiguity=0;
+		this.symbolTable = '\\';
+		this.symbolCode = '.';
+		this.timestamp = new Date();
+	}
 
 	/**
 	 * @return the latitude

@@ -160,8 +160,8 @@ public class PositionParser {
 			} catch ( NumberFormatException nfe ) {
 				course = 0;
 				speed = 0;
-				System.err.println("Unable to parse course "+courseString+" or speed "+
-						speedString+" into a valid course/speed for CS Extension from "+new String(msgBody));
+				//System.err.println("Unable to parse course "+courseString+" or speed "+
+				//		speedString+" into a valid course/speed for CS Extension from "+new String(msgBody));
 			}
 			cse.setCourse(course);
 			cse.setSpeed(speed);
