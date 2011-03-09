@@ -23,7 +23,7 @@
  * 
  */
 
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 import java.util.ArrayList;
 /**

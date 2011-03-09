@@ -18,20 +18,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-package net.ab0oo.aprs;
 /**
- * 
- * @author johng
- * Abstract class that encapsulates the possible Data Extensions to APRS packets.  These include
- * Course and Speed
- * Power, Effective Antenna Heigh/Gain/Directivity
- * Pre-calculated Radio Range
- * Omni DF Signal Strength
- * Storm Data
- * Bearing and Number/Range/Quality
- * Area Objects
- * Wind Direction and Speed
+ * Simple exception class used to indicate a Parser failure 
  */
-public abstract class DataExtension {
-	public abstract String toSAEString();
+package net.ab0oo.aprs.parser;
+
+/**
+ * @author johng
+ *
+ */
+public class UnparsablePositionException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	public UnparsablePositionException(String ex) {
+		super(ex);
+	}
 }

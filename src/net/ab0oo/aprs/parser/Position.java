@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 import java.util.Date;
 /**
@@ -170,6 +170,10 @@ public class Position {
 	
 	public String toString() {
 		return getDMS(latitude,true)+symbolTable+getDMS(longitude,false)+symbolCode;
+	}
+	
+	public String toDecimalString() {
+		return latitude+", "+longitude;
 	}
 	
 	public String toCompressedString() {

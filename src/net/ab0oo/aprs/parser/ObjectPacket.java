@@ -1,4 +1,4 @@
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 public class ObjectPacket extends InformationField {
 	private String objectName;

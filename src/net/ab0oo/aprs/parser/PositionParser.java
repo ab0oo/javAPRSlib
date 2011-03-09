@@ -22,7 +22,7 @@
  * http://repo.ham.fi/websvn/java-aprs-fap/
  * I appreciate the base work Matti did - JohnG
  */
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 import java.util.regex.Pattern;
 /**
  * This class with decode any of the Position formats specified in the APRS spec, 

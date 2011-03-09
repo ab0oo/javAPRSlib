@@ -21,7 +21,7 @@
  *  Please note that significant portions of this code were taken from the JAVA FAP
  *  conversion by Matti Aarnio at http://repo.ham.fi/websvn/java-aprs-fap/
  */
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 
 public class PositionPacket extends InformationField {

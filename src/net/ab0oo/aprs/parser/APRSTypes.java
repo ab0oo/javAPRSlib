@@ -22,7 +22,7 @@
  *  by Matti Aarnio at http://repo.ham.fi/websvn/java-aprs-fap/
  */
 
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 public enum APRSTypes implements java.io.Serializable {
     T_UNSPECIFIED,

@@ -18,41 +18,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-package net.ab0oo.aprs;
-
+package net.ab0oo.aprs.parser;
 /**
- * @author johng
  * 
+ * @author johng
+ * Abstract class that encapsulates the possible Data Extensions to APRS packets.  These include
+ * Course and Speed
+ * Power, Effective Antenna Heigh/Gain/Directivity
+ * Pre-calculated Radio Range
+ * Omni DF Signal Strength
+ * Storm Data
+ * Bearing and Number/Range/Quality
+ * Area Objects
+ * Wind Direction and Speed
  */
-public class Utilities {
-	public static void main(String[] args) {
-		if (args.length == 0) {
-			System.out.println("Usage:  AprsPass <callsign>");
-			System.exit(1);
-		}
-	}
-
-	public static int doHash(String callSign) {
-		short kKey = 0x73e2; // Straight from Steme Dimse himself
-		if (callSign.indexOf('-') > 0) {
-			callSign = callSign.substring(0, callSign.indexOf('-'));
-		}
-		callSign = callSign.toUpperCase();
-		short i = 0;
-		int hash = kKey;
-		int len = callSign.length();
-		while (i < len) {
-			hash ^= callSign.charAt(i) << 8;
-			if (i + 1 < len) {
-				hash ^= callSign.charAt(i + 1);
-			}
-			i += 2;
-		}
-		int code = hash & 0x7FFF;
-		return code;
-	}
-	
-	public static int ktsToMph(int knots) {
-		return (int)Math.round(knots * 1.15077945);
-	}
+public abstract class DataExtension {
+	public abstract String toSAEString();
 }

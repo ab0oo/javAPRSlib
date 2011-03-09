@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-package net.ab0oo.aprs;
+package net.ab0oo.aprs.parser;
 
 public class PHGExtension extends DataExtension {
 	private static int[] powerCodes = {0,1,4,9,16,25,36,49,64,81};
