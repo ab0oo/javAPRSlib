@@ -51,12 +51,39 @@ public class Parser {
         String[] digiTemp = digiList.split(",");
         String dest = digiTemp[0].toUpperCase();
         ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
+	// for now, '*' is set for all digis with used bit.
+	// however, only the last used digi should have a '*'
         if ( digiTemp.length > 0 ) {
             for ( int i=1; i<digiTemp.length; i++) {
                 digis.add(new Digipeater(digiTemp[i]));
             }
         }
         String body = packet.substring(ms+1);
+	return parseBody(source, dest, digis, body);
+    }
+
+    public static APRSPacket parseAX25(byte[] packet) throws Exception {
+	    int pos = 0;
+	    Digipeater destcall = new Digipeater(packet, pos);
+	    destcall.setUsed(false);
+	    String dest = destcall.toString();
+	    pos += 7;
+	    String source = new Digipeater(packet, pos).toString();
+	    pos += 7;
+	    ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
+	    do {
+		    Digipeater d =new Digipeater(packet, pos);
+		    digis.add(d);
+		    pos += 7;
+	    } while ((packet[pos - 1] & 1) == 0);
+	    if (packet[pos] != 0x03 || packet[pos+1] != -16 /*0xf0*/)
+		    throw new IllegalArgumentException("control + pid must be 0x03 0xF0!");
+	    pos += 2;
+	    String body = new String(packet, pos, packet.length - pos);
+	    return parseBody(source, dest, digis, body);
+    }
+
+    public static APRSPacket parseBody(String source, String dest, ArrayList<Digipeater> digis, String body) throws Exception {
         byte[] bodyBytes = body.getBytes();
         byte dti = bodyBytes[0];
         InformationField infoField = null;

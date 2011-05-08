@@ -31,6 +31,10 @@ public class Digipeater {
     private boolean used;
     
     public Digipeater(String call) {
+        if ( call.indexOf("*") >= 0 ) {
+		setUsed(true);
+		call = call.substring(0, call.indexOf("*"));
+	}
         if ( call.indexOf("-") > 0 ) {
             ssid = call.substring(call.indexOf("-")+1, call.length());
             this.callsign = call.substring(0,call.indexOf("-"));
@@ -38,6 +42,18 @@ public class Digipeater {
             this.callsign=call;
             this.ssid="";
         }
+    }
+    public Digipeater(byte[] data, int offset) {
+	    byte[] shifted = new byte[6];
+	    byte ssidbyte = data[offset + 6];
+	    for (int i = 0; i < 6; i++)
+		    shifted[i] = (byte)((data[offset + i]&0xff) >> 1);
+	    this.callsign = new String(shifted, 0, 6).trim();
+	    int ssidval = (ssidbyte & 0x1e) >> 1;
+	    if (ssidval != 0)
+		    this.ssid = "" + ssidval;
+	    else this.ssid = "";
+	    this.used = (ssidbyte & 0x80) == 0x80;
     }
 
     /**
@@ -84,5 +100,26 @@ public class Digipeater {
     
     public String toString() {
         return callsign+( ssid == "" ? "" : "-" )+ssid+ ( isUsed() ? "*":"");
+    }
+
+    public byte[] toAX25() throws IllegalArgumentException {
+        byte[] callbytes = callsign.getBytes();
+        byte[] ax25 = new byte[7];
+	// shift " " by one
+	java.util.Arrays.fill(ax25, (byte)0x40);
+	if (callbytes.length > 6)
+		throw new IllegalArgumentException("Callsign " + callsign + " is too long for AX.25!");
+        for (int i = 0; i < callbytes.length; i++) {
+		ax25[i] = (byte)(callbytes[i] << 1);
+	}
+	int ssidval = 0;
+	try {
+		ssidval = Integer.parseInt(ssid);
+	} catch (NumberFormatException e) {
+		// we ignore that for now.
+	}
+	// ssid byte: u11ssss0
+	ax25[6] = (byte) (0x60 | ((ssidval*2) & 0x1e) | (isUsed()?0x80:0));
+	return ax25;
     }
 }

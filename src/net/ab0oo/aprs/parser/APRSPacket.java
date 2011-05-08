@@ -20,6 +20,7 @@
  */
 package net.ab0oo.aprs.parser;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 /**
  * 
@@ -152,6 +153,33 @@ public class APRSPacket {
 
 	public String toString() {
 		return sourceCall+">"+destinationCall+getDigiString()+":"+aprsInformation.toString()+"\n";
+	}
+
+	public byte[] toAX25Frame() throws IllegalArgumentException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		// write AX.25 header
+		// dest
+		byte[] dest = new Digipeater(destinationCall + "*").toAX25();
+		baos.write(dest, 0, dest.length);
+		// src
+		byte[] src = new Digipeater(sourceCall).toAX25();
+		baos.write(src, 0, src.length);
+		// digipeater list
+		for (int i = 0; i < digipeaters.size(); i++) {
+			byte[] d = digipeaters.get(i).toAX25();
+			// last byte of last digi is |=1
+			if (i == digipeaters.size() - 1)
+				d[6] |= 1;
+			baos.write(d, 0, 7);
+		}
+		// control: UI-frame, poll-bit set
+		baos.write(0x03);
+		// pid: 0xF0 - no layer 3 protocol
+		baos.write(0xF0);
+		// write content
+		byte[] content = aprsInformation.getRawBytes();
+		baos.write(content, 0, content.length);
+		return baos.toByteArray();
 	}
 }
 
