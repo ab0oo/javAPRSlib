@@ -67,7 +67,7 @@ public class Utilities {
 	public static String degressToCardinal(double degrees) {
 		if ( degrees >= 11.25 && degrees < 33.75 ) return "NNE";
 		if ( degrees >= 33.75 && degrees < 56.25 ) return "NE";
-		if ( degrees >= 56.25 && degrees < 78.25 ) return "WNE";
+		if ( degrees >= 56.25 && degrees < 78.25 ) return "ENE";
 		if ( degrees >= 78.25 && degrees < 101.25 ) return "E";
 		if ( degrees >= 101.25 && degrees < 123.75 ) return "ESE";
 		if ( degrees >= 123.75 && degrees < 146.25 ) return "SE";
