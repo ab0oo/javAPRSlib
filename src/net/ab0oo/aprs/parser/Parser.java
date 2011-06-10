@@ -59,7 +59,9 @@ public class Parser {
             }
         }
         String body = packet.substring(ms+1);
-	return parseBody(source, dest, digis, body);
+        APRSPacket ap = parseBody(source, dest, digis, body);
+        ap.setOriginalString(packet);
+        return ap;
     }
 
     public static APRSPacket parseAX25(byte[] packet) throws Exception {
@@ -97,8 +99,12 @@ public class Parser {
         	case '`':
         	case '\'':
         	case '$':
-        		infoField = new PositionPacket(bodyBytes,dest);
-        		break;
+        		if ( body.startsWith("$ULTW") ) {
+        			// Ultimeter II weather packet
+        		} else {
+        			infoField = new PositionPacket(bodyBytes,dest);
+        		}
+    			break;
         	case ':':
         		infoField = new MessagePacket(bodyBytes,dest);
         		break;

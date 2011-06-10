@@ -19,14 +19,18 @@
  * USA
  */
 package net.ab0oo.aprs.parser;
+
+import java.io.Serializable;
+
 /**
  * 
  * @author johng
  * This class represents a single digipeater in a TNC2-format VIA string.
  * 
  */
-public class Digipeater {
-    private String callsign;
+public class Digipeater implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private String callsign;
     private String ssid;
     private boolean used;
     

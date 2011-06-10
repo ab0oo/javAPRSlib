@@ -28,10 +28,11 @@ import java.util.Date;
  * a symbol table and actual symbol, and a possible timestamp.
  *
  */
-public class Position {
-	private double latitude = 0d, longitude = 0d;
-	private int altitude = -1;
-	private int positionAmbiguity;
+public class Position implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+	private Double latitude = 0d, longitude = 0d;
+	private Integer altitude = -1;
+	private Integer positionAmbiguity;
 	private Date timestamp;
 	private char symbolTable, symbolCode;
 

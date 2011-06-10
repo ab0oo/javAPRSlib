@@ -20,7 +20,10 @@
  */
 package net.ab0oo.aprs.parser;
 
-public class PHGExtension extends DataExtension {
+import java.io.Serializable;
+
+public class PHGExtension extends DataExtension implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static int[] powerCodes = {0,1,4,9,16,25,36,49,64,81};
 	private static int[] heightCodes = {10,20,40,80,160,320,640,1280,2560,5120};
 	private static int[] gainCodes = {0,1,2,3,4,5,6,7,8,9};

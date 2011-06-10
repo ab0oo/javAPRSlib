@@ -20,8 +20,10 @@
  */
 package net.ab0oo.aprs.parser;
 
-public class MessagePacket extends InformationField {
+import java.io.Serializable;
 
+public class MessagePacket extends InformationField implements Serializable {
+	private static final long serialVersionUID = 1L;
     private String messageBody;
     private String messageNumber;
     private String targetCallsign ="";

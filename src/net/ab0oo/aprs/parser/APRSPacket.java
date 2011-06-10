@@ -21,6 +21,7 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * 
@@ -28,8 +29,10 @@ import java.util.ArrayList;
  *  This class represents a complete APRS AX.25 packet, as found in a TNC2-style string:
  *  SOURCE>DESTIN,VIA,VIA:payload
  */
-public class APRSPacket {
-    private String sourceCall;
+public class APRSPacket implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String originalString;
+	private String sourceCall;
     private String destinationCall;
     private ArrayList<Digipeater> digipeaters;
     private char dti;
@@ -149,6 +152,20 @@ public class APRSPacket {
 
 	public void setType(APRSTypes type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the originalString
+	 */
+	public final String getOriginalString() {
+		return originalString;
+	}
+
+	/**
+	 * @param originalString the originalString to set
+	 */
+	public final void setOriginalString(String originalString) {
+		this.originalString = originalString;
 	}
 
 	public String toString() {

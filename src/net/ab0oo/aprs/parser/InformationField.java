@@ -19,6 +19,9 @@
  * USA
  */
 package net.ab0oo.aprs.parser;
+
+import java.io.Serializable;
+
 /**
  * 
  * @author johng
@@ -28,8 +31,9 @@ package net.ab0oo.aprs.parser;
  *  and Items, Weather, Telemetry, Messages, Bulletins, Annoucements, Queries, Responses, Statuses,
  *  and User-defined Others.
  */
-public abstract class InformationField {
-    private char dataTypeIdentifier;
+public abstract class InformationField implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private char dataTypeIdentifier;
     private byte[] rawBytes;
     protected APRSTypes type;
 	protected boolean hasFault = false;
