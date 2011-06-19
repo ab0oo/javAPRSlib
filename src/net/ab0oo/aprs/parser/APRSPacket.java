@@ -169,7 +169,7 @@ public class APRSPacket implements Serializable {
 	}
 
 	public String toString() {
-		return sourceCall+">"+destinationCall+getDigiString()+":"+aprsInformation.toString()+"\n";
+		return sourceCall+">"+destinationCall+getDigiString()+":"+aprsInformation.toString();
 	}
 
 	public byte[] toAX25Frame() throws IllegalArgumentException {
