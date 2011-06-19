@@ -50,7 +50,7 @@ public class MessagePacket extends InformationField implements Serializable {
         	targetCallsign = message.substring(1,msgSpc).trim().toUpperCase();
         }
         int msgNumberIdx = message.lastIndexOf('{');
-        this.messageNumber="0";
+        this.messageNumber="";
         if ( msgNumberIdx > -1 ) {
             this.messageNumber = message.substring(msgNumberIdx+1,message.length());
             messageBody = message.substring(11,msgNumberIdx);
@@ -151,8 +151,10 @@ public class MessagePacket extends InformationField implements Serializable {
 	public String toString() {
 		if ( this.messageBody.equals("ack") || this.messageBody.equals("rej")) {
 			return String.format(":%-9s:%s%s", this.targetCallsign, this.messageBody, this.messageNumber);
-		} else {
+		} else if (messageNumber.length() > 0) {
 			return String.format(":%-9s:%s{%s", this.targetCallsign, this.messageBody, this.messageNumber);
+		} else {
+			return String.format(":%-9s:%s", this.targetCallsign, this.messageBody);
 		}
 	}
 }
