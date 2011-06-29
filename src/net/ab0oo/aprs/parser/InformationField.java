@@ -71,12 +71,15 @@ public abstract class InformationField implements Serializable {
      * @return the rawBytes
      */
     public byte[] getRawBytes() {
-        return rawBytes;
+	if (rawBytes != null)
+		return rawBytes;
+	else
+		return toString().getBytes();
     }
     
     public byte[] getBytes(int start, int end) {
         byte[] returnArray = new byte[end-start];
-        System.arraycopy(rawBytes, start, returnArray, 0, end-start);
+        System.arraycopy(getRawBytes(), start, returnArray, 0, end-start);
         return returnArray;
     }
     
