@@ -118,6 +118,11 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 		this.comment = comment;
 	}
 
+	public PositionPacket(Position position, String comment, boolean msgCapable) {
+		this(position, comment);
+		canMessage = msgCapable;
+	}
+
 	private boolean validSymTableCompressed(char c) {
 		if (c == '/' || c == '\\')
 			return true;
@@ -153,7 +158,7 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 	}
 
 	public String toString() {
-		return "!" + position + comment;
+		return (canMessage ? "=" : "!") + position + comment;
 	}
 	/**
 	 * @return the positionSource
