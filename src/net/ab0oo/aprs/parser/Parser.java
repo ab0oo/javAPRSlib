@@ -50,14 +50,7 @@ public class Parser {
         String digiList = packet.substring(cs+1,ms);
         String[] digiTemp = digiList.split(",");
         String dest = digiTemp[0].toUpperCase();
-        ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
-	// for now, '*' is set for all digis with used bit.
-	// however, only the last used digi should have a '*'
-        if ( digiTemp.length > 0 ) {
-            for ( int i=1; i<digiTemp.length; i++) {
-                digis.add(new Digipeater(digiTemp[i]));
-            }
-        }
+        ArrayList<Digipeater> digis = Digipeater.parseList(digiList, false);
         String body = packet.substring(ms+1);
         APRSPacket ap = parseBody(source, dest, digis, body);
         ap.setOriginalString(packet);

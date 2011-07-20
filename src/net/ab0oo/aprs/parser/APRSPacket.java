@@ -107,6 +107,10 @@ public class APRSPacket implements Serializable {
         return digipeaters;
     }
     
+    public void setDigipeaters(ArrayList<Digipeater> newDigis) {
+	    digipeaters = newDigis;
+    }
+
     public String getDigiString() {
         StringBuilder sb = new StringBuilder();
         for ( Digipeater digi : digipeaters ) {

@@ -21,6 +21,7 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 
@@ -58,6 +59,23 @@ public class Digipeater implements Serializable {
 		    this.ssid = "" + ssidval;
 	    else this.ssid = "";
 	    this.used = (ssidbyte & 0x80) == 0x80;
+    }
+
+    /** parse a comma-separated list of digipeaters
+     * @return the list of digipeaters as an array
+     */
+    public static ArrayList<Digipeater> parseList(String digiList, boolean includeFirst) {
+	String[] digiTemp = digiList.split(",");
+	ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
+	int first = includeFirst ? 0 : 1;
+	// for now, '*' is set for all digis with used bit.
+	// however, only the last used digi should have a '*'
+	if ( digiTemp.length >= first ) {
+	    for (int i=first; i<digiTemp.length; i++) {
+		digis.add(new Digipeater(digiTemp[i]));
+	    }
+	}
+	return digis;
     }
 
     /**
