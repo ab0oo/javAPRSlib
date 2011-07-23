@@ -36,6 +36,27 @@ import java.util.ArrayList;
  * further parsing of the message.  This class parses raw TNC2 packets and returns instances of APRSPackets
  */
 public class Parser {
+	
+	public static void main( String[] args ) {
+		Parser parser = new Parser();
+		if ( args.length > 0 ) {
+			try {
+				APRSPacket packet = parser.parse(args[0]);
+				System.out.println("Packet parsed as a "+packet.getType());
+				System.out.println("From:  "+packet.getSourceCall());
+				System.out.println("To:  "+packet.getDestinationCall());
+				System.out.println("Via: "+packet.getDigiString());
+				System.out.println("DTI: "+packet.getDti());
+				System.out.println("Valid?  "+packet.isAprs());
+				if ( packet.isAprs() ) {
+					System.out.println(packet.getAprsInformation().toString());
+				}
+			} catch ( Exception ex ) {
+				System.err.println("Unable to parse:  "+ex);
+				ex.printStackTrace();
+			}
+		}
+	}
     
     public APRSPacket parsePacket(byte[] rawPacket) {
         //if ( packet.getDti() == '!' || packet.getDti() == '=' ) {
@@ -107,6 +128,7 @@ public class Parser {
 					type = APRSTypes.T_OBJECT;
     				infoField = new ObjectPacket(bodyBytes);
     			} else {
+    				System.err.println("Object packet body too short for valid object");
     				hasFault = true; // too short for an object
     			}
     			break;

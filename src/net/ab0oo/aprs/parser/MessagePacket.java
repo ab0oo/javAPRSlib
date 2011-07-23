@@ -52,7 +52,7 @@ public class MessagePacket extends InformationField implements Serializable {
         int msgNumberIdx = message.lastIndexOf('{');
         this.messageNumber="";
         if ( msgNumberIdx > -1 ) {
-            this.messageNumber = message.substring(msgNumberIdx+1,message.length());
+            this.messageNumber = message.substring(msgNumberIdx+1);
             messageBody = message.substring(11,msgNumberIdx);
         } else {
             messageBody = message.substring(11);

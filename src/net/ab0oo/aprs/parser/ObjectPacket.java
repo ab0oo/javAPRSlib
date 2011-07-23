@@ -15,7 +15,11 @@ public class ObjectPacket extends InformationField implements Serializable {
 		this.objectName = new String(msgBody, 1, 9).trim();
 		this.live = (msgBody[10] == '*');
 		int cursor = 18;
-		this.position = PositionParser.parseUncompressed(msgBody, 18);
+		if ( msgBody[cursor] > '0' && msgBody[cursor] < '9' ) {
+		    this.position = PositionParser.parseUncompressed(msgBody, cursor);
+		} else {
+		    this.position = PositionParser.parseCompressed(msgBody, cursor);
+		}
 		cursor += 19;
 		comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
 	}
