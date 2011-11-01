@@ -154,7 +154,7 @@ public class Position implements java.io.Serializable {
 		this.symbolCode = symbolCode;
 	}
 	
-	public static String getDMS(double decimalDegree, boolean isLatitude) {
+	public String getDMS(double decimalDegree, boolean isLatitude) {
 			int minFrac = (int)Math.round(decimalDegree*6000); ///< degree in 1/100s of a minute
 			boolean negative = (minFrac < 0);
 			if (negative)
@@ -162,10 +162,24 @@ public class Position implements java.io.Serializable {
 			int deg = minFrac / 6000;
 			int min = (minFrac / 100) % 60;
 			minFrac = minFrac % 100;
+			String ambiguousFrac;
+
+			switch (positionAmbiguity) {
+			case 1: // "dd  .  N"
+				ambiguousFrac = "  .  "; break;
+			case 2: // "ddm .  N"
+				ambiguousFrac = String.format("%d .  ", min/10); break;
+			case 3: // "ddmm.  N"
+				ambiguousFrac = String.format("%2d.  ", min); break;
+			case 4: // "ddmm.f N"
+				ambiguousFrac = String.format("%02d.%d ", min, minFrac/10); break;
+			default: // "ddmm.ffN"
+				ambiguousFrac = String.format("%02d.%02d", min, minFrac); break;
+			}
 			if ( isLatitude ) {
-				return String.format("%02d%02d.%02d%s", deg, min, minFrac, ( negative ? "S" : "N"));
+				return String.format("%02d%s%s", deg, ambiguousFrac, ( negative ? "S" : "N"));
 			} else {
-				return String.format("%03d%02d.%02d%s", deg, min, minFrac, ( negative ? "W" : "E"));
+				return String.format("%03d%s%s", deg, ambiguousFrac, ( negative ? "W" : "E"));
 			}
 	}
 	
