@@ -170,7 +170,7 @@ public class Position implements java.io.Serializable {
 			case 2: // "ddm .  N"
 				ambiguousFrac = String.format("%d .  ", min/10); break;
 			case 3: // "ddmm.  N"
-				ambiguousFrac = String.format("%2d.  ", min); break;
+				ambiguousFrac = String.format("%02d.  ", min); break;
 			case 4: // "ddmm.f N"
 				ambiguousFrac = String.format("%02d.%d ", min, minFrac/10); break;
 			default: // "ddmm.ffN"
