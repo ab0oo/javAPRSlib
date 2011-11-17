@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="javAPRSlib" basedir="." default="compile-library" >
+	<path id="project.classpath">
+		<pathelement location="/usr/share/java/ant.jar" />
+	</path>
+
+	<target name="compile-library" >
+		<mkdir dir="bin" />
+		<mkdir dir="bin/classes" />
+
+		<javac  destdir="bin/classes"
+			deprecation="false"
+			optimize="true"
+			debug="true" >
+
+			<src path="src/" />
+			<include name="**/*.java" />
+
+		</javac>
+		<jar jarfile="bin/javAPRSlib.jar" basedir="bin/classes" />
+	</target>
+	<target name="clean">
+		<delete dir="bin"  failonerror="false" />
+	</target>
+</project>
