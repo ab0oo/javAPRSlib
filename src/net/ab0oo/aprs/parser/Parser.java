@@ -42,13 +42,18 @@ public class Parser {
 			try {
 				APRSPacket packet = Parser.parse(args[0]);
 				System.out.println("Packet parsed as a "+packet.getType());
-				System.out.println("From:  "+packet.getSourceCall());
-				System.out.println("To:  "+packet.getDestinationCall());
-				System.out.println("Via: "+packet.getDigiString());
-				System.out.println("DTI: "+packet.getDti());
-				System.out.println("Valid?  "+packet.isAprs());
-				if ( packet.isAprs() ) {
-					System.out.println(packet.getAprsInformation().toString());
+				System.out.println("From:	"+packet.getSourceCall());
+				System.out.println("To:	"+packet.getDestinationCall());
+				System.out.println("Via:	"+packet.getDigiString());
+				System.out.println("DTI:	"+packet.getDti());
+				System.out.println("Valid:	"+packet.isAprs());
+				InformationField data = packet.getAprsInformation();
+				System.out.println("Data:	" + data);
+				if ( packet.isAprs() && data != null) {
+					System.out.println("    Type:	" + data.getClass().getName());
+					System.out.println("    Messaging:	" + data.canMessage);
+					System.out.println("    Comment:	" + data.getComment());
+					System.out.println("    Extension:	" + data.getExtension());
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
