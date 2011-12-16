@@ -38,10 +38,9 @@ import java.util.ArrayList;
 public class Parser {
 	
 	public static void main( String[] args ) {
-		Parser parser = new Parser();
 		if ( args.length > 0 ) {
 			try {
-				APRSPacket packet = parser.parse(args[0]);
+				APRSPacket packet = Parser.parse(args[0]);
 				System.out.println("Packet parsed as a "+packet.getType());
 				System.out.println("From:  "+packet.getSourceCall());
 				System.out.println("To:  "+packet.getDestinationCall());
@@ -58,13 +57,13 @@ public class Parser {
 		}
 	}
     
-    public APRSPacket parsePacket(byte[] rawPacket) {
+    public static APRSPacket parsePacket(byte[] rawPacket) {
         //if ( packet.getDti() == '!' || packet.getDti() == '=' ) {
             // !3449.94N/08448.56W_203/000g000t079P133h85b10149OD1
         return new APRSPacket(null, null, null, null);
     }
     
-    public APRSPacket parse(String packet) throws Exception {
+    public static APRSPacket parse(String packet) throws Exception {
         int cs = packet.indexOf('>');
         String source = packet.substring(0,cs).toUpperCase();
         int ms = packet.indexOf(':');
