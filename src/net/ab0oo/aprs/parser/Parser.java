@@ -88,7 +88,9 @@ public class Parser {
 	    destcall.setUsed(false);
 	    String dest = destcall.toString();
 	    pos += 7;
-	    String source = new Digipeater(packet, pos).toString();
+	    Digipeater srccall  = new Digipeater(packet, pos);
+	    srccall.setUsed(false);
+	    String source = srccall.toString();
 	    pos += 7;
 	    ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
 	    do {
