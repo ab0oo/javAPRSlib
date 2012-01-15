@@ -109,7 +109,7 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 
 		}
 		if (cursor > 0 && cursor < msgBody.length) {
-			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
+			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8");
 		}
 	}
 	public PositionPacket(Position position, String comment) {
