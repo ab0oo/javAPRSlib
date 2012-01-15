@@ -176,6 +176,8 @@ public class Parser {
     			break;
 
         }
+	if (infoField == null)
+		infoField = new UnsupportedInfoField(bodyBytes);
         APRSPacket returnPacket = new APRSPacket(source,dest,digis,infoField);
         returnPacket.setType(type);
         returnPacket.setHasFault(hasFault);
