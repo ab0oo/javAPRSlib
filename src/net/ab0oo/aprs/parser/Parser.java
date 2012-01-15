@@ -89,11 +89,11 @@ public class Parser {
 	    String source = new Callsign(packet, pos).toString();
 	    pos += 7;
 	    ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
-	    do {
+	    while ((packet[pos - 1] & 1) == 0) {
 		    Digipeater d =new Digipeater(packet, pos);
 		    digis.add(d);
 		    pos += 7;
-	    } while ((packet[pos - 1] & 1) == 0);
+	    }
 	    if (packet[pos] != 0x03 || packet[pos+1] != -16 /*0xf0*/)
 		    throw new IllegalArgumentException("control + pid must be 0x03 0xF0!");
 	    pos += 2;
