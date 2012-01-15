@@ -29,36 +29,19 @@ import java.util.ArrayList;
  * This class represents a single digipeater in a TNC2-format VIA string.
  * 
  */
-public class Digipeater implements Serializable {
+public class Digipeater extends Callsign implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String callsign;
-    private String ssid;
     private boolean used;
     
     public Digipeater(String call) {
+	super(call.replaceAll("\\*", ""));
         if ( call.indexOf("*") >= 0 ) {
 		setUsed(true);
-		call = call.substring(0, call.indexOf("*"));
 	}
-        if ( call.indexOf("-") > 0 ) {
-            ssid = call.substring(call.indexOf("-")+1, call.length());
-            this.callsign = call.substring(0,call.indexOf("-"));
-        } else {
-            this.callsign=call;
-            this.ssid="";
-        }
     }
     public Digipeater(byte[] data, int offset) {
-	    byte[] shifted = new byte[6];
-	    byte ssidbyte = data[offset + 6];
-	    for (int i = 0; i < 6; i++)
-		    shifted[i] = (byte)((data[offset + i]&0xff) >> 1);
-	    this.callsign = new String(shifted, 0, 6).trim();
-	    int ssidval = (ssidbyte & 0x1e) >> 1;
-	    if (ssidval != 0)
-		    this.ssid = "" + ssidval;
-	    else this.ssid = "";
-	    this.used = (ssidbyte & 0x80) == 0x80;
+	    super(data, offset);
+	    this.used = (data[offset + 6] & 0x80) == 0x80;
     }
 
     /** parse a comma-separated list of digipeaters
@@ -79,34 +62,6 @@ public class Digipeater implements Serializable {
     }
 
     /**
-     * @return the callsign
-     */
-    public String getCallsign() {
-        return callsign;
-    }
-
-    /**
-     * @param callsign the callsign to set
-     */
-    public void setCallsign(String callsign) {
-        this.callsign = callsign;
-    }
-
-    /**
-     * @return the ssid
-     */
-    public String getSsid() {
-        return ssid;
-    }
-
-    /**
-     * @param ssid the ssid to set
-     */
-    public void setSsid(String ssid) {
-        this.ssid = ssid;
-    }
-
-    /**
      * @return the used
      */
     public boolean isUsed() {
@@ -121,27 +76,12 @@ public class Digipeater implements Serializable {
     }
     
     public String toString() {
-        return callsign+( ssid == "" ? "" : "-" )+ssid+ ( isUsed() ? "*":"");
+        return super.toString() + ( isUsed() ? "*":"");
     }
 
     public byte[] toAX25() throws IllegalArgumentException {
-        byte[] callbytes = callsign.getBytes();
-        byte[] ax25 = new byte[7];
-	// shift " " by one
-	java.util.Arrays.fill(ax25, (byte)0x40);
-	if (callbytes.length > 6)
-		throw new IllegalArgumentException("Callsign " + callsign + " is too long for AX.25!");
-        for (int i = 0; i < callbytes.length; i++) {
-		ax25[i] = (byte)(callbytes[i] << 1);
-	}
-	int ssidval = 0;
-	try {
-		ssidval = Integer.parseInt(ssid);
-	} catch (NumberFormatException e) {
-		// we ignore that for now.
-	}
-	// ssid byte: u11ssss0
-	ax25[6] = (byte) (0x60 | ((ssidval*2) & 0x1e) | (isUsed()?0x80:0));
+        byte[] ax25 = super.toAX25();
+	ax25[6] |= (isUsed()?0x80:0);
 	return ax25;
     }
 }

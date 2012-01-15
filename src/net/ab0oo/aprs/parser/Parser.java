@@ -84,13 +84,9 @@ public class Parser {
 
     public static APRSPacket parseAX25(byte[] packet) throws Exception {
 	    int pos = 0;
-	    Digipeater destcall = new Digipeater(packet, pos);
-	    destcall.setUsed(false);
-	    String dest = destcall.toString();
+	    String dest = new Callsign(packet, pos).toString();
 	    pos += 7;
-	    Digipeater srccall  = new Digipeater(packet, pos);
-	    srccall.setUsed(false);
-	    String source = srccall.toString();
+	    String source = new Callsign(packet, pos).toString();
 	    pos += 7;
 	    ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
 	    do {
