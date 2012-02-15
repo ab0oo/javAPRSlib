@@ -75,6 +75,7 @@ public class Digipeater extends Callsign implements Serializable {
         this.used = used;
     }
     
+    @Override
     public String toString() {
         return super.toString() + ( isUsed() ? "*":"");
     }

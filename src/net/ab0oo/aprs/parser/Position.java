@@ -183,6 +183,7 @@ public class Position implements java.io.Serializable {
 			}
 	}
 	
+	@Override
 	public String toString() {
 		return getDMS(latitude,true)+symbolTable+getDMS(longitude,false)+symbolCode;
 	}

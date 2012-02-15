@@ -56,10 +56,12 @@ public class CourseAndSpeedExtension extends DataExtension implements Serializab
 		this.speed = speed;
 	}
 	
+	@Override
 	public String toString() {
 		return "Moving "+speed+" kts @ "+course+" deg";
 	}
 	
+	@Override
 	public String toSAEString() {
 		return "Moving "+Utilities.ktsToMph(speed)+" mph @ "+course+" deg";
 	}

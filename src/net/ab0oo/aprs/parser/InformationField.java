@@ -90,6 +90,7 @@ public abstract class InformationField implements Serializable {
         return comment;
     }
     
+    @Override
     public String toString() {
         return new String(rawBytes);
     }

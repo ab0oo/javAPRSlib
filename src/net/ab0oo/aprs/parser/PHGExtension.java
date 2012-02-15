@@ -82,6 +82,7 @@ public class PHGExtension extends DataExtension implements Serializable {
 		this.directivity = directivityCodes[directivity];
 	}
 	
+	@Override
 	public String toSAEString() {
 		return power+" watts at "+height+" ft HAAT with "+gain+" dBi gain directed at "+directivity+" degress";
 	}
