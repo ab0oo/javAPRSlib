@@ -80,7 +80,8 @@ public class ObjectPacket extends InformationField implements Serializable {
 		this.extension = extension;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return ")"+this.objectName+( live ? "!":"_")+position.toString()+comment;
 	}
 }

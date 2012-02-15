@@ -148,7 +148,8 @@ public class MessagePacket extends InformationField implements Serializable {
 		this.isRej = isRej;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		if ( this.messageBody.equals("ack") || this.messageBody.equals("rej")) {
 			return String.format(":%-9s:%s%s", this.targetCallsign, this.messageBody, this.messageNumber);
 		} else if (messageNumber.length() > 0) {

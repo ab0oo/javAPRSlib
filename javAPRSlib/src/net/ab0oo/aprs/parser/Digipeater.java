@@ -120,6 +120,7 @@ public class Digipeater implements Serializable {
         this.used = used;
     }
     
+    @Override
     public String toString() {
         return callsign+( ssid == "" ? "" : "-" )+ssid+ ( isUsed() ? "*":"");
     }

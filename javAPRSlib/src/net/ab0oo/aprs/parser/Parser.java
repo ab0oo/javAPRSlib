@@ -64,7 +64,7 @@ public class Parser {
         return new APRSPacket(null, null, null, null);
     }
     
-    public APRSPacket parse(String packet) throws Exception {
+    public APRSPacket parse(final String packet) throws Exception {
         int cs = packet.indexOf('>');
         String source = packet.substring(0,cs).toUpperCase();
         int ms = packet.indexOf(':');

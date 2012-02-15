@@ -172,7 +172,8 @@ public class APRSPacket implements Serializable {
 		this.originalString = originalString;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return sourceCall+">"+destinationCall+getDigiString()+":"+aprsInformation.toString();
 	}
 
