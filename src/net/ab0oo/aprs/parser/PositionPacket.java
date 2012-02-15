@@ -81,7 +81,7 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 					position = PositionParser.parseCompressed(msgBody, cursor);
 					this.extension = PositionParser.parseCompressedExtension(msgBody, cursor);
 					positionSource = "Compressed";
-					cursor += 12;
+					cursor += 13;
 				} else if ('0' <= posChar && posChar <= '9') {
 					// normal uncompressed position
 					position = PositionParser.parseUncompressed(msgBody);
@@ -109,7 +109,7 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 
 		}
 		if (cursor > 0 && cursor < msgBody.length) {
-			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
+			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8");
 		}
 	}
 	public PositionPacket(Position position, String comment) {

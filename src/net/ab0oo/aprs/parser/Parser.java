@@ -38,18 +38,22 @@ import java.util.ArrayList;
 public class Parser {
 	
 	public static void main( String[] args ) {
-		Parser parser = new Parser();
 		if ( args.length > 0 ) {
 			try {
-				APRSPacket packet = parser.parse(args[0]);
+				APRSPacket packet = Parser.parse(args[0]);
 				System.out.println("Packet parsed as a "+packet.getType());
-				System.out.println("From:  "+packet.getSourceCall());
-				System.out.println("To:  "+packet.getDestinationCall());
-				System.out.println("Via: "+packet.getDigiString());
-				System.out.println("DTI: "+packet.getDti());
-				System.out.println("Valid?  "+packet.isAprs());
-				if ( packet.isAprs() ) {
-					System.out.println(packet.getAprsInformation().toString());
+				System.out.println("From:	"+packet.getSourceCall());
+				System.out.println("To:	"+packet.getDestinationCall());
+				System.out.println("Via:	"+packet.getDigiString());
+				System.out.println("DTI:	"+packet.getDti());
+				System.out.println("Valid:	"+packet.isAprs());
+				InformationField data = packet.getAprsInformation();
+				System.out.println("Data:	" + data);
+				if ( packet.isAprs() && data != null) {
+					System.out.println("    Type:	" + data.getClass().getName());
+					System.out.println("    Messaging:	" + data.canMessage);
+					System.out.println("    Comment:	" + data.getComment());
+					System.out.println("    Extension:	" + data.getExtension());
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
@@ -58,13 +62,13 @@ public class Parser {
 		}
 	}
     
-    public APRSPacket parsePacket(byte[] rawPacket) {
+    public static APRSPacket parsePacket(byte[] rawPacket) {
         //if ( packet.getDti() == '!' || packet.getDti() == '=' ) {
             // !3449.94N/08448.56W_203/000g000t079P133h85b10149OD1
         return new APRSPacket(null, null, null, null);
     }
     
-    public APRSPacket parse(String packet) throws Exception {
+    public static APRSPacket parse(String packet) throws Exception {
         int cs = packet.indexOf('>');
         String source = packet.substring(0,cs).toUpperCase();
         int ms = packet.indexOf(':');
@@ -80,18 +84,16 @@ public class Parser {
 
     public static APRSPacket parseAX25(byte[] packet) throws Exception {
 	    int pos = 0;
-	    Digipeater destcall = new Digipeater(packet, pos);
-	    destcall.setUsed(false);
-	    String dest = destcall.toString();
+	    String dest = new Callsign(packet, pos).toString();
 	    pos += 7;
-	    String source = new Digipeater(packet, pos).toString();
+	    String source = new Callsign(packet, pos).toString();
 	    pos += 7;
 	    ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
-	    do {
+	    while ((packet[pos - 1] & 1) == 0) {
 		    Digipeater d =new Digipeater(packet, pos);
 		    digis.add(d);
 		    pos += 7;
-	    } while ((packet[pos - 1] & 1) == 0);
+	    }
 	    if (packet[pos] != 0x03 || packet[pos+1] != -16 /*0xf0*/)
 		    throw new IllegalArgumentException("control + pid must be 0x03 0xF0!");
 	    pos += 2;
@@ -174,6 +176,8 @@ public class Parser {
     			break;
 
         }
+	if (infoField == null)
+		infoField = new UnsupportedInfoField(bodyBytes);
         APRSPacket returnPacket = new APRSPacket(source,dest,digis,infoField);
         returnPacket.setType(type);
         returnPacket.setHasFault(hasFault);
