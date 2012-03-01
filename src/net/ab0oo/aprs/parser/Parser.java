@@ -118,6 +118,7 @@ public class Parser {
         		if ( body.startsWith("$ULTW") ) {
         			// Ultimeter II weather packet
         		} else {
+        			type = APRSTypes.T_POSITION;
         			infoField = new PositionPacket(bodyBytes,dest);
         		}
     			break;
@@ -127,7 +128,7 @@ public class Parser {
     		case ';':
     			if (bodyBytes.length > 29) {
     				//System.out.println("Parsing an OBJECT");
-					type = APRSTypes.T_OBJECT;
+				type = APRSTypes.T_OBJECT;
     				infoField = new ObjectPacket(bodyBytes);
     			} else {
     				System.err.println("Object packet body too short for valid object");
