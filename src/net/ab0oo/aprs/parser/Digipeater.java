@@ -80,6 +80,7 @@ public class Digipeater extends Callsign implements Serializable {
         return super.toString() + ( isUsed() ? "*":"");
     }
 
+    @Override
     public byte[] toAX25() throws IllegalArgumentException {
         byte[] ax25 = super.toAX25();
 	ax25[6] |= (isUsed()?0x80:0);

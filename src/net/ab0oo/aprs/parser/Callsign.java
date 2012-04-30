@@ -21,7 +21,6 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * 
@@ -83,6 +82,7 @@ public class Callsign implements Serializable {
         this.ssid = ssid;
     }
 
+    @Override
     public String toString() {
         return callsign + (ssid == "" ? "" : "-" + ssid);
     }
