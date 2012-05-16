@@ -19,9 +19,16 @@ Usage instructions
 Just run `ant` from the project directory. The compiled library is located as
 `bin/javAPRSlib.jar`.
 
-### When using Eclipse
+### When using `Eclipse`
 
-To be done.
+It's highly recommended that you use the m2e Maven plugin for eclipse.  Importing this
+library as a maven project will create the appropriate build structure.  The compiled library
+is available at target/javAPRSlib-0.0.1-SNAPSHOT.jar (obviously, the version number is subject
+to change).
+
+### When using `Maven`
+Executing 'mvn compile' will build the library, executing 'mvn package' will create a JAR package.
+All compiled code winds up in the "target" directory.
 
 ### Examples
 
