@@ -79,7 +79,19 @@ public class APRSPacket implements Serializable {
     public String getIgate() {
     	for ( int i=0; i<digipeaters.size(); i++) {
     		Digipeater d = digipeaters.get(i);
+    		// I'm not sure I'm treating these correctly (poor understanding of the
+    		// Q-constructs on my part).  For now, I'm saying that call sign AFTER a 
+    		// q-construct is the I-gate.
     		if ( d.getCallsign().equalsIgnoreCase("qar") && i<digipeaters.size()-1 ) {
+    			return digipeaters.get(i+1).toString();
+    		}
+    		if ( d.getCallsign().equalsIgnoreCase("qas") && i<digipeaters.size()-1 ) {
+    			return digipeaters.get(i+1).toString();
+    		}
+    		if ( d.getCallsign().equalsIgnoreCase("qac") && i<digipeaters.size()-1 ) {
+    			return digipeaters.get(i+1).toString();
+    		}
+    		if ( d.getCallsign().equalsIgnoreCase("qao") && i<digipeaters.size()-1 ) {
     			return digipeaters.get(i+1).toString();
     		}
     	}

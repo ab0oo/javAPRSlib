@@ -56,6 +56,10 @@ public class Utilities {
 		return (int)Math.round(knots * 1.15077945);
 	}
 	
+	public static int kntsToKmh(int knots) {
+		return (int)Math.round(knots*1.852);
+	}
+	
 	public static double metersToMiles(double meters) {
 		return meters * 0.000621371192;
 	}
