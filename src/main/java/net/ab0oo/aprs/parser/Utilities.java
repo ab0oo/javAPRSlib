@@ -65,7 +65,7 @@ public class Utilities {
 	}
 	
 	public static double metersToKilometers(double meters) {
-		return meters * 1000.0;
+		return meters / 1000.0;
 	}
 	
 	public static String degressToCardinal(double degrees) {
