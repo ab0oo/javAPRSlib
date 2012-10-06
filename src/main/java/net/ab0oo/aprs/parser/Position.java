@@ -36,7 +36,9 @@ public class Position implements java.io.Serializable {
 	private Date timestamp;
 	private char symbolTable, symbolCode;
 
-	public Position() {}
+	public Position() {
+	    timestamp = new Date();
+	}
 	
 	public Position(double lat, double lon, int posAmb, char st, char sc) {
 		this.latitude = Math.round(lat * 100000) * 0.00001D;
@@ -116,7 +118,7 @@ public class Position implements java.io.Serializable {
 	 * @return the timestamp
 	 */
 	public Date getTimestamp() {
-		return timestamp;
+		return this.timestamp;
 	}
 
 	/**
