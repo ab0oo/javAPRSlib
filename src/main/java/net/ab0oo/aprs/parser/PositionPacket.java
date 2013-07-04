@@ -159,6 +159,8 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 
 	@Override
 	public String toString() {
+		if (rawBytes != null)
+			return new String(rawBytes);
 		return (canMessage ? "=" : "!") + position + comment;
 	}
 	/**

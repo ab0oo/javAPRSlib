@@ -12,6 +12,7 @@ public class ObjectPacket extends InformationField implements Serializable {
 	 * @return new ObjectPacket instance with the parsed data
 	 */
 	public ObjectPacket(byte[] msgBody) throws Exception {
+		super(msgBody);
 		this.objectName = new String(msgBody, 1, 9).trim();
 		this.live = (msgBody[10] == '*');
 		int cursor = 18;
@@ -83,6 +84,8 @@ public class ObjectPacket extends InformationField implements Serializable {
 
 	@Override
 	public String toString() {
+		if (rawBytes != null)
+			return new String(rawBytes);
 		return ")"+this.objectName+( live ? "!":"_")+position.toString()+comment;
 	}
 }

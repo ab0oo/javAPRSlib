@@ -34,7 +34,7 @@ import java.io.Serializable;
 public abstract class InformationField implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private char dataTypeIdentifier;
-    private byte[] rawBytes;
+    protected byte[] rawBytes;
     protected APRSTypes type;
 	protected boolean hasFault = false;
     protected boolean canMessage = false;
@@ -48,8 +48,7 @@ public abstract class InformationField implements Serializable {
         if ( rawBytes.length < 1 ) {
             System.err.println("Parse error:  zero length information field");
         }
-        this.rawBytes = new byte[rawBytes.length];
-        System.arraycopy(rawBytes, 0, this.rawBytes, 0, rawBytes.length);
+        this.rawBytes = rawBytes;
         this.dataTypeIdentifier = (char)rawBytes[0];
         switch ( dataTypeIdentifier ) {
         	case '@' :
