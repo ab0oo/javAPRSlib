@@ -61,10 +61,12 @@ public class MessagePacket extends InformationField implements Serializable {
         if ( lcMsg.startsWith("ack") ) {
         	isAck = true;
         	this.messageNumber = messageBody.substring(3,messageBody.length());
+		this.messageBody = messageBody.substring(0, 3);
         }
         if ( lcMsg.startsWith("rej") ) {
         	isRej = true;
         	this.messageNumber = messageBody.substring(3,messageBody.length());
+		this.messageBody = messageBody.substring(0, 3);
         }
     }
     
