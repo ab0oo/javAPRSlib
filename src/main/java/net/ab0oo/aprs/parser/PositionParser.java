@@ -243,19 +243,19 @@ public class PositionParser {
         int posAmbiguity = 0;
         if (destcall2[5] == '_') {
             destcall2[5] = '5';
-            posAmbiguity = 1;
+            posAmbiguity = 4;
         }
         if (destcall2[4] == '_') {
             destcall2[4] = '5';
-            posAmbiguity = 2;
+            posAmbiguity = 3;
         }
         if (destcall2[3] == '_') {
             destcall2[3] = '5';
-            posAmbiguity = 3;
+            posAmbiguity = 2;
         }
         if (destcall2[2] == '_') {
             destcall2[2] = '3';
-            posAmbiguity = 4;
+            posAmbiguity = 1;
         }
         if (destcall2[1] == '_' || destcall2[0] == '_') {
             throw new UnparsablePositionException("bad pos-ambiguity on destcall");
