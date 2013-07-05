@@ -147,9 +147,9 @@ public class Parser {
     			type = APRSTypes.T_QUERY;
     			break;
     		case ')':
+			type = APRSTypes.T_ITEM;
     			if (bodyBytes.length > 18) {
-    				//System.out.println("Parsing an ITEM");
-    				//parseItem(bodyBytes);
+				infoField = new ItemPacket(bodyBytes);
     			} else {
     				hasFault = true; // too short
     			}

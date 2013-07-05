@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 public class ObjectPacket extends InformationField implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String objectName;
-	private boolean live = true;
-	private Position position;
+	protected String objectName;
+	protected boolean live = true;
+	protected Position position;
+
+	protected ObjectPacket() {
+	}
 
 	/** parse an APRS object message
 	 * @return new ObjectPacket instance with the parsed data
