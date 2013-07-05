@@ -56,6 +56,8 @@ public class Parser {
 					System.out.println("    Extension:	" + data.getExtension());
 					if (data instanceof PositionPacket)
 						System.out.println("    Position:       " + ((PositionPacket)data).getPosition());
+					if (data instanceof ObjectPacket)
+						System.out.println("    Position:       " + ((ObjectPacket)data).getPosition());
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
