@@ -89,6 +89,6 @@ public class ObjectPacket extends InformationField implements Serializable {
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);
-		return ")"+this.objectName+( live ? "!":"_")+position.toString()+comment;
+		return String.format(";%-9s%c%s%s", this.objectName, live ? '!':'_', position.toString(), comment);
 	}
 }
