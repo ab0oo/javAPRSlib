@@ -54,6 +54,8 @@ public class Parser {
 					System.out.println("    Messaging:	" + data.canMessage);
 					System.out.println("    Comment:	" + data.getComment());
 					System.out.println("    Extension:	" + data.getExtension());
+					if (data instanceof PositionPacket)
+						System.out.println("    Position:       " + ((PositionPacket)data).getPosition());
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
