@@ -39,6 +39,8 @@ public class APRSPacket implements Serializable {
     private InformationField aprsInformation;
     protected boolean hasFault;
     private APRSTypes type;
+
+    static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
     public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, InformationField info) {
         this.sourceCall=source.toUpperCase();
@@ -121,6 +123,19 @@ public class APRSPacket implements Serializable {
     
     public void setDigipeaters(ArrayList<Digipeater> newDigis) {
 	    digipeaters = newDigis;
+    }
+
+    /**
+     * @return the last digipeater in the path marked as used (with '*') or null.
+     */
+    public String getLastUsedDigi() {
+        for (int i=digipeaters.size()-1; i>=0; i--) {
+            Digipeater d = digipeaters.get(i);
+	    String call = d.getCallsign();
+            if (d.isUsed() && !call.matches(REGEX_PATH_ALIASES))
+                return call;
+        }
+        return null;
     }
 
     public String getDigiString() {
