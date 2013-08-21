@@ -55,7 +55,7 @@ public class Digipeater extends Callsign implements Serializable {
 	// however, only the last used digi should have a '*'
 	if ( digiTemp.length >= first ) {
 	    for (int i=first; i<digiTemp.length; i++) {
-		digis.add(new Digipeater(digiTemp[i]));
+		digis.add(new Digipeater(digiTemp[i].trim()));
 	    }
 	}
 	return digis;
