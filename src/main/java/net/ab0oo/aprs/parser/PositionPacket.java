@@ -28,6 +28,7 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 	private static final long serialVersionUID = 1L;
 	private Position position;
 	private String positionSource;
+	private boolean compressedFormat;
 
 	public PositionPacket(byte[] msgBody, String destinationField)
 			throws Exception {
@@ -111,16 +112,26 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 		if (cursor > 0 && cursor < msgBody.length) {
 			comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8");
 		}
+		compressedFormat = false;
 	}
 	public PositionPacket(Position position, String comment) {
 		this.position = position;
 		this.type = APRSTypes.T_POSITION;
 		this.comment = comment;
+		compressedFormat = false;
 	}
 
 	public PositionPacket(Position position, String comment, boolean msgCapable) {
 		this(position, comment);
 		canMessage = msgCapable;
+	}
+
+	public void setCompressedFormat(boolean val) {
+		compressedFormat = val;
+	}
+
+	public boolean getCompressedFormat() {
+		return compressedFormat;
 	}
 
 	private boolean validSymTableCompressed(char c) {
@@ -161,8 +172,11 @@ public class PositionPacket extends InformationField implements java.io.Serializ
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);
+		if (compressedFormat)
+			return (canMessage ? "=" : "!") + position.toCompressedString() + comment;
 		return (canMessage ? "=" : "!") + position + comment;
 	}
+
 	/**
 	 * @return the positionSource
 	 */

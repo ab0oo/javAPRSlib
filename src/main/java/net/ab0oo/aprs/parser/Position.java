@@ -35,6 +35,7 @@ public class Position implements java.io.Serializable {
 	private Integer positionAmbiguity;
 	private Date timestamp;
 	private char symbolTable, symbolCode;
+	private String csTField = " sT";
 
 	public Position() {
 	    timestamp = new Date();
@@ -193,7 +194,18 @@ public class Position implements java.io.Serializable {
 	public String toDecimalString() {
 		return latitude+", "+longitude;
 	}
-	
+
+	public void setCsTField(String val) {
+		if(val == null || val == "") {
+			val = " sT";
+		}
+		csTField = val;
+	}
+
+	public String getCsTField() {
+		return csTField;
+	}
+
 	public String toCompressedString() {
 		long latbase = Math.round(380926 * (90-this.latitude));
 		long latchar1 = latbase / (91*91*91)+33;
@@ -211,7 +223,7 @@ public class Position implements java.io.Serializable {
 		int lonchar4 = (int)(lonbase % 91)+33;
 		
 		return ""+symbolTable+(char)latchar1+(char)latchar2+(char)latchar3+(char)latchar4+
-				""+(char)lonchar1+(char)lonchar2+(char)lonchar3+(char)lonchar4+symbolCode+" sT";
+				""+(char)lonchar1+(char)lonchar2+(char)lonchar3+(char)lonchar4+symbolCode+csTField;
 	}
 
 	public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
