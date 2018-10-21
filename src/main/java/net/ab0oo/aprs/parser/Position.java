@@ -21,6 +21,7 @@
 package net.ab0oo.aprs.parser;
 
 import java.util.Date;
+import java.util.Locale;
 /**
  * 
  * @author johng
@@ -171,18 +172,18 @@ public class Position implements java.io.Serializable {
 			case 1: // "dd  .  N"
 				ambiguousFrac = "  .  "; break;
 			case 2: // "ddm .  N"
-				ambiguousFrac = String.format("%d .  ", min/10); break;
+				ambiguousFrac = String.format((Locale)null, "%d .  ", min/10); break;
 			case 3: // "ddmm.  N"
-				ambiguousFrac = String.format("%02d.  ", min); break;
+				ambiguousFrac = String.format((Locale)null, "%02d.  ", min); break;
 			case 4: // "ddmm.f N"
-				ambiguousFrac = String.format("%02d.%d ", min, minFrac/10); break;
+				ambiguousFrac = String.format((Locale)null, "%02d.%d ", min, minFrac/10); break;
 			default: // "ddmm.ffN"
-				ambiguousFrac = String.format("%02d.%02d", min, minFrac); break;
+				ambiguousFrac = String.format((Locale)null, "%02d.%02d", min, minFrac); break;
 			}
 			if ( isLatitude ) {
-				return String.format("%02d%s%s", deg, ambiguousFrac, ( negative ? "S" : "N"));
+				return String.format((Locale)null, "%02d%s%s", deg, ambiguousFrac, ( negative ? "S" : "N"));
 			} else {
-				return String.format("%03d%s%s", deg, ambiguousFrac, ( negative ? "W" : "E"));
+				return String.format((Locale)null, "%03d%s%s", deg, ambiguousFrac, ( negative ? "W" : "E"));
 			}
 	}
 	
