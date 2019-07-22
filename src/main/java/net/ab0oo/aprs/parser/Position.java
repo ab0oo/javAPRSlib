@@ -244,7 +244,7 @@ public class Position implements java.io.Serializable {
 		double lat1 = this.getLatitude();
 		double lat2 = position2.getLatitude();
 		double lng1 = this.getLongitude();
-		double lng2 = position2.getLatitude();
+		double lng2 = position2.getLongitude();
 		return distFrom(lat1,lng1,lat2,lng2);
 	}
 	
