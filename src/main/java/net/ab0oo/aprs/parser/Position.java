@@ -248,6 +248,29 @@ public class Position implements java.io.Serializable {
 		return distFrom(lat1,lng1,lat2,lng2);
 	}
 	
+	/**
+	 * Returns Azimuth between two points as measured clockwise from North
+	 * and vary from 0° to 360°.
+	 * <p>
+	 * This function returns the initial bearing (sometimes referred to as forward azimuth)
+	 * which if followed in a straight line along a great-circle arc will take you from the
+	 * start point to the end point.
+	 * </p>
+	 * @param position2 end position
+	 * @return bearing in degrees
+	 */
+	public float direction(Position position2) {
+		double Lat1 = Math.toRadians(position2.getLatitude());
+		double Lon1 = position2.getLongitude();
+		double Lat2 = Math.toRadians(getLatitude());
+		double Lon2 = getLongitude();
+		double dLon = Math.toRadians(Lon2 - Lon1);
+		double y = Math.sin(dLon) * Math.cos(Lat2);
+		double x = Math.cos(Lat1) * Math.sin(Lat2) - Math.sin(Lat1) *
+			Math.cos(Lat2) * Math.cos(dLon);
+		return (float) ((Math.toDegrees(Math.atan2(y, x)) + 360) % 360);
+	}
+
 	public static void main(String[] args) {
 		Position pos = new Position();
 		pos.setLatitude(34.12558);
