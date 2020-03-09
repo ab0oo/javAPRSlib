@@ -31,12 +31,14 @@ public class MessagePacket extends InformationField {
     public MessagePacket( byte[] bodyBytes, String destCall ) {
         super(bodyBytes);
         String message = new String(bodyBytes);
+        /*
         if (destCall.toUpperCase().equals("BEACON")) {
         	this.messageNumber="";
         	this.messageBody = message.substring(11);
         	this.targetCallsign = "BEACON";
         	return;
         }
+        */
         if ( message.length() < 2) {
             this.hasFault = true;
             return;
