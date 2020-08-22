@@ -50,13 +50,14 @@ public class Digipeater extends Callsign implements Serializable {
     public static ArrayList<Digipeater> parseList(String digiList, boolean includeFirst) {
 	String[] digiTemp = digiList.split(",");
 	ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
-	int first = includeFirst ? 0 : 1;
+	boolean includeNext = includeFirst;
 	// for now, '*' is set for all digis with used bit.
 	// however, only the last used digi should have a '*'
-	if ( digiTemp.length >= first ) {
-	    for (int i=first; i<digiTemp.length; i++) {
-		digis.add(new Digipeater(digiTemp[i].trim()));
-	    }
+	for (String digi : digiTemp) {
+		String digiTrim = digi.trim();
+		if (digiTrim.length() > 0 && includeNext)
+			digis.add(new Digipeater(digiTrim));
+		includeNext = true;
 	}
 	return digis;
     }
