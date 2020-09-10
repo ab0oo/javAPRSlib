@@ -2,7 +2,6 @@ package net.ab0oo.aprs.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.DisplayName;
@@ -100,7 +99,6 @@ public class CallsignTest {
 	public class GivenLowercaseCallsign {
 		final String callsign = "ab1cde";
 
-		@Disabled
 		@Nested
 		@DisplayName("When instantiated as a class")
 		public class WhenInstantiated {
@@ -151,7 +149,6 @@ public class CallsignTest {
 					new Callsign(callsign).toAX25(), 0);
 			}
 
-			@Disabled
 			@Test
 			@DisplayName("Then it should return the proper callsign")
 			public void thenReturnCallsign() {
@@ -164,7 +161,6 @@ public class CallsignTest {
 				assertEquals("", object.getSsid());
 			}
 
-			@Disabled
 			@Test
 			@DisplayName("Then it should return correct AX25 data")
 			public void thenReturnAX25() {
