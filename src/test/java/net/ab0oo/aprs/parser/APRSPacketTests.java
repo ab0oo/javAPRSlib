@@ -4,13 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-//import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-//import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Disabled;
-//import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.DisplayName;
@@ -18,14 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 
 @DisplayName("APRS Packet Tests")
 public class APRSPacketTests {
-	@BeforeEach
-	public void setUp() {
-	}
-
-	@AfterEach
-	public void tearDown() {
-	}
-
 	@Nested
 	@DisplayName("Given an empty APRS packet")
 	public class GivenEmptyAPRSPacket {
