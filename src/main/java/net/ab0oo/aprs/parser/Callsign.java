@@ -65,7 +65,7 @@ public class Callsign implements Serializable {
      * @param callsign the callsign to set
      */
     public void setCallsign(String callsign) {
-        this.callsign = callsign;
+        this.callsign = callsign.toUpperCase();
     }
 
     /**
