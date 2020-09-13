@@ -24,6 +24,7 @@
  */
 package net.ab0oo.aprs.parser;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -37,8 +38,17 @@ public class PositionParser {
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
         // System.out.print("UN: ");
 
+        Date date = new Date();
         if (msgBody[0] == '/' || msgBody[0] == '@') {
             // With a prepended timestamp, jump over it.
+            if (msgBody[cursor+6] == 'z') {
+                int day    = (msgBody[cursor+0] - '0') * 10 + msgBody[cursor+1] - '0';
+                int hour   = (msgBody[cursor+2] - '0') * 10 + msgBody[cursor+3] - '0';
+                int minute = (msgBody[cursor+4] - '0') * 10 + msgBody[cursor+5] - '0';
+                date.setDate(day);
+                date.setHours(hour);
+                date.setMinutes(minute);
+            }
             cursor += 7;
         }
         if (msgBody.length < cursor + 19) {
@@ -119,7 +129,9 @@ public class PositionParser {
                 longitude = 0.0F - longitude;
             else if (lngh != 'e' && lngh != 'E')
                 throw new Exception("Bad longitude sign character");
-            return new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+            Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+            position.setTimestamp(date);
+            return position;
         } catch (Exception e) {
             throw new Exception(e);
         }

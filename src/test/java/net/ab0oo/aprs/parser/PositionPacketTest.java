@@ -61,7 +61,6 @@ class PositionPacketTest {
 				assertEquals(0, pos.getPositionAmbiguity());
 			}
 
-			@Disabled("Time is being returned in local time, is this correct?")
 			@Test
 			@DisplayName("Then it should return the proper timestamp")
 			void thenReturnTimestamp() {
