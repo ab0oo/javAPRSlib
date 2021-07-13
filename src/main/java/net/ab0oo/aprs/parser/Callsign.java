@@ -34,7 +34,7 @@ public class Callsign implements Serializable {
 
 	public Callsign(String call) {
 		String[] callssid = call.split("-");
-		this.callsign = callssid[0];
+		this.callsign = callssid[0].toUpperCase();
 		if (callssid.length > 1) {
 			this.ssid = callssid[1];
 		} else {
@@ -65,7 +65,7 @@ public class Callsign implements Serializable {
      * @param callsign the callsign to set
      */
     public void setCallsign(String callsign) {
-        this.callsign = callsign;
+        this.callsign = callsign.toUpperCase();
     }
 
     /**
