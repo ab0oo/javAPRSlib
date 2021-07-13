@@ -237,7 +237,7 @@ public class Position implements java.io.Serializable {
 		    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 		    double dist = earthRadius * c;
 
-		    return new Float(dist).floatValue();
+		    return (float) dist;
     }
 	
 	public float distance(Position position2) {

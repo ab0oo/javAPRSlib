@@ -1,8 +1,6 @@
 package net.ab0oo.aprs.parser;
 
-import java.io.Serializable;
-
-public class ItemPacket extends ObjectPacket implements Serializable {
+public class ItemPacket extends ObjectPacket {
 	private static final long serialVersionUID = 1L;
 	private boolean live = true;
 

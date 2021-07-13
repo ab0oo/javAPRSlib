@@ -1,8 +1,6 @@
 package net.ab0oo.aprs.parser;
 
-import java.io.Serializable;
-
-public class ObjectPacket extends InformationField implements Serializable {
+public class ObjectPacket extends InformationField {
 	private static final long serialVersionUID = 1L;
 	protected String objectName;
 	protected boolean live = true;

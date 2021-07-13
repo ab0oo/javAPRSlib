@@ -20,7 +20,6 @@
  */
 package net.ab0oo.aprs.parser;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -29,7 +28,7 @@ import java.util.ArrayList;
  * This class represents a single digipeater in a TNC2-format VIA string.
  * 
  */
-public class Digipeater extends Callsign implements Serializable {
+public class Digipeater extends Callsign {
 	private static final long serialVersionUID = 1L;
     private boolean used;
     
