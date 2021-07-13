@@ -24,7 +24,7 @@
 package net.ab0oo.aprs.parser;
 
 
-public class PositionPacket extends InformationField implements java.io.Serializable {
+public class PositionPacket extends InformationField {
 	private static final long serialVersionUID = 1L;
 	private Position position;
 	private String positionSource;
