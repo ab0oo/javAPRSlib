@@ -23,6 +23,7 @@ package net.ab0oo.aprs.parser;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 /**
  * 
  * @author johng
@@ -31,6 +32,7 @@ import java.util.ArrayList;
  */
 public class APRSPacket implements Serializable {
     private static final long serialVersionUID = 1L;
+	private Date receivedTimestamp = null;
     private String originalString;
 	private String sourceCall;
     private String destinationCall;
@@ -42,7 +44,8 @@ public class APRSPacket implements Serializable {
 
     static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
-    public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, InformationField info) {
+    public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, byte[] body) {
+		receivedTimestamp = new Date(System.currentTimeMillis());
         this.sourceCall=source.toUpperCase();
         this.destinationCall=destination.toUpperCase();
         if ( digipeaters == null ) {
@@ -52,12 +55,7 @@ public class APRSPacket implements Serializable {
         } else {
         	this.digipeaters = digipeaters;
         }
-        this.aprsInformation = info;
-        if ( info != null ) {
-            this.dti = aprsInformation.getDateTypeIdentifier();
-        } else {
-            this.dti= (char)' ';
-        }
+        this.aprsInformation = new InformationField(body);
     }
     
     public static final String getBaseCall(String callsign) {
@@ -140,8 +138,13 @@ public class APRSPacket implements Serializable {
 
     public String getDigiString() {
         StringBuilder sb = new StringBuilder();
+		boolean first=true;
         for ( Digipeater digi : digipeaters ) {
-            sb.append(","+digi.toString());
+			if ( first ) {
+            	sb.append(digi.toString());
+				first=false;
+			} else 
+				sb.append(","+digi.toString());
         }
         return sb.toString();
     }
@@ -167,7 +170,8 @@ public class APRSPacket implements Serializable {
 	 * @return the hasFault
 	 */
 	public boolean hasFault() {
-		return hasFault;
+		this.hasFault = false;
+		return ( this.hasFault | aprsInformation.hasFault() );
 	}
 
 	/**
@@ -199,9 +203,17 @@ public class APRSPacket implements Serializable {
 		this.originalString = originalString;
 	}
 
+		public void setInfoField(InformationField infoField) {
+		this.aprsInformation = infoField;
+	}
+
 	@Override
 	public String toString() {
-		return sourceCall+">"+destinationCall+getDigiString()+":"+aprsInformation.toString();
+		StringBuffer sb = new StringBuffer("-------------------------------\n");
+		sb.append(sourceCall+">"+destinationCall+"\n");
+		sb.append("Via Digis: "+getDigiString()+"\n");
+		sb.append(aprsInformation.toString());
+		return sb.toString();
 	}
 
 	public byte[] toAX25Frame() throws IllegalArgumentException {
@@ -229,6 +241,10 @@ public class APRSPacket implements Serializable {
 		byte[] content = aprsInformation.getRawBytes();
 		baos.write(content, 0, content.length);
 		return baos.toByteArray();
+	}
+
+	public Date getRecevedTimestamp() {
+		return this.receivedTimestamp;
 	}
 }
 

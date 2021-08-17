@@ -54,10 +54,10 @@ public class Parser {
 					System.out.println("    Messaging:	" + data.canMessage);
 					System.out.println("    Comment:	" + data.getComment());
 					System.out.println("    Extension:	" + data.getExtension());
-					if (data instanceof PositionPacket)
-						System.out.println("    Position:       " + ((PositionPacket)data).getPosition());
-					if (data instanceof ObjectPacket)
-						System.out.println("    Position:       " + ((ObjectPacket)data).getPosition());
+					for ( APRSData d: packet.getAprsInformation().getAprsData() ) {
+						System.out.println("    Data:  "+d.toString());
+
+					}
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
@@ -105,89 +105,114 @@ public class Parser {
 	    return parseBody(source, dest, digis, body);
     }
 
+	/**
+	 * 
+	 * @param source
+	 * @param dest
+	 * @param digis
+	 * @param body
+	 * @return
+	 * @throws Exception
+	 * 
+	 * This is the core packet parser.  It parses the entire "body" of the APRS Packet,
+	 * starting with the Data Type Indicator in position 0.
+	 */
+
     public static APRSPacket parseBody(String source, String dest, ArrayList<Digipeater> digis, String body) throws Exception {
-        byte[] bodyBytes = body.getBytes();
-        byte dti = bodyBytes[0];
-        InformationField infoField = null;
-        APRSTypes type = APRSTypes.T_UNSPECIFIED;
-        boolean hasFault = false;
+		APRSPacket packet = new APRSPacket(source,dest,digis, body.getBytes());
+        byte[] msgBody = body.getBytes();
+		InformationField infoField = packet.getAprsInformation();
+        byte dti = msgBody[0];
+		int cursor = 0;
+        packet.setType(APRSTypes.T_UNSPECIFIED);
+        packet.hasFault = false;
         switch ( dti ) {
-        	case '!':
-        	case '=':
         	case '/':
         	case '@':
+				// These have timestamps, so we need to parse those, advance the cursor, and then look for
+				// the position data
+				TimeField timeField = TimeField.parse(msgBody, cursor);
+				infoField.addAprsData(timeField);
+				cursor = timeField.getLastCursorPosition();
+				PositionField pf = new PositionField(msgBody, dest, cursor+1);
+				infoField.addAprsData(pf);
+				cursor = pf.getLastCursorPosition();
+				if ( pf.getPosition().getSymbolCode() == '_' ) {
+					// this is a weather packet, so pull the weather info from it
+					WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor);
+					infoField.addAprsData(wf);
+					cursor = wf.getLastCursorPosition();
+				}
+				break;
+	    	case '!':
+        	case '=':
         	case '`':
         	case '\'':
         	case '$':
         		if ( body.startsWith("$ULTW") ) {
         			// Ultimeter II weather packet
         		} else {
-        			type = APRSTypes.T_POSITION;
-        			infoField = new PositionPacket(bodyBytes,dest);
+					// these are non-timestamped packets with position.
+        			packet.setType( APRSTypes.T_POSITION );
+        			infoField.addAprsData( new PositionField(msgBody,dest, cursor+1) );
         		}
     			break;
         	case ':':
-        		infoField = new MessagePacket(bodyBytes,dest);
+        		infoField = new MessagePacket(msgBody,dest);
         		break;
     		case ';':
-    			if (bodyBytes.length > 29) {
+    			if (msgBody.length > 29) {
     				//System.out.println("Parsing an OBJECT");
-				type = APRSTypes.T_OBJECT;
-    				infoField = new ObjectPacket(bodyBytes);
+					packet.setType(APRSTypes.T_OBJECT);
+    				infoField = new ObjectPacket(msgBody);
     			} else {
     				System.err.println("Object packet body too short for valid object");
-    				hasFault = true; // too short for an object
+    				packet.hasFault = true; // too short for an object
     			}
     			break;
     		case '>':
-    			type = APRSTypes.T_STATUS;
+				packet.setType(APRSTypes.T_STATUS);
     			break;
     		case '<':
-    			type = APRSTypes.T_STATCAPA;
+				packet.setType(APRSTypes.T_STATCAPA);
     			break;
     		case '?':
-    			type = APRSTypes.T_QUERY;
+				packet.setType(APRSTypes.T_QUERY);
     			break;
     		case ')':
-			type = APRSTypes.T_ITEM;
-    			if (bodyBytes.length > 18) {
-				infoField = new ItemPacket(bodyBytes);
+				packet.setType(APRSTypes.T_ITEM);
+    			if (msgBody.length > 18) {
+				infoField = new ItemPacket(msgBody);
     			} else {
-    				hasFault = true; // too short
+    				packet.hasFault = true; // too short
     			}
     			break;
     		case 'T':
-    			if (bodyBytes.length > 18) {
+    			if (msgBody.length > 18) {
     				//System.out.println("Parsing TELEMETRY");
     				//parseTelem(bodyBytes);
     			} else {
-    				hasFault = true; // too short
+    				packet.hasFault = true; // too short
     			}
     			break;
     		case '#': // Peet Bros U-II Weather Station
     		case '*': // Peet Bros U-II Weather Station
     		case '_': // Weather report without position
-    			type = APRSTypes.T_WX;
+    			packet.setType(APRSTypes.T_WX);
     			break;
     		case '{':
-    			type = APRSTypes.T_USERDEF;
+				packet.setType(APRSTypes.T_USERDEF);
     			break;
     		case '}': // 3rd-party
-    			type = APRSTypes.T_THIRDPARTY;
+				packet.setType(APRSTypes.T_THIRDPARTY);
     			break;
 
     		default:
-    			hasFault = true; // UNKNOWN!
+    			packet.hasFault = true; // UNKNOWN!
     			break;
 
         }
-	if (infoField == null)
-		infoField = new UnsupportedInfoField(bodyBytes);
-        APRSPacket returnPacket = new APRSPacket(source,dest,digis,infoField);
-        returnPacket.setType(type);
-        returnPacket.setHasFault(hasFault);
-        return returnPacket;
-        
+		return packet;
     }
     
 }

@@ -21,6 +21,9 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * 
@@ -31,13 +34,14 @@ import java.io.Serializable;
  *  and Items, Weather, Telemetry, Messages, Bulletins, Annoucements, Queries, Responses, Statuses,
  *  and User-defined Others.
  */
-public abstract class InformationField implements Serializable {
+public class InformationField implements Serializable {
 	private static final long serialVersionUID = 1L;
+    private final long createTimestamp = System.currentTimeMillis();
 	private char dataTypeIdentifier;
     protected byte[] rawBytes;
-    protected APRSTypes type;
 	protected boolean hasFault = false;
     protected boolean canMessage = false;
+    Set<APRSData> dataFields;
     DataExtension extension = null;
 	protected String comment = "";
 
@@ -50,11 +54,13 @@ public abstract class InformationField implements Serializable {
         }
         this.rawBytes = rawBytes;
         this.dataTypeIdentifier = (char)rawBytes[0];
+        this.dataFields = Collections.synchronizedSortedSet(new TreeSet<>());
         switch ( dataTypeIdentifier ) {
-        	case '@' :
+       	case '@' :
         	case '=' :
         	case '\'':
         	case ':' : this.canMessage = true;
+            default: this.canMessage = false;
         }
     }
     
@@ -70,10 +76,10 @@ public abstract class InformationField implements Serializable {
      * @return the rawBytes
      */
     public byte[] getRawBytes() {
-	if (rawBytes != null)
-		return rawBytes;
-	else
-		return toString().getBytes();
+	    if (rawBytes != null)
+		    return rawBytes;
+	    else
+		    return toString().getBytes();
     }
     
     public byte[] getBytes(int start, int end) {
@@ -91,13 +97,27 @@ public abstract class InformationField implements Serializable {
     
     @Override
     public String toString() {
-        return new String(rawBytes);
+        StringBuffer sb = new StringBuffer();
+        sb.append("Raw Bytes:\t"+new String(rawBytes)+"\n");
+        sb.append("Data Type Identifier: "+dataTypeIdentifier+"\n");
+        sb.append("Create Timestamp:\t"+ (new java.util.Date(createTimestamp)).toString()+"\n");
+        sb.append("Comment:  "+this.comment+"\n");
+        for ( APRSData df : dataFields ) {
+            sb.append("Class "+df.getClass().getName()+"\n");
+            sb.append(df.toString());
+        }
+
+        return sb.toString();
     }
 	/**
 	 * @return the hasFault
 	 */
-	public boolean isHasFault() {
-		return hasFault;
+	public boolean hasFault() {
+        boolean faultFound = this.hasFault;
+        for ( APRSData data : dataFields )  {
+            faultFound = faultFound | data.hasFault();
+        }
+		return faultFound;
 	}
 
 	/**
@@ -106,4 +126,21 @@ public abstract class InformationField implements Serializable {
 	public final DataExtension getExtension() {
 		return extension;
 	}
+
+    public final long getCreateTimestamp() {
+        return this.createTimestamp;
+    }
+
+    public void setAprsDataFields(Set<APRSData> aprsData ) {
+		this.dataFields = aprsData;
+	}
+
+	public Set<APRSData> getAprsData() {
+		return this.dataFields;
+	}
+
+	public void addAprsData(APRSData data) {
+		dataFields.add(data);
+	}
+
 }

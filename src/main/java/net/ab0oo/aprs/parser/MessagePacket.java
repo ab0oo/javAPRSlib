@@ -75,7 +75,6 @@ public class MessagePacket extends InformationField {
     	if ( messageBody.equals("ack") ) isAck = true;
     	if ( messageBody.equals("rej") ) isRej = true;
     	super.setDataTypeIdentifier(':');
-    	super.type=APRSTypes.T_MESSAGE;
     }
     
     /**
