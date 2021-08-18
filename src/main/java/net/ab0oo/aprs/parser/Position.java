@@ -21,6 +21,7 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Locale;
 /**
  * 
@@ -31,6 +32,7 @@ import java.util.Locale;
  */
 public class Position implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static DecimalFormat df = new DecimalFormat("0.00000");
 	private Double latitude = 0d, longitude = 0d;
 	private Integer altitude = -1;
 	private Integer positionAmbiguity;
@@ -57,7 +59,7 @@ public class Position implements Serializable {
 	 * @return the latitude
 	 */
 	public double getLatitude() {
-		return latitude;
+		return Double.parseDouble(df.format(latitude));
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class Position implements Serializable {
 	 * @return the longitude
 	 */
 	public double getLongitude() {
-		return longitude;
+		return Double.parseDouble(df.format(longitude));
 	}
 
 	/**
@@ -169,13 +171,13 @@ public class Position implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Latitude:\t"+this.latitude+"\n");
-		sb.append("Longitude:\t"+this.longitude+"\n");
+		sb.append("Latitude:\t"+df.format(this.latitude)+"\n");
+		sb.append("Longitude:\t"+df.format(this.longitude)+"\n");
 		return sb.toString();
 	}
 	
 	public String toDecimalString() {
-		return latitude+", "+longitude;
+		return df.format(latitude)+", "+df.format(longitude);
 	}
 
 	public void setCsTField(String val) {

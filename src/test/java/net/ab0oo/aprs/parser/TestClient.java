@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import org.junit.jupiter.api.Test;
-
 public class TestClient {
     private static final String host = "205.233.35.46";
     private static final int port = 10152;
@@ -15,7 +13,6 @@ public class TestClient {
     private BufferedReader input;
     private PrintWriter out;
 
-@Test
     public void testClient() {
         int linecount = 0;
         int badPackets = 0;

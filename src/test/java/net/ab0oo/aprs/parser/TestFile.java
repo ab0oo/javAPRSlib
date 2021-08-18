@@ -6,7 +6,7 @@ import java.io.FileReader;
 import org.junit.jupiter.api.Test;
 
 public class TestFile {
-    private static final int MAX_LINES = 1000;
+    private static final int MAX_LINES = 10;
 
     @Test
     public void testParser() {
