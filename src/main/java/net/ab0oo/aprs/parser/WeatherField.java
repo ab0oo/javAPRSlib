@@ -1,5 +1,7 @@
 package net.ab0oo.aprs.parser;
 
+import java.util.Objects;
+
 public class WeatherField extends APRSData {
     private Integer windDirection;
     private Integer windSpeed;
@@ -14,19 +16,18 @@ public class WeatherField extends APRSData {
     private Integer snowfallLast24Hours = 0;
     private Integer rawRainCounter = 0;
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("---WEATHER---\n");
-        sb.append("Wind Direction:\t"+this.windDirection+"\n");
-        sb.append("Wind Speed:\t"+this.windSpeed+"\n");
-        sb.append("Wind Gust:\t"+this.windGust+"\n");
-        sb.append("Temperature:\t"+this.temp+"\n");
-        sb.append("Rain last hour:\t"+this.rainLastHour+"\n");
-        sb.append("Rain 24 hours:\t"+this.rainLast24Hours+"\n");
-        sb.append("Rain since 00:00:\t"+this.rainSinceMidnight+"\n");
-        sb.append("Humidity:\t"+this.humidity+"\n");
-        sb.append("Pressure:\t"+this.pressure+"\n");
+        sb.append("Wind Direction:\t" + this.windDirection + "\n");
+        sb.append("Wind Speed:\t" + this.windSpeed + "\n");
+        sb.append("Wind Gust:\t" + this.windGust + "\n");
+        sb.append("Temperature:\t" + this.temp + "\n");
+        sb.append("Rain last hour:\t" + this.rainLastHour + "\n");
+        sb.append("Rain 24 hours:\t" + this.rainLast24Hours + "\n");
+        sb.append("Rain since 00:00:\t" + this.rainSinceMidnight + "\n");
+        sb.append("Humidity:\t" + this.humidity + "\n");
+        sb.append("Pressure:\t" + this.pressure + "\n");
         return sb.toString();
     }
 
@@ -128,14 +129,43 @@ public class WeatherField extends APRSData {
 
     @Override
     public int compareTo(APRSData o) {
-        if ( this.getClass().hashCode() > o.getClass().hashCode() ) {
+        if (this.hashCode() > o.hashCode()) {
             return 1;
+        }
+        if (this.hashCode() == o.hashCode()) {
+            return 0;
         }
         return -1;
     }
-  
+
     @Override
     public boolean hasFault() {
         return this.hasFault;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof WeatherField)) {
+            return false;
+        }
+        WeatherField weatherField = (WeatherField) o;
+        return Objects.equals(windDirection, weatherField.windDirection)
+                && Objects.equals(windSpeed, weatherField.windSpeed) && Objects.equals(windGust, weatherField.windGust)
+                && Objects.equals(temp, weatherField.temp) && Objects.equals(rainLastHour, weatherField.rainLastHour)
+                && Objects.equals(rainLast24Hours, weatherField.rainLast24Hours)
+                && Objects.equals(rainSinceMidnight, weatherField.rainSinceMidnight)
+                && Objects.equals(humidity, weatherField.humidity) && Objects.equals(pressure, weatherField.pressure)
+                && Objects.equals(luminosity, weatherField.luminosity)
+                && Objects.equals(snowfallLast24Hours, weatherField.snowfallLast24Hours)
+                && Objects.equals(rawRainCounter, weatherField.rawRainCounter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(windDirection, windSpeed, windGust, temp, rainLastHour, rainLast24Hours, rainSinceMidnight,
+                humidity, pressure, luminosity, snowfallLast24Hours, rawRainCounter);
+    }
+
 }

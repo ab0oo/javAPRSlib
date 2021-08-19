@@ -22,6 +22,7 @@ package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -64,7 +65,7 @@ public class InformationField implements Serializable {
         }
     }
     
-    public char getDateTypeIdentifier() {
+    public char getDataTypeIdentifier() {
         return dataTypeIdentifier;
     }
 
@@ -142,5 +143,20 @@ public class InformationField implements Serializable {
 	public void addAprsData(APRSData data) {
 		dataFields.add(data);
 	}
+
+    public boolean containsType(APRSTypes t) {
+        for ( APRSData d : dataFields ) {
+            if ( d.type == t ) return true;
+        }
+        return false;
+    }
+
+    public Set<APRSTypes> getTypes() {
+        Set<APRSTypes> types = new HashSet<>();
+        for ( APRSData d : dataFields ) {
+            types.add(d.type);
+        }
+        return types;
+    }
 
 }

@@ -2,6 +2,7 @@ package net.ab0oo.aprs.parser;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class TimeField extends APRSData {
@@ -98,8 +99,11 @@ public class TimeField extends APRSData {
 
     @Override
     public int compareTo(APRSData o) {
-        if ( this.getClass().hashCode() > o.getClass().hashCode() ) {
+        if (this.hashCode() > o.hashCode()) {
             return 1;
+        }
+        if (this.hashCode() == o.hashCode()) {
+            return 0;
         }
         return -1;
     }
@@ -107,6 +111,22 @@ public class TimeField extends APRSData {
     @Override
     public boolean hasFault() {
         return this.hasFault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof TimeField)) {
+            return false;
+        }
+        TimeField timeField = (TimeField) o;
+        return Objects.equals(reportedTimestamp, timeField.reportedTimestamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(reportedTimestamp);
     }
 
  }

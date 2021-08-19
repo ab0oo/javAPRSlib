@@ -41,7 +41,6 @@ public class Parser {
 		if ( args.length > 0 ) {
 			try {
 				APRSPacket packet = Parser.parse(args[0]);
-				System.out.println("Packet parsed as a "+packet.getType());
 				System.out.println("From:	"+packet.getSourceCall());
 				System.out.println("To:	"+packet.getDestinationCall());
 				System.out.println("Via:	"+packet.getDigiString());
@@ -121,11 +120,17 @@ public class Parser {
     public static APRSPacket parseBody(String source, String dest, ArrayList<Digipeater> digis, String body) throws Exception {
 		APRSPacket packet = new APRSPacket(source,dest,digis, body.getBytes());
         byte[] msgBody = body.getBytes();
-		InformationField infoField = packet.getAprsInformation();
         byte dti = msgBody[0];
+		// get the invalid crap out of the way right away.
+		if ( (dti >='A' && dti <= 'S') || 
+		     (dti >='U' && dti <= 'Z') ||
+			 (dti >='0' && dti <= '9') ) {
+			packet.setHasFault(true);
+			packet.setComment("Invalid DTI");
+			return packet;
+		}
+		InformationField infoField = packet.getAprsInformation();
 		int cursor = 0;
-        packet.setType(APRSTypes.T_UNSPECIFIED);
-        packet.hasFault = false;
         switch ( dti ) {
         	case '/':
         	case '@':
@@ -140,6 +145,7 @@ public class Parser {
 				if ( pf.getPosition().getSymbolCode() == '_' ) {
 					// this is a weather packet, so pull the weather info from it
 					WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor);
+					wf.setType(APRSTypes.T_WX);
 					infoField.addAprsData(wf);
 					cursor = wf.getLastCursorPosition();
 				}
@@ -153,8 +159,15 @@ public class Parser {
         			// Ultimeter II weather packet
         		} else {
 					// these are non-timestamped packets with position.
-        			packet.setType( APRSTypes.T_POSITION );
-        			infoField.addAprsData( new PositionField(msgBody,dest, cursor+1) );
+					PositionField posField = new PositionField(msgBody, dest, cursor+1);
+					cursor = posField.getLastCursorPosition();
+					infoField.addAprsData( posField );
+					if ( posField.getPosition().getSymbolCode() == '_' ) {
+						// with weather...
+						WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor + 1);
+						infoField.addAprsData(wf);
+						cursor = wf.getLastCursorPosition();
+					}
         		}
     			break;
         	case ':':
@@ -163,52 +176,59 @@ public class Parser {
     		case ';':
     			if (msgBody.length > 29) {
     				//System.out.println("Parsing an OBJECT");
-					packet.setType(APRSTypes.T_OBJECT);
-    				infoField = new ObjectPacket(msgBody);
+					ObjectField of = new ObjectField(msgBody);
+    				infoField.addAprsData(of);
+					cursor = of.getLastCursorPosition();
+					PositionField posField = new PositionField(msgBody,dest, cursor +1 );
+					infoField.addAprsData(posField);
+					cursor = posField.getLastCursorPosition();
+
     			} else {
     				System.err.println("Object packet body too short for valid object");
-    				packet.hasFault = true; // too short for an object
+    				packet.setHasFault(true); // too short for an object
     			}
     			break;
     		case '>':
-				packet.setType(APRSTypes.T_STATUS);
+//				packet.setType(APRSTypes.T_STATUS);
     			break;
     		case '<':
-				packet.setType(APRSTypes.T_STATCAPA);
+//				packet.setType(APRSTypes.T_STATCAPA);
     			break;
     		case '?':
-				packet.setType(APRSTypes.T_QUERY);
+//				packet.setType(APRSTypes.T_QUERY);
     			break;
     		case ')':
-				packet.setType(APRSTypes.T_ITEM);
-    			if (msgBody.length > 18) {
-				infoField = new ItemPacket(msgBody);
-    			} else {
-    				packet.hasFault = true; // too short
-    			}
+//				packet.setType(APRSTypes.T_ITEM);
+//    			if (msgBody.length > 18) {
+//				infoField = new ItemPacket(msgBody);
+//    			} else {
+//    				packet.hasFault = true; // too short
+//    			}
     			break;
     		case 'T':
     			if (msgBody.length > 18) {
     				//System.out.println("Parsing TELEMETRY");
     				//parseTelem(bodyBytes);
     			} else {
-    				packet.hasFault = true; // too short
-    			}
+    				packet.setHasFault(true); // too short
+	   			}
     			break;
     		case '#': // Peet Bros U-II Weather Station
     		case '*': // Peet Bros U-II Weather Station
     		case '_': // Weather report without position
-    			packet.setType(APRSTypes.T_WX);
+				WeatherField  wf = WeatherParser.parseWeatherData(msgBody, cursor);
+				infoField.addAprsData(wf);
+				cursor = wf.getLastCursorPosition();
     			break;
     		case '{':
-				packet.setType(APRSTypes.T_USERDEF);
+//				packet.setType(APRSTypes.T_USERDEF);
     			break;
     		case '}': // 3rd-party
-				packet.setType(APRSTypes.T_THIRDPARTY);
+//				packet.setType(APRSTypes.T_THIRDPARTY);
     			break;
 
     		default:
-    			packet.hasFault = true; // UNKNOWN!
+    			packet.setHasFault(true); // UNKNOWN!
     			break;
 
         }

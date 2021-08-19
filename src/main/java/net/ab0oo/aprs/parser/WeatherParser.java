@@ -51,6 +51,7 @@ public class WeatherParser {
         WeatherField wf = new WeatherField();
         String wxReport = new String(msgBody, cursor, msgBody.length - cursor);
         wf.setLastCursorPosition(cursor += 36);
+        wf.setType(APRSTypes.T_WX);
         Matcher matcher = dataPattern.matcher(wxReport);
         if (matcher.matches()) {
             try {

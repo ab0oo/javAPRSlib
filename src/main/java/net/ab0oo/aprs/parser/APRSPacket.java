@@ -39,8 +39,8 @@ public class APRSPacket implements Serializable {
     private ArrayList<Digipeater> digipeaters;
     private char dti;
     private InformationField aprsInformation;
-    protected boolean hasFault;
-    private APRSTypes type;
+    private boolean hasFault;
+	private String comment;
 
     static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
@@ -55,6 +55,7 @@ public class APRSPacket implements Serializable {
         } else {
         	this.digipeaters = digipeaters;
         }
+		this.dti = (char)body[0];
         this.aprsInformation = new InformationField(body);
     }
     
@@ -170,7 +171,6 @@ public class APRSPacket implements Serializable {
 	 * @return the hasFault
 	 */
 	public boolean hasFault() {
-		this.hasFault = false;
 		return ( this.hasFault | aprsInformation.hasFault() );
 	}
 
@@ -179,14 +179,6 @@ public class APRSPacket implements Serializable {
 	 */
 	public void setHasFault(boolean hasFault) {
 		this.hasFault = hasFault;
-	}
-
-	public APRSTypes getType() {
-		return type;
-	}
-
-	public void setType(APRSTypes type) {
-		this.type = type;
 	}
 
 	/**
@@ -205,6 +197,14 @@ public class APRSPacket implements Serializable {
 
 		public void setInfoField(InformationField infoField) {
 		this.aprsInformation = infoField;
+	}
+
+	public final void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public final String getComment() {
+		return this.comment;
 	}
 
 	@Override

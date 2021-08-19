@@ -23,6 +23,8 @@
  */
 package net.ab0oo.aprs.parser;
 
+import java.util.Objects;
+
 public class PositionField extends APRSData {
 	private static final long serialVersionUID = 1L;
 	private Position position = new Position(0, 0);
@@ -86,8 +88,8 @@ public class PositionField extends APRSData {
 							// normal uncompressed position
 							try {
 								this.position = PositionParser.parseUncompressed(msgBody, cursor);
-							} catch ( Exception ex ) {
-								this.comment=ex.getMessage();
+							} catch (Exception ex) {
+								this.comment = ex.getMessage();
 								System.err.println(ex);
 								hasFault = true;
 							}
@@ -99,7 +101,7 @@ public class PositionField extends APRSData {
 							this.positionSource = "Uncompressed";
 							cursor += 19;
 						} else {
- 							this.positionSource = "Who knows...";
+							this.positionSource = "Who knows...";
 							hasFault = true;
 						}
 						break;
@@ -190,7 +192,7 @@ public class PositionField extends APRSData {
 		sb.append("Position Source\t" + this.positionSource + "\n");
 		sb.append("Is Compressed:\t" + this.compressedFormat + "\n");
 		sb.append(this.position.toString());
-		sb.append("Comment:  "+ this.comment+"\n");
+		sb.append("Comment:  " + this.comment + "\n");
 		return sb.toString();
 	}
 
@@ -209,17 +211,39 @@ public class PositionField extends APRSData {
 		return this.compressedFormat;
 	}
 
-	@Override
-	public int compareTo(APRSData o) {
-		if (this.getClass().hashCode() > o.getClass().hashCode()) {
-			return 1;
-		}
-		return -1;
-	}
+    @Override
+    public int compareTo(APRSData o) {
+        if (this.hashCode() > o.hashCode()) {
+            return 1;
+        }
+        if (this.hashCode() == o.hashCode()) {
+            return 0;
+        }
+        return -1;
+    }
 
 	@Override
 	public boolean hasFault() {
-        return this.hasFault;
-    }
+		return this.hasFault;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof PositionField)) {
+			return false;
+		}
+		PositionField positionField = (PositionField) o;
+		return Objects.equals(position, positionField.position)
+				&& Objects.equals(positionSource, positionField.positionSource)
+				&& compressedFormat == positionField.compressedFormat
+				&& Objects.equals(extension, positionField.extension);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(position, positionSource, compressedFormat, extension);
+	}
 
 }
