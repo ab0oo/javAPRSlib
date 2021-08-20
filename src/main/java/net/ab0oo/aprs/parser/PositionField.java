@@ -126,7 +126,6 @@ public class PositionField extends APRSData {
 			}
 			this.setLastCursorPosition(cursor);
 			compressedFormat = false;
-			this.positionSource = "Unparseble";
 		} catch (Exception ex) {
 			this.hasFault = true;
 			this.comment = this.comment + " INVALID position format.";

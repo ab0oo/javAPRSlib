@@ -93,7 +93,7 @@ public class TimeField extends APRSData {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("---TIMESTAMP---\n");
-        sb.append("Reported Timestamp: "+this.reportedTimestamp);
+        sb.append("Reported Timestamp: "+this.reportedTimestamp+"\n");
         return sb.toString();
     }
 
