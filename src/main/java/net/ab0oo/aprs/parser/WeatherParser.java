@@ -59,15 +59,15 @@ public class WeatherParser {
                 wf.setWindSpeed(Integer.parseInt(matcher.group(2)));
                 wf.setWindGust(Integer.parseInt(matcher.group(3)));
                 wf.setTemp(Integer.parseInt(matcher.group(4)));
-                wf.setRainLastHour(Float.parseFloat(matcher.group(5)) / 100);
-                wf.setRainLast24Hours(Float.parseFloat(matcher.group(6)) / 100);
-                wf.setRainSinceMidnight(Float.parseFloat(matcher.group(7)) / 100);
-                wf.setHumidity(Float.parseFloat(matcher.group(8)));
-                wf.setPressure(Float.parseFloat(matcher.group(9)));
+                wf.setRainLastHour(Double.parseDouble(matcher.group(5)) / 100);
+                wf.setRainLast24Hours(Double.parseDouble(matcher.group(6)) / 100);
+                wf.setRainSinceMidnight(Double.parseDouble(matcher.group(7)) / 100);
+                wf.setHumidity(Double.parseDouble(matcher.group(8)));
+                wf.setPressure(Double.parseDouble(matcher.group(9)));
             } catch (NumberFormatException nfe) {
                 System.err.println("Got a weather packet with bogus data");
             } catch (IllegalStateException ese) {
-                System.err.println("something failed in our matching expression");
+                System.err.println("something failed in our matching expression");  
             }
         } else {
             // we need to pick out the matches one by one
@@ -87,23 +87,23 @@ public class WeatherParser {
             matcher = rainPattern.matcher(wxReport);
             matcher.find();
             if (matcher.matches()) {
-                wf.setRainLastHour(Float.parseFloat(matcher.group(1)) / 100);
+                wf.setRainLastHour(Double.parseDouble(matcher.group(1)) / 100);
             }
             matcher = rain24Pattern.matcher(wxReport);
             if (matcher.matches()) {
-                wf.setRainLast24Hours(Float.parseFloat(matcher.group(1)) / 100);
+                wf.setRainLast24Hours(Double.parseDouble(matcher.group(1)) / 100);
             }
             matcher = rainMidnightPattern.matcher(wxReport);
             if (matcher.matches()) {
-                wf.setRainSinceMidnight(Float.parseFloat(matcher.group(1)) / 100);
+                wf.setRainSinceMidnight(Double.parseDouble(matcher.group(1)) / 100);
             }
             matcher = humidityPattern.matcher(wxReport);
             if (matcher.matches()) {
-                wf.setHumidity(Float.parseFloat(matcher.group(1)));
+                wf.setHumidity(Double.parseDouble(matcher.group(1)));
             }
             matcher = pressurePattern.matcher(wxReport);
             if (matcher.matches()) {
-                wf.setPressure(Float.parseFloat(matcher.group(1)));
+                wf.setPressure(Double.parseDouble(matcher.group(1)));
             }
             matcher = luminosityLowPattern.matcher(wxReport);
             if (matcher.matches()) {

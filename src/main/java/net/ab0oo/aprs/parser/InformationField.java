@@ -21,10 +21,9 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * 
@@ -42,7 +41,7 @@ public class InformationField implements Serializable {
     protected byte[] rawBytes;
 	protected boolean hasFault = false;
     protected boolean canMessage = false;
-    Set<APRSData> dataFields;
+    Map<APRSTypes,APRSData> dataFields;
     DataExtension extension = null;
 	protected String comment = "";
 
@@ -55,7 +54,7 @@ public class InformationField implements Serializable {
         }
         this.rawBytes = rawBytes;
         this.dataTypeIdentifier = (char)rawBytes[0];
-        this.dataFields = Collections.synchronizedSortedSet(new TreeSet<>());
+        this.dataFields = new HashMap<>();
         switch ( dataTypeIdentifier ) {
        	case '@' :
         	case '=' :
@@ -103,7 +102,7 @@ public class InformationField implements Serializable {
         sb.append("Data Type Identifier: "+dataTypeIdentifier+"\n");
         sb.append("Create Timestamp:\t"+ (new java.util.Date(createTimestamp)).toString()+"\n");
         sb.append("Comment:  "+this.comment+"\n");
-        for ( APRSData df : dataFields ) {
+        for ( APRSData df : dataFields.values() ) {
             sb.append("Class "+df.getClass().getName()+"\n");
             sb.append(df.toString());
         }
@@ -115,7 +114,7 @@ public class InformationField implements Serializable {
 	 */
 	public boolean hasFault() {
         boolean faultFound = this.hasFault;
-        for ( APRSData data : dataFields )  {
+        for ( APRSData data : dataFields.values() )  {
             faultFound = faultFound | data.hasFault();
         }
 		return faultFound;
@@ -132,31 +131,28 @@ public class InformationField implements Serializable {
         return this.createTimestamp;
     }
 
-    public void setAprsDataFields(Set<APRSData> aprsData ) {
-		this.dataFields = aprsData;
-	}
-
-	public Set<APRSData> getAprsData() {
+	public Map<APRSTypes,APRSData> getAprsData() {
 		return this.dataFields;
 	}
 
-	public void addAprsData(APRSData data) {
-		dataFields.add(data);
+    public APRSData getAprsData(APRSTypes t) {
+        if ( dataFields.containsKey(t)) {
+            return dataFields.get(t);
+        }
+        return null;
+    }
+
+	public void addAprsData(APRSTypes type, APRSData data) {
+		dataFields.put(type, data);
 	}
 
     public boolean containsType(APRSTypes t) {
-        for ( APRSData d : dataFields ) {
-            if ( d.type == t ) return true;
-        }
+        if ( dataFields.containsKey(t) ) return true;
         return false;
     }
 
     public Set<APRSTypes> getTypes() {
-        Set<APRSTypes> types = new HashSet<>();
-        for ( APRSData d : dataFields ) {
-            types.add(d.type);
-        }
-        return types;
+        return dataFields.keySet();
     }
 
 }

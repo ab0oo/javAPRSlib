@@ -1,5 +1,7 @@
 package net.ab0oo.aprs.parser;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class WeatherField extends APRSData {
@@ -7,15 +9,22 @@ public class WeatherField extends APRSData {
     private Integer windSpeed;
     private Integer windGust;
     private Integer temp;
-    private Float rainLastHour;
-    private Float rainLast24Hours;
-    private Float rainSinceMidnight;
-    private Float humidity;
-    private Float pressure;
-    private Integer luminosity = 0;
-    private Integer snowfallLast24Hours = 0;
-    private Integer rawRainCounter = 0;
+    private Double rainLastHour;
+    private Double rainLast24Hours;
+    private Double rainSinceMidnight;
+    private Double humidity;
+    private Double pressure;
+    private Integer luminosity;
+    private Double snowfallLast24Hours;
+    private Integer rawRainCounter;
 
+    public static Double round(Double d, int decimalPlace) {
+        if ( d == null ) return null;
+        BigDecimal bd = new BigDecimal(Double.toString(d));
+        bd = bd.setScale(decimalPlace, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("---WEATHER---\n");
@@ -63,43 +72,43 @@ public class WeatherField extends APRSData {
         this.temp = temp;
     }
 
-    public Float getRainLastHour() {
-        return this.rainLastHour;
+    public Double getRainLastHour() {
+        return round(this.rainLastHour, 2);
     }
 
-    public void setRainLastHour(Float rainLastHour) {
+    public void setRainLastHour(Double rainLastHour) {
         this.rainLastHour = rainLastHour;
     }
 
-    public Float getRainLast24Hours() {
-        return this.rainLast24Hours;
+    public Double getRainLast24Hours() {
+        return round(this.rainLast24Hours,2);
     }
 
-    public void setRainLast24Hours(Float rainLast24Hours) {
+    public void setRainLast24Hours(Double rainLast24Hours) {
         this.rainLast24Hours = rainLast24Hours;
     }
 
-    public Float getRainSinceMidnight() {
-        return this.rainSinceMidnight;
+    public Double getRainSinceMidnight() {
+        return round(this.rainSinceMidnight,2);
     }
 
-    public void setRainSinceMidnight(Float rainSinceMidnight) {
+    public void setRainSinceMidnight(Double rainSinceMidnight) {
         this.rainSinceMidnight = rainSinceMidnight;
     }
 
-    public Float getHumidity() {
-        return this.humidity;
+    public Double getHumidity() {
+        return round(this.humidity,2);
     }
 
-    public void setHumidity(Float humidity) {
+    public void setHumidity(Double humidity) {
         this.humidity = humidity;
     }
 
-    public Float getPressure() {
+    public Double getPressure() {
         return this.pressure;
     }
 
-    public void setPressure(Float pressure) {
+    public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
 
@@ -111,11 +120,11 @@ public class WeatherField extends APRSData {
         this.luminosity = luminosity;
     }
 
-    public Integer getSnowfallLast24Hours() {
-        return this.snowfallLast24Hours;
+    public Double getSnowfallLast24Hours() {
+        return round(this.snowfallLast24Hours,1);
     }
 
-    public void setSnowfallLast24Hours(Integer snowfallLast24Hours) {
+    public void setSnowfallLast24Hours(Double snowfallLast24Hours) {
         this.snowfallLast24Hours = snowfallLast24Hours;
     }
 

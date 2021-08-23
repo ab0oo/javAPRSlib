@@ -53,10 +53,6 @@ public class Parser {
 					System.out.println("    Messaging:	" + data.canMessage);
 					System.out.println("    Comment:	" + data.getComment());
 					System.out.println("    Extension:	" + data.getExtension());
-					for ( APRSData d: packet.getAprsInformation().getAprsData() ) {
-						System.out.println("    Data:  "+d.toString());
-
-					}
 				}
 			} catch ( Exception ex ) {
 				System.err.println("Unable to parse:  "+ex);
@@ -137,16 +133,16 @@ public class Parser {
 				// These have timestamps, so we need to parse those, advance the cursor, and then look for
 				// the position data
 				TimeField timeField = TimeField.parse(msgBody, cursor);
-				infoField.addAprsData(timeField);
+				infoField.addAprsData(APRSTypes.T_TIMESTAMP, timeField);
 				cursor = timeField.getLastCursorPosition();
 				PositionField pf = new PositionField(msgBody, dest, cursor+1);
-				infoField.addAprsData(pf);
+				infoField.addAprsData(APRSTypes.T_POSITION,pf);
 				cursor = pf.getLastCursorPosition();
 				if ( pf.getPosition().getSymbolCode() == '_' ) {
 					// this is a weather packet, so pull the weather info from it
 					WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor);
 					wf.setType(APRSTypes.T_WX);
-					infoField.addAprsData(wf);
+					infoField.addAprsData(APRSTypes.T_WX, wf);
 					cursor = wf.getLastCursorPosition();
 				}
 				break;
@@ -161,11 +157,11 @@ public class Parser {
 					// these are non-timestamped packets with position.
 					PositionField posField = new PositionField(msgBody, dest, cursor+1);
 					cursor = posField.getLastCursorPosition();
-					infoField.addAprsData( posField );
+					infoField.addAprsData(APRSTypes.T_POSITION, posField );
 					if ( posField.getPosition().getSymbolCode() == '_' ) {
 						// with weather...
 						WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor + 1);
-						infoField.addAprsData(wf);
+						infoField.addAprsData(APRSTypes.T_WX, wf);
 						cursor = wf.getLastCursorPosition();
 					}
         		}
@@ -177,10 +173,10 @@ public class Parser {
     			if (msgBody.length > 29) {
     				//System.out.println("Parsing an OBJECT");
 					ObjectField of = new ObjectField(msgBody);
-    				infoField.addAprsData(of);
+    				infoField.addAprsData(APRSTypes.T_OBJECT, of);
 					cursor = of.getLastCursorPosition();
 					PositionField posField = new PositionField(msgBody,dest, cursor +1 );
-					infoField.addAprsData(posField);
+					infoField.addAprsData(APRSTypes.T_POSITION, posField);
 					cursor = posField.getLastCursorPosition();
 
     			} else {
@@ -217,7 +213,7 @@ public class Parser {
     		case '*': // Peet Bros U-II Weather Station
     		case '_': // Weather report without position
 				WeatherField  wf = WeatherParser.parseWeatherData(msgBody, cursor);
-				infoField.addAprsData(wf);
+				infoField.addAprsData(APRSTypes.T_WX, wf);
 				cursor = wf.getLastCursorPosition();
     			break;
     		case '{':

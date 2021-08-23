@@ -1,5 +1,6 @@
 package net.ab0oo.aprs.parser;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class APRSPacketTests {
 			@Test
 			@DisplayName("Then it should have a correct lattitude and longitude")
 			public void thenHasPosition() {
-				Set<APRSData> dataFields = packet2.getAprsInformation().getAprsData();
+				Collection<APRSData> dataFields = packet2.getAprsInformation().getAprsData().values();
 				for ( APRSData dataField : dataFields ) {
 					if (dataField.type == APRSTypes.T_POSITION) {
 						PositionField pf = (PositionField)dataField;

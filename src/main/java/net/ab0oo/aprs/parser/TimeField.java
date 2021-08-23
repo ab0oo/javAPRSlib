@@ -37,7 +37,19 @@ public class TimeField extends APRSData {
                     c.setLenient(true);
                     c.setTimeZone(TimeZone.getTimeZone("GMT"));
                     c.setTime(new Date(System.currentTimeMillis()));
-                    c.set(Calendar.DAY_OF_MONTH, (short)(msgBody[1]-'0')*10 + ((short)msgBody[2]-'0'));
+                    int currentMonth = c.get(Calendar.MONTH);
+                    int currentDay = c.get(Calendar.DAY_OF_MONTH);
+                    int msgDay = (msgBody[1]-'0')*10 + ((short)msgBody[2]-'0');
+                    // since it's possible we're reading this message some time after it was actually sent
+                    // (i.e. from a testing file), we need to make sure we do the best we can to get 
+                    // the month correct.  For example, the test file is from the end of July, but if
+                    // it's read during the beginning of August, messages sent on July 29 will be 
+                    // stamped with AUG 29 unless we do this check
+                    if ( msgDay > currentDay ) {
+                        currentMonth-=1;
+                    }
+                    c.set(Calendar.MONTH, currentMonth);
+                    c.set(Calendar.DAY_OF_MONTH, msgDay);
                     c.set(Calendar.HOUR_OF_DAY, (short)(msgBody[3]-'0')*10 + ((short)msgBody[4]-'0'));
                     c.set(Calendar.MINUTE, (short)(msgBody[5]-'0')*10 + (short)(msgBody[6]-'0'));
                     c.set(Calendar.SECOND, 0);
