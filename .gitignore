@@ -10,3 +10,7 @@ target
 .vscode/settings.json
 release.properties
 add_to_local_maven.sh
+.project
+pom.xml.releaseBackup
+.project
+.project
