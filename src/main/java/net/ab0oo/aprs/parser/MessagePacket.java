@@ -147,7 +147,11 @@ public class MessagePacket extends InformationField {
 		this.isRej = isRej;
 	}
 
-	@Override
+	
+    /** 
+     * @return String
+     */
+    @Override
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);

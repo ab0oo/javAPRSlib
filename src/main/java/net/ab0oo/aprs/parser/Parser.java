@@ -37,6 +37,10 @@ import java.util.ArrayList;
  */
 public class Parser {
 	
+	
+	/** 
+	 * @param args
+	 */
 	public static void main( String[] args ) {
 		if ( args.length > 0 ) {
 			try {
@@ -61,13 +65,24 @@ public class Parser {
 		}
 	}
     
-    public static APRSPacket parsePacket(byte[] rawPacket) {
+    
+	/** 
+	 * @param rawPacket
+	 * @return APRSPacket
+	 */
+	public static APRSPacket parsePacket(byte[] rawPacket) {
         //if ( packet.getDti() == '!' || packet.getDti() == '=' ) {
             // !3449.94N/08448.56W_203/000g000t079P133h85b10149OD1
         return new APRSPacket(null, null, null, null);
     }
     
-    public static APRSPacket parse(final String packet) throws Exception {
+    
+	/** 
+	 * @param packet
+	 * @return APRSPacket
+	 * @throws Exception
+	 */
+	public static APRSPacket parse(final String packet) throws Exception {
         int cs = packet.indexOf('>');
         String source = packet.substring(0,cs).toUpperCase();
         int ms = packet.indexOf(':');
@@ -81,7 +96,13 @@ public class Parser {
         return ap;
     }
 
-    public static APRSPacket parseAX25(byte[] packet) throws Exception {
+    
+	/** 
+	 * @param packet
+	 * @return APRSPacket
+	 * @throws Exception
+	 */
+	public static APRSPacket parseAX25(byte[] packet) throws Exception {
 	    int pos = 0;
 	    String dest = new Callsign(packet, pos).toString();
 	    pos += 7;

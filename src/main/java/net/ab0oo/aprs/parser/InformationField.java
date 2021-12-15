@@ -64,10 +64,18 @@ public class InformationField implements Serializable {
         }
     }
     
+    
+    /** 
+     * @return char
+     */
     public char getDataTypeIdentifier() {
         return dataTypeIdentifier;
     }
 
+    
+    /** 
+     * @param dti
+     */
     public void setDataTypeIdentifier(char dti) {
         this.dataTypeIdentifier = dti;
     }
@@ -82,6 +90,12 @@ public class InformationField implements Serializable {
 		    return toString().getBytes();
     }
     
+    
+    /** 
+     * @param start
+     * @param end
+     * @return byte[]
+     */
     public byte[] getBytes(int start, int end) {
         byte[] returnArray = new byte[end-start];
         System.arraycopy(getRawBytes(), start, returnArray, 0, end-start);
@@ -95,6 +109,10 @@ public class InformationField implements Serializable {
         return comment;
     }
     
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -127,14 +145,27 @@ public class InformationField implements Serializable {
 		return extension;
 	}
 
+    
+    /** 
+     * @return long
+     */
     public final long getCreateTimestamp() {
         return this.createTimestamp;
     }
 
-	public Map<APRSTypes,APRSData> getAprsData() {
+	
+    /** 
+     * @return Map<APRSTypes, APRSData>
+     */
+    public Map<APRSTypes,APRSData> getAprsData() {
 		return this.dataFields;
 	}
 
+    
+    /** 
+     * @param t
+     * @return APRSData
+     */
     public APRSData getAprsData(APRSTypes t) {
         if ( dataFields.containsKey(t)) {
             return dataFields.get(t);
@@ -142,15 +173,29 @@ public class InformationField implements Serializable {
         return null;
     }
 
-	public void addAprsData(APRSTypes type, APRSData data) {
+	
+    /** 
+     * @param type
+     * @param data
+     */
+    public void addAprsData(APRSTypes type, APRSData data) {
 		dataFields.put(type, data);
 	}
 
+    
+    /** 
+     * @param t
+     * @return boolean
+     */
     public boolean containsType(APRSTypes t) {
         if ( dataFields.containsKey(t) ) return true;
         return false;
     }
 
+    
+    /** 
+     * @return Set<APRSTypes>
+     */
     public Set<APRSTypes> getTypes() {
         return dataFields.keySet();
     }

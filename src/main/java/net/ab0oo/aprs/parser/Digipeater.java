@@ -75,11 +75,20 @@ public class Digipeater extends Callsign {
         this.used = used;
     }
     
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         return super.toString() + ( isUsed() ? "*":"");
     }
 
+    
+    /** 
+     * @return byte[]
+     * @throws IllegalArgumentException
+     */
     @Override
     public byte[] toAX25() throws IllegalArgumentException {
         byte[] ax25 = super.toAX25();

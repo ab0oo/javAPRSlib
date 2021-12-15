@@ -12,6 +12,12 @@ public class TimeField extends APRSData {
         
     }
     
+    
+    /** 
+     * @param msgBody
+     * @param startPos
+     * @return TimeField
+     */
     public static TimeField parse(byte[] msgBody, int startPos) {
         TimeField tf = new TimeField();
         char dti=(char)msgBody[0];
@@ -98,10 +104,18 @@ public class TimeField extends APRSData {
         return tf;
     }
 
+    
+    /** 
+     * @return Date
+     */
     public Date getReportedTimestamp() {
         return this.reportedTimestamp;
     }
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("---TIMESTAMP---\n");
@@ -109,6 +123,11 @@ public class TimeField extends APRSData {
         return sb.toString();
     }
 
+    
+    /** 
+     * @param o
+     * @return int
+     */
     @Override
     public int compareTo(APRSData o) {
         if (this.hashCode() > o.hashCode()) {
@@ -120,11 +139,20 @@ public class TimeField extends APRSData {
         return -1;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     @Override
     public boolean hasFault() {
         return this.hasFault;
     }
 
+    
+    /** 
+     * @param o
+     * @return boolean
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -136,6 +164,10 @@ public class TimeField extends APRSData {
         return Objects.equals(reportedTimestamp, timeField.reportedTimestamp);
     }
 
+    
+    /** 
+     * @return int
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(reportedTimestamp);

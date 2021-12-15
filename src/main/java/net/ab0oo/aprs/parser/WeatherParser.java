@@ -47,6 +47,13 @@ public class WeatherParser {
     private static final Pattern luminosityLowPattern = Pattern.compile(".*L(\\d{3}).*");
     private static final Pattern luminosityHighPattern = Pattern.compile(".*l(\\d{3}).*");
 
+    
+    /** 
+     * @param msgBody
+     * @param cursor
+     * @return WeatherField
+     * @throws Exception
+     */
     public static WeatherField parseWeatherData(byte[] msgBody, int cursor) throws Exception {
         WeatherField wf = new WeatherField();
         String wxReport = new String(msgBody, cursor, msgBody.length - cursor);

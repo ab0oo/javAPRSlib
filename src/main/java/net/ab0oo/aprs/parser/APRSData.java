@@ -35,27 +35,58 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getLastCursorPosition() {
         return lastCursorPosition;
     }
 
+    
+    /** 
+     * @param cp
+     */
     public void setLastCursorPosition(int cp) {
         this.lastCursorPosition = cp;
     }
 
+    
+    /** 
+     * @param type
+     * @return String
+     */
     @Override
     public abstract String toString();
 
+    
+    /** 
+     * @param type
+     * @return boolean
+     */
     public abstract boolean hasFault();
 
+    
+    /** 
+     * @param type
+     */
     public void setType( APRSTypes type ) {
         this.type = type;
     }
 
+    
+    /** 
+     * @return APRSTypes
+     */
     public APRSTypes getType() {
         return this.type;
     }
 
+    
+    /** 
+     * @param o
+     * @return int
+     */
     @Override
     public int compareTo(APRSData o) {
         if (this.hashCode() > o.hashCode()) {

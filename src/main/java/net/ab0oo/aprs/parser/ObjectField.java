@@ -55,6 +55,10 @@ public class ObjectField extends APRSData {
 		this.live = live;
 	}
 
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		if (rawBytes != null)
@@ -62,6 +66,11 @@ public class ObjectField extends APRSData {
 		return String.format(";%-9s%c%s%s", this.objectName, live ? '*' : '_', comment);
 	}
 
+	
+	/** 
+	 * @param o
+	 * @return int
+	 */
 	@Override
 	public int compareTo(APRSData o) {
 		if (this.hashCode() > o.hashCode()) {
@@ -73,11 +82,20 @@ public class ObjectField extends APRSData {
 		return -1;
 	}
 
+	
+	/** 
+	 * @return boolean
+	 */
 	@Override
 	public boolean hasFault() {
 		return this.hasFault;
 	}
 
+	
+	/** 
+	 * @param o
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -89,6 +107,10 @@ public class ObjectField extends APRSData {
 		return Objects.equals(objectName, objectField.objectName) && live == objectField.live;
 	}
 
+	
+	/** 
+	 * @return int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(objectName, live);
