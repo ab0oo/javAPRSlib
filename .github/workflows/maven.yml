@@ -12,14 +12,17 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        java: [ '8', '11', '15' ]
+    name: Java ${{ matrix.java }} Built and Test
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: ${{ matrix.java }}
         distribution: 'adopt'
         cache: maven
     - name: Test with Maven
