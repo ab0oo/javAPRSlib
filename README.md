@@ -11,6 +11,8 @@ the library is to become an easy-to-use APRS backend both for open and for
 closed APRS applications. If you are using javAPRSlib in your project, please
 let us know and contribute patches, fixes and improvements.
 
+[![Java CI](../../actions/workflows/javaci.yml/badge.svg)](../../actions/workflows/javaci.yml)
+
 Usage instructions
 ------------------
 
