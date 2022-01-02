@@ -1,9 +1,6 @@
 package net.ab0oo.aprs.parser;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
 
 public class TimeField extends APRSData {
     private Date reportedTimestamp;
@@ -39,9 +36,8 @@ public class TimeField extends APRSData {
             switch (timeIndicator) {
                 case 'z': {
                     // DHM zulu time
-                    Calendar c = Calendar.getInstance();
+                    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     c.setLenient(true);
-                    c.setTimeZone(TimeZone.getTimeZone("GMT"));
                     c.setTime(new Date(System.currentTimeMillis()));
                     int currentMonth = c.get(Calendar.MONTH);
                     int currentDay = c.get(Calendar.DAY_OF_MONTH);
@@ -59,7 +55,13 @@ public class TimeField extends APRSData {
                     c.set(Calendar.HOUR_OF_DAY, (short)(msgBody[3]-'0')*10 + ((short)msgBody[4]-'0'));
                     c.set(Calendar.MINUTE, (short)(msgBody[5]-'0')*10 + (short)(msgBody[6]-'0'));
                     c.set(Calendar.SECOND, 0);
-                    tf.reportedTimestamp = c.getTime();
+                    tf.reportedTimestamp = new Date(
+                            c.get(Calendar.YEAR) - 1900,
+                            c.get(Calendar.MONTH),
+                            c.get(Calendar.DAY_OF_MONTH),
+                            c.get(Calendar.HOUR_OF_DAY),
+                            c.get(Calendar.MINUTE),
+                            c.get(Calendar.SECOND));
                     cursor += 7;
                     break;
                 }

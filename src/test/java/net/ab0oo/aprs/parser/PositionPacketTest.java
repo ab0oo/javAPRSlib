@@ -34,7 +34,12 @@ class PositionPacketTest {
 				}
 			}
 
-			@Disabled("Time is being returned in local time, is this correct?")
+			@Test
+			@DisplayName("Then it should not have a fault")
+			void thenShouldNotHaveFault() {
+				assertFalse(timeField.hasFault());
+			}
+
 			@Test
 			@DisplayName("Then it should return the proper timestamp")
 			void thenReturnTimestamp() {
@@ -154,6 +159,89 @@ class PositionPacketTest {
 			}
 		}
 		*/
+	}
+
+	// TODO: No APRS messaging and local time stamp
+	// XE2BGF-9>APT311,WIDE1-1,WIDE2-1,qAR,XE2GF-11:/114218h3231.61N/11700.18WF057/000/A=000186
+
+	@Nested
+	@DisplayName("Given a different, valid APRS location message body")
+	class GivenDifferentValidAPRSLocationMessage {
+		// EW7217>APRS,TCPXX*,qAX,CWOP-3:
+		final String body = "/021144z3501.94N/12032.42W_000/000g000t000r000p000P000h00b00000RainwiseNet-MKIII";
+
+		@Nested
+		@DisplayName("When time field is parsed in packet")
+		class WhenTimeParsed {
+			TimeField timeField;
+
+			@BeforeEach
+			void setUp() {
+				try {
+					timeField = TimeField.parse(body.getBytes(), 0);
+				} catch (Exception ex) {
+					timeField = null;
+				}
+			}
+
+			@Test
+			@DisplayName("Then it should not have a fault")
+			void thenShouldNotHaveFault() {
+				assertFalse(timeField.hasFault());
+			}
+
+			@Test
+			@DisplayName("Then it should return the proper timestamp")
+			void thenReturnTimestamp() {
+				Date time = timeField.getReportedTimestamp();
+				assertEquals(2, time.getDate());
+				assertEquals(11, time.getHours());
+				assertEquals(44, time.getMinutes());
+			}
+		}
+
+		@Nested
+		@DisplayName("When location field is parsed in packet")
+		class WhenLocationParsed {
+			PositionField packet;
+
+			@BeforeEach
+			void setUp() {
+				try {
+					packet = new PositionField(body.getBytes(), null, 8);
+				} catch (Exception ex) {
+					packet = null;
+				}
+			}
+
+			@Test
+			@DisplayName("Then it should not have raised an exception")
+			void thenReturnValid() {
+				assertNotNull(packet, "Exception raised during packet parsing");
+			}
+
+			@Test
+			@DisplayName("Then it should not be compressed")
+			void thenReturnUncompressed() {
+				assertFalse(packet.getCompressedFormat());
+			}
+
+			@Test
+			@DisplayName("Then it should return the proper position sourcce")
+			void thenReturnSource() {
+				assertEquals("Uncompressed", packet.getPositionSource());
+			}
+
+			@Test
+			@DisplayName("Then it should return the proper location")
+			void thenReturnLocation() {
+				Position pos = packet.getPosition();
+				//3501.94N/12032.42
+				assertEquals((35. + 01.94 / 60.), pos.getLatitude(), 0.001);
+				assertEquals(-(120. + 32.42 / 60.), pos.getLongitude(), 0.001);
+				assertEquals(0, pos.getPositionAmbiguity());
+			}
+		}
 	}
 
 	/*
