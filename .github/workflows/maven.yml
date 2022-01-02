@@ -26,9 +26,15 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'zulu'
         cache: maven
+    - name: Clean with Maven
+      run: mvn -B clean
+    - name: Compile with Maven
+      run: mvn -B compile
     - name: Test with Maven
       run: mvn -B test
-    - name: Build with Maven
+    - name: Package with Maven
       run: mvn -B package
+    - name: Install with Maven
+      run: mvn -B install
     - name: Build with Ant
       run: ant -noinput clean compile-library
