@@ -13,7 +13,7 @@
 			optimize="true"
 			debug="true" >
 
-			<src path="src/" />
+			<src path="src/main/" />
 			<include name="**/*.java" />
 
 		</javac>
