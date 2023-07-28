@@ -54,6 +54,7 @@ class PositionPacketTest {
 			void setUp() {
 				try {
 					packet = new PositionField(body.getBytes(), null, 8);
+
 				} catch(Exception ex) {
 					packet = null;
 				}
@@ -94,6 +95,23 @@ class PositionPacketTest {
 			}
 
 			@Disabled("Does not return back the packet body")
+      @Test
+			@DisplayName("Then it should return the proper timestamp")
+			void thenReturnTimestamp() {
+				Position pos = packet.getPosition();
+				Date time = pos.getTimestamp();
+				assertEquals(12, time.getDate());
+				assertEquals(8, time.getHours());
+				assertEquals(45, time.getMinutes());
+			}
+
+			@Test
+			@DisplayName("Then it should return the original raw bytes")
+			void thenReturnRawBytes() {
+				assertArrayEquals(body.getBytes(), packet.getRawBytes());
+			}
+
+
 			@Test
 			@DisplayName("Then it should return the original string")
 			void thenReturnString() {
