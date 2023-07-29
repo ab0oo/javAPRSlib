@@ -2,7 +2,6 @@ package net.ab0oo.aprs.parser;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;

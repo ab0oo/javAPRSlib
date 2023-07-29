@@ -24,7 +24,8 @@
  */
 package net.ab0oo.aprs.parser;
 
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 /**
@@ -36,21 +37,22 @@ public class PositionParser {
     private static Pattern commaSplit = Pattern.compile(",");
 
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
-
-        Date date = new Date();
+        Calendar.Builder cb = new Calendar.Builder();
+        Calendar date = cb.build();
         if (msgBody[0] == '/' || msgBody[0] == '@') {
             // With a prepended timestamp, jump over it.
             if (msgBody[cursor+6] == 'z') {
+                System.err.println("FOUND A ZULU TIMESTAMP");
                 int day    = (msgBody[cursor+0] - '0') * 10 + msgBody[cursor+1] - '0';
                 int hour   = (msgBody[cursor+2] - '0') * 10 + msgBody[cursor+3] - '0';
                 int minute = (msgBody[cursor+4] - '0') * 10 + msgBody[cursor+5] - '0';
-                date.setDate(day);
-                date.setHours(hour);
-                date.setMinutes(minute);
+                date.set(Calendar.DATE, day);
+                date.set(Calendar.HOUR, hour);
+                date.set(Calendar.MINUTE, minute);
             }
-            cursor += 7;
         }
         if (msgBody.length < cursor + 19) {
+            System.err.println("Cursor is "+cursor+", barfed on "+new String(msgBody, StandardCharsets.UTF_8));
             throw new UnparsablePositionException("Uncompressed packet too short");
         }
 
@@ -128,7 +130,8 @@ public class PositionParser {
             else if (lngh != 'e' && lngh != 'E')
                 throw new Exception("Bad longitude sign character");
             Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
-            position.setTimestamp(date);
+//          TODO - figure out what I meant here...
+//            position.setTimestamp(date);
             return position;
         } catch (Exception e) {
             throw new Exception(e);

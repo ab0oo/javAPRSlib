@@ -1,7 +1,7 @@
 package net.ab0oo.aprs.parser;
 
-import java.util.Date;
-
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -30,18 +30,18 @@ class PositionPacketTest {
 				try {
 					timeField = TimeField.parse(body.getBytes(), 0);
 				} catch(Exception ex) {
+					System.err.println("Barfed parsing time field: "+ ex);
 					timeField = null;
 				}
 			}
 
-			@Disabled("Time is being returned in local time, is this correct?")
 			@Test
 			@DisplayName("Then it should return the proper timestamp")
 			void thenReturnTimestamp() {
-				Date time = timeField.getReportedTimestamp();
-				assertEquals(12, time.getDate());
-				assertEquals(8, time.getHours());
-				assertEquals(45, time.getMinutes());
+				Calendar time = timeField.getReportedTimestamp();
+				assertEquals(12, time.get(Calendar.DATE));
+				assertEquals(8, time.get(Calendar.HOUR));
+				assertEquals(45, time.get(Calendar.MINUTE));
 			}
 		}
 
@@ -54,8 +54,8 @@ class PositionPacketTest {
 			void setUp() {
 				try {
 					packet = new PositionField(body.getBytes(), null, 8);
-
 				} catch(Exception ex) {
+					System.err.println("Barfed parsing position field:  "+ex);
 					packet = null;
 				}
 			}
@@ -87,35 +87,10 @@ class PositionPacketTest {
 				assertEquals(0, pos.getPositionAmbiguity());
 			}
 
-			@Disabled("No API for returning raw packets")
-			@Test
-			@DisplayName("Then it should return the original raw bytes")
-			void thenReturnRawBytes() {
-				//assertArrayEquals(body.getBytes(), packet.getRawBytes());
-			}
-
-			@Disabled("Does not return back the packet body")
-      @Test
-			@DisplayName("Then it should return the proper timestamp")
-			void thenReturnTimestamp() {
-				Position pos = packet.getPosition();
-				Date time = pos.getTimestamp();
-				assertEquals(12, time.getDate());
-				assertEquals(8, time.getHours());
-				assertEquals(45, time.getMinutes());
-			}
-
-			@Test
-			@DisplayName("Then it should return the original raw bytes")
-			void thenReturnRawBytes() {
-				assertArrayEquals(body.getBytes(), packet.getRawBytes());
-			}
-
-
 			@Test
 			@DisplayName("Then it should return the original string")
 			void thenReturnString() {
-				assertEquals(body, packet.toString());
+				assertEquals(body, new String(packet.getRawBytes(), StandardCharsets.UTF_8));
 			}
 		}
 

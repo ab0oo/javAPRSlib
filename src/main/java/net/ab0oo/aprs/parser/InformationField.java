@@ -118,7 +118,7 @@ public class InformationField implements Serializable {
         StringBuffer sb = new StringBuffer();
         sb.append("Raw Bytes:\t"+new String(rawBytes)+"\n");
         sb.append("Data Type Identifier: "+dataTypeIdentifier+"\n");
-        sb.append("Create Timestamp:\t"+ (new java.util.Date(createTimestamp)).toString()+"\n");
+        sb.append("Create Timestamp:\t"+ (new java.util.Date(createTimestamp).toString() )+"\n");
         sb.append("Comment:  "+this.comment+"\n");
         for ( APRSData df : dataFields.values() ) {
             sb.append("Class "+df.getClass().getName()+"\n");

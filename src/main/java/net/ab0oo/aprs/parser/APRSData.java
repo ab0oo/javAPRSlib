@@ -32,7 +32,8 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
     public APRSData() {}
 
     public APRSData(byte[] msgBody) {
-
+        rawBytes = new byte[msgBody.length];
+        System.arraycopy(msgBody, 0, rawBytes, 0, msgBody.length);
     }
 
     
@@ -82,7 +83,20 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
         return this.type;
     }
 
-    
+    /** 
+     * @return byte[] the raw bytes handed to this object
+     */
+    public byte[] getRawBytes() {
+        return rawBytes;
+    }
+
+    /**
+     * @param rawBytes set the raw bytes of the packet body
+     */
+    public void setRawBytes(byte[] rawBytes) {
+        this.rawBytes = rawBytes;
+    }
+
     /** 
      * @param o
      * @return int

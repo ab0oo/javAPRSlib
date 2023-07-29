@@ -1,18 +1,19 @@
 package net.ab0oo.aprs.parser;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
 public class TimeField extends APRSData {
-    private Date reportedTimestamp;
+    private Calendar reportedTimestamp;
 
     public TimeField() {
-        
+        reportedTimestamp = Calendar.getInstance();
+        reportedTimestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
-    
-    
+        
     /** 
      * @param msgBody
      * @param startPos
@@ -36,6 +37,7 @@ public class TimeField extends APRSData {
              * HMS: fixed 7 character, Hour Minute Second, always ZULU 
              * MDHM: fixed _8_ character zulu timestamp
              */
+            Calendar.Builder cb = new Calendar.Builder();
             switch (timeIndicator) {
                 case 'z': {
                     // DHM zulu time
@@ -59,7 +61,7 @@ public class TimeField extends APRSData {
                     c.set(Calendar.HOUR_OF_DAY, (short)(msgBody[3]-'0')*10 + ((short)msgBody[4]-'0'));
                     c.set(Calendar.MINUTE, (short)(msgBody[5]-'0')*10 + (short)(msgBody[6]-'0'));
                     c.set(Calendar.SECOND, 0);
-                    tf.reportedTimestamp = c.getTime();
+                    tf.reportedTimestamp = c;
                     cursor += 7;
                     break;
                 }
@@ -69,13 +71,13 @@ public class TimeField extends APRSData {
                     // to extract the zulu time this packet was sent.
                     // TODO - load geospatial representations of all timezones, then use the location
                     // of this station to figure out what their "local" time is.  For now, we fake it.
-                    tf.reportedTimestamp = new Date(System.currentTimeMillis());
+                    tf.reportedTimestamp = cb.build();
                     cursor += 7;
                     break;
                 }
                 case 'h': {
                     // HMS zulu time.
-                    tf.reportedTimestamp = new Date(System.currentTimeMillis());
+                    tf.reportedTimestamp = cb.build();
                     cursor += 7;
                     break;
                 }
@@ -90,12 +92,13 @@ public class TimeField extends APRSData {
                 case '8':
                 case '9': {
                     // this is for the funky case of MHDM format, always in Zulu.
-                    tf.reportedTimestamp = new Date(System.currentTimeMillis());
+                    tf.reportedTimestamp = cb.build();
                     cursor += 8;
                     break;								
                 }
                 default: {
-                    tf.reportedTimestamp = new Date(0);
+                    tf.reportedTimestamp = cb.build();
+                    tf.reportedTimestamp.setTimeInMillis(0);
                     cursor += 7;
                 }
             }
@@ -106,9 +109,9 @@ public class TimeField extends APRSData {
 
     
     /** 
-     * @return Date
+     * @return Calendar
      */
-    public Date getReportedTimestamp() {
+    public Calendar getReportedTimestamp() {
         return this.reportedTimestamp;
     }
 
@@ -118,8 +121,9 @@ public class TimeField extends APRSData {
      */
     @Override
     public String toString() {
+        SimpleDateFormat f = new SimpleDateFormat("dd HH:MM");          
         StringBuffer sb = new StringBuffer("---TIMESTAMP---\n");
-        sb.append("Reported Timestamp: "+this.reportedTimestamp+"\n");
+        sb.append("Reported Timestamp: "+f.format(reportedTimestamp.getTime())+"\n");
         return sb.toString();
     }
 
