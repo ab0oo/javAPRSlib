@@ -2,6 +2,7 @@ package net.ab0oo.aprs.parser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -22,7 +23,10 @@ public class TestClient {
         Socket clientSocket = null;
         BufferedReader input = null;
         PrintWriter out = null;
+        FileWriter badPackets = null;
         try {
+            // set up a file for bad packets
+            badPackets = new FileWriter("badpackets.txt");
             clientSocket = new Socket(host, port);
             System.out.println(clientSocket.getLocalPort());
             out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -35,7 +39,15 @@ public class TestClient {
                 linecount++;
                 if ( fromServer.startsWith("#") ) { continue; }
                 //System.out.println(fromServer);
-                processPacket(fromServer);
+                APRSPacket p = processPacket(fromServer);
+                if ( p.getAprsInformation().containsType(APRSTypes.T_WX)) {
+                    WeatherField wf = (WeatherField)p.getAprsInformation().getAprsData(APRSTypes.T_WX);
+                    System.out.println( p.getSourceCall() +" temperature is "+ wf.getTemp());
+                }
+                if ( p.hasFault() ) {
+                    badPackets.write(fromServer);
+                    badPackets.write("\n");
+                }
             }
             System.out.println("Disconnected after receiving "+linecount+" lines.");
         } catch ( Exception ex ) {
@@ -44,6 +56,10 @@ public class TestClient {
             System.exit(1);
         } finally {
             try {
+                if ( null != badPackets ) {
+                    badPackets.flush();
+                    badPackets.close();;
+                } 
                 if ( null != input ) input.close();
                 if ( null != out ) out.flush();
                 if ( null != out ) out.close();
