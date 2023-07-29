@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '15', '17' ]
+        java: [ '17' ]
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
