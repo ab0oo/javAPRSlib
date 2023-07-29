@@ -24,7 +24,8 @@
  */
 package net.ab0oo.aprs.parser;
 
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 /**
@@ -36,27 +37,26 @@ public class PositionParser {
     private static Pattern commaSplit = Pattern.compile(",");
 
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
-        // System.out.print("UN: ");
-
-        Date date = new Date();
+        Calendar.Builder cb = new Calendar.Builder();
+        Calendar date = cb.build();
         if (msgBody[0] == '/' || msgBody[0] == '@') {
             // With a prepended timestamp, jump over it.
             if (msgBody[cursor+6] == 'z') {
+                System.err.println("FOUND A ZULU TIMESTAMP");
                 int day    = (msgBody[cursor+0] - '0') * 10 + msgBody[cursor+1] - '0';
                 int hour   = (msgBody[cursor+2] - '0') * 10 + msgBody[cursor+3] - '0';
                 int minute = (msgBody[cursor+4] - '0') * 10 + msgBody[cursor+5] - '0';
-                date.setDate(day);
-                date.setHours(hour);
-                date.setMinutes(minute);
+                date.set(Calendar.DATE, day);
+                date.set(Calendar.HOUR, hour);
+                date.set(Calendar.MINUTE, minute);
             }
-            cursor += 7;
         }
         if (msgBody.length < cursor + 19) {
+            System.err.println("Cursor is "+cursor+", barfed on "+new String(msgBody, StandardCharsets.UTF_8));
             throw new UnparsablePositionException("Uncompressed packet too short");
         }
 
         int positionAmbiguity = 0;
-        // char[] posbuf = fap.body.substring(cursor,cursor+18).toCharArray();
         char[] posbuf = new char[msgBody.length - cursor + 1];
         int pos = 0;
         for (int i = cursor; i < cursor + 19; i++) {
@@ -64,8 +64,9 @@ public class PositionParser {
             pos++;
         }
 
-        // System.arraycopy(packet, cursor, posbuf, 0, packet.length - cursor);
-        // latitude
+        /* this block of code accounts for position ambiguity.  It sets the actual position
+         * to the middle of the ambiguous range
+         */
         if (posbuf[2] == ' ') {
             posbuf[2] = '3';
             posbuf[3] = '0';
@@ -116,7 +117,7 @@ public class PositionParser {
             double latitude = parseDegMin(posbuf, 0, 2, 7, true);
             char lath = (char) posbuf[7];
             char symbolTable = (char) posbuf[8];
-            double longitude = parseDegMin(posbuf, 9, 3, 8, true);
+            double longitude = parseDegMin(posbuf, 9 , 3, 8, true);
             char lngh = (char) posbuf[17];
             char symbolCode = (char) posbuf[18];
 
@@ -124,13 +125,13 @@ public class PositionParser {
                 latitude = 0.0F - latitude;
             else if (lath != 'n' && lath != 'N')
                 throw new Exception("Bad latitude sign character");
-
             if (lngh == 'w' || lngh == 'W')
                 longitude = 0.0F - longitude;
             else if (lngh != 'e' && lngh != 'E')
                 throw new Exception("Bad longitude sign character");
             Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
-            position.setTimestamp(date);
+//          TODO - figure out what I meant here...
+//            position.setTimestamp(date);
             return position;
         } catch (Exception e) {
             throw new Exception(e);
@@ -577,7 +578,6 @@ public class PositionParser {
 
     private static double parseDegMin(char[] txt, int cursor, int degSize, int len, boolean decimalDot)
             throws Exception {
-        //System.out.println("DegMin data is "+new String(txt));
         if (txt == null || txt.length < cursor + degSize + 2)
             throw new Exception("Too short degmin data");
         double result = 0.0F;

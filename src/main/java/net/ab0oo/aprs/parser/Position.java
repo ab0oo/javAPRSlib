@@ -20,7 +20,8 @@
  */
 package net.ab0oo.aprs.parser;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Locale;
 /**
  * 
@@ -29,18 +30,14 @@ import java.util.Locale;
  * a symbol table and actual symbol, and a possible timestamp.
  *
  */
-public class Position implements java.io.Serializable {
+public class Position implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static DecimalFormat df = new DecimalFormat("0.00000");
 	private Double latitude = 0d, longitude = 0d;
 	private Integer altitude = -1;
 	private Integer positionAmbiguity;
-	private Date timestamp;
 	private char symbolTable, symbolCode;
 	private String csTField = " sT";
-
-	public Position() {
-	    timestamp = new Date();
-	}
 	
 	public Position(double lat, double lon, int posAmb, char st, char sc) {
 		this.latitude = Math.round(lat * 100000) * 0.00001D;
@@ -48,7 +45,6 @@ public class Position implements java.io.Serializable {
 		this.positionAmbiguity = posAmb;
 		this.symbolTable = st;
 		this.symbolCode = sc;
-		this.timestamp = new Date();
 	}
 	
 	public Position(double lat, double lon) {
@@ -57,14 +53,13 @@ public class Position implements java.io.Serializable {
 		this.positionAmbiguity=0;
 		this.symbolTable = '\\';
 		this.symbolCode = '.';
-		this.timestamp = new Date();
 	}
 
 	/**
 	 * @return the latitude
 	 */
 	public double getLatitude() {
-		return latitude;
+		return Double.parseDouble(df.format(latitude));
 	}
 
 	/**
@@ -78,7 +73,7 @@ public class Position implements java.io.Serializable {
 	 * @return the longitude
 	 */
 	public double getLongitude() {
-		return longitude;
+		return Double.parseDouble(df.format(longitude));
 	}
 
 	/**
@@ -114,20 +109,6 @@ public class Position implements java.io.Serializable {
 	 */
 	public void setPositionAmbiguity(int positionAmbiguity) {
 		this.positionAmbiguity = positionAmbiguity;
-	}
-
-	/**
-	 * @return the timestamp
-	 */
-	public Date getTimestamp() {
-		return this.timestamp;
-	}
-
-	/**
-	 * @param timestamp the timestamp to set
-	 */
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
 	}
 
 	/**
@@ -189,11 +170,14 @@ public class Position implements java.io.Serializable {
 	
 	@Override
 	public String toString() {
-		return getDMS(latitude,true)+symbolTable+getDMS(longitude,false)+symbolCode;
+		StringBuffer sb = new StringBuffer();
+		sb.append("Latitude:\t"+df.format(this.latitude)+"\n");
+		sb.append("Longitude:\t"+df.format(this.longitude)+"\n");
+		return sb.toString();
 	}
 	
 	public String toDecimalString() {
-		return latitude+", "+longitude;
+		return df.format(latitude)+", "+df.format(longitude);
 	}
 
 	public void setCsTField(String val) {
@@ -237,7 +221,7 @@ public class Position implements java.io.Serializable {
 		    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 		    double dist = earthRadius * c;
 
-		    return new Float(dist).floatValue();
+		    return (float) dist;
     }
 	
 	public float distance(Position position2) {
@@ -272,7 +256,7 @@ public class Position implements java.io.Serializable {
 	}
 
 	public static void main(String[] args) {
-		Position pos = new Position();
+		Position pos = new Position(0,0);
 		pos.setLatitude(34.12558);
 		pos.setLongitude(-84.13697);
 		pos.setSymbolCode('o');

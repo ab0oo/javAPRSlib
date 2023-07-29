@@ -24,8 +24,9 @@
 
 package net.ab0oo.aprs.parser;
 
-public enum APRSTypes implements java.io.Serializable {
+public enum APRSTypes {
     T_UNSPECIFIED,
+	T_TIMESTAMP,
 	T_POSITION,
 	T_WX,
 	T_THIRDPARTY,

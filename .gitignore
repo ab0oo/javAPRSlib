@@ -5,3 +5,9 @@ tags
 target
 .settings/org.eclipse.core.resources.prefs
 .settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.jdt.apt.core.prefs
+.settings/org.eclipse.m2e.core.prefs
+.vscode/settings.json
+release.properties
+add_to_local_maven.sh
+pom.xml.releaseBackup

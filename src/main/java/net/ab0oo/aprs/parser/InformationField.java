@@ -21,6 +21,9 @@
 package net.ab0oo.aprs.parser;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -31,13 +34,14 @@ import java.io.Serializable;
  *  and Items, Weather, Telemetry, Messages, Bulletins, Annoucements, Queries, Responses, Statuses,
  *  and User-defined Others.
  */
-public abstract class InformationField implements Serializable {
+public class InformationField implements Serializable {
 	private static final long serialVersionUID = 1L;
+    private final long createTimestamp = System.currentTimeMillis();
 	private char dataTypeIdentifier;
     protected byte[] rawBytes;
-    protected APRSTypes type;
 	protected boolean hasFault = false;
     protected boolean canMessage = false;
+    Map<APRSTypes,APRSData> dataFields;
     DataExtension extension = null;
 	protected String comment = "";
 
@@ -50,18 +54,28 @@ public abstract class InformationField implements Serializable {
         }
         this.rawBytes = rawBytes;
         this.dataTypeIdentifier = (char)rawBytes[0];
+        this.dataFields = new HashMap<>();
         switch ( dataTypeIdentifier ) {
-        	case '@' :
+       	case '@' :
         	case '=' :
         	case '\'':
         	case ':' : this.canMessage = true;
+            default: this.canMessage = false;
         }
     }
     
-    public char getDateTypeIdentifier() {
+    
+    /** 
+     * @return char
+     */
+    public char getDataTypeIdentifier() {
         return dataTypeIdentifier;
     }
 
+    
+    /** 
+     * @param dti
+     */
     public void setDataTypeIdentifier(char dti) {
         this.dataTypeIdentifier = dti;
     }
@@ -70,12 +84,18 @@ public abstract class InformationField implements Serializable {
      * @return the rawBytes
      */
     public byte[] getRawBytes() {
-	if (rawBytes != null)
-		return rawBytes;
-	else
-		return toString().getBytes();
+	    if (rawBytes != null)
+		    return rawBytes;
+	    else
+		    return toString().getBytes();
     }
     
+    
+    /** 
+     * @param start
+     * @param end
+     * @return byte[]
+     */
     public byte[] getBytes(int start, int end) {
         byte[] returnArray = new byte[end-start];
         System.arraycopy(getRawBytes(), start, returnArray, 0, end-start);
@@ -89,15 +109,33 @@ public abstract class InformationField implements Serializable {
         return comment;
     }
     
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
-        return new String(rawBytes);
+        StringBuffer sb = new StringBuffer();
+        sb.append("Raw Bytes:\t"+new String(rawBytes)+"\n");
+        sb.append("Data Type Identifier: "+dataTypeIdentifier+"\n");
+        sb.append("Create Timestamp:\t"+ (new java.util.Date(createTimestamp).toString() )+"\n");
+        sb.append("Comment:  "+this.comment+"\n");
+        for ( APRSData df : dataFields.values() ) {
+            sb.append("Class "+df.getClass().getName()+"\n");
+            sb.append(df.toString());
+        }
+
+        return sb.toString();
     }
 	/**
 	 * @return the hasFault
 	 */
-	public boolean isHasFault() {
-		return hasFault;
+	public boolean hasFault() {
+        boolean faultFound = this.hasFault;
+        for ( APRSData data : dataFields.values() )  {
+            faultFound = faultFound | data.hasFault();
+        }
+		return faultFound;
 	}
 
 	/**
@@ -106,4 +144,60 @@ public abstract class InformationField implements Serializable {
 	public final DataExtension getExtension() {
 		return extension;
 	}
+
+    
+    /** 
+     * @return long
+     */
+    public final long getCreateTimestamp() {
+        return this.createTimestamp;
+    }
+
+	
+    /** 
+     * @return Map<APRSTypes, APRSData>
+     */
+    public Map<APRSTypes,APRSData> getAprsData() {
+		return this.dataFields;
+	}
+
+    
+    /** 
+     * @param t
+     * @return APRSData
+     */
+    public APRSData getAprsData(APRSTypes t) {
+        if ( dataFields.containsKey(t)) {
+            return dataFields.get(t);
+        }
+        return null;
+    }
+
+	
+    /** 
+     * @param type
+     * @param data
+     */
+    public void addAprsData(APRSTypes type, APRSData data) {
+		dataFields.put(type, data);
+	}
+
+    
+    /** 
+     * @param t
+     * @return boolean
+     */
+    public boolean containsType(APRSTypes t) {
+        if ( dataFields.containsKey(t) ) return true;
+        return false;
+    }
+
+    
+    /** 
+     * @return Set<APRSTypes>
+     */
+    public Set<APRSTypes> getTypes() {
+        return dataFields.keySet();
+    }
+
 }

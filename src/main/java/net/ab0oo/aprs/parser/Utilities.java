@@ -25,6 +25,10 @@ package net.ab0oo.aprs.parser;
  * 
  */
 public class Utilities {
+	
+	/** 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			System.out.println("Usage:  AprsPass <callsign>");
@@ -32,6 +36,11 @@ public class Utilities {
 		}
 	}
 
+	
+	/** 
+	 * @param callSign
+	 * @return int
+	 */
 	public static int doHash(String callSign) {
 		short kKey = 0x73e2; // Straight from Steme Dimse himself
 		if (callSign.indexOf('-') > 0) {
@@ -52,22 +61,47 @@ public class Utilities {
 		return code;
 	}
 	
+	
+	/** 
+	 * @param knots
+	 * @return int
+	 */
 	public static int ktsToMph(int knots) {
 		return (int)Math.round(knots * 1.15077945);
 	}
 	
+	
+	/** 
+	 * @param knots
+	 * @return int
+	 */
 	public static int kntsToKmh(int knots) {
 		return (int)Math.round(knots*1.852);
 	}
 	
+	
+	/** 
+	 * @param meters
+	 * @return double
+	 */
 	public static double metersToMiles(double meters) {
 		return meters * 0.000621371192;
 	}
 	
+	
+	/** 
+	 * @param meters
+	 * @return double
+	 */
 	public static double metersToKilometers(double meters) {
 		return meters / 1000.0;
 	}
 	
+	
+	/** 
+	 * @param degrees
+	 * @return String
+	 */
 	public static String degressToCardinal(double degrees) {
 		if ( degrees >= 11.25 && degrees < 33.75 ) return "NNE";
 		if ( degrees >= 33.75 && degrees < 56.25 ) return "NE";

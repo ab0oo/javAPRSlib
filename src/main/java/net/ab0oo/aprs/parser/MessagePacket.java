@@ -20,9 +20,7 @@
  */
 package net.ab0oo.aprs.parser;
 
-import java.io.Serializable;
-
-public class MessagePacket extends InformationField implements Serializable {
+public class MessagePacket extends InformationField {
 	private static final long serialVersionUID = 1L;
     private String messageBody;
     private String messageNumber;
@@ -71,7 +69,6 @@ public class MessagePacket extends InformationField implements Serializable {
     	if ( messageBody.equals("ack") ) isAck = true;
     	if ( messageBody.equals("rej") ) isRej = true;
     	super.setDataTypeIdentifier(':');
-    	super.type=APRSTypes.T_MESSAGE;
     }
     
     /**
@@ -144,7 +141,11 @@ public class MessagePacket extends InformationField implements Serializable {
 		this.isRej = isRej;
 	}
 
-	@Override
+	
+    /** 
+     * @return String
+     */
+    @Override
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);

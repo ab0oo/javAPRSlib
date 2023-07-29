@@ -48,6 +48,10 @@ public class RangeExtension extends DataExtension implements Serializable {
 		return range;
 	}
 	
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toSAEString() {
 		return "Range of "+range+" miles";
