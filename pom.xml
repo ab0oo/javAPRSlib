@@ -152,8 +152,8 @@
             </goals>
             <configuration>
               <gpgArguments>
-                <arg>--pinentry-mode</arg>
                 <arg>--batch</arg>
+                <arg>--pinentry-mode</arg>
                 <arg>loopback</arg>
               </gpgArguments>
             </configuration>
