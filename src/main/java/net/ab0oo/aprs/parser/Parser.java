@@ -179,7 +179,7 @@ public class Parser {
 					PositionField posField = new PositionField(msgBody, dest, cursor+1);
 					cursor = posField.getLastCursorPosition();
 					infoField.addAprsData(APRSTypes.T_POSITION, posField );
-					if ( posField.getPosition().getSymbolCode() == '_' ) {
+					if ( posField.getPosition().getSymbolCode() == '_' && msgBody.length > 20) {
 						// with weather...
 						WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor + 1);
 						infoField.addAprsData(APRSTypes.T_WX, wf);

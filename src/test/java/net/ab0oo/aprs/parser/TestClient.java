@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TestClient {
-    private static final String host = "205.233.35.46";
+    private static final String host = "192.168.1.11";
     private static final int port = 10152;
     private static final int MAX_LINES = 1000;
     private static Map<APRSTypes, Integer> typeCounts = new HashMap<>();
@@ -33,12 +33,12 @@ public class TestClient {
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println(input.readLine());
             System.out.println("Sending login.");
-            out.println("user ab0oo pass 19951");
+            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 2.0.1");
             String fromServer;
             while ( (null != input ) && (fromServer = input.readLine() ) != null && linecount <= MAX_LINES ) {
                 linecount++;
                 if ( fromServer.startsWith("#") ) { continue; }
-                //System.out.println(fromServer);
+                System.out.println(fromServer);
                 APRSPacket p = processPacket(fromServer);
                 if ( p.getAprsInformation().containsType(APRSTypes.T_WX)) {
                     WeatherField wf = (WeatherField)p.getAprsInformation().getAprsData(APRSTypes.T_WX);
