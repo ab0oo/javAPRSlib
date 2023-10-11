@@ -20,6 +20,8 @@ jobs:
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
+    - name: Install Secret Key
+      run:  cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import && gpg --list-secret-keys --keyid-format LONG 
     - uses: actions/checkout@v2
     - name: Set up JDK
       uses: actions/setup-java@v2
@@ -36,6 +38,4 @@ jobs:
     - name: Package with Maven
       run: mvn -B package
     - name: Install with Maven
-      run: mvn -B install
-    - name: Build with Ant
-      run: ant -noinput clean compile-library
+      run: mvn -B --no-transfer-progress -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} install
