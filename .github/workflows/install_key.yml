@@ -1,8 +1,0 @@
-name: Install gpg secret key
-run-name: ${{ github.actor }} is preloading the secret key 
-on: [push]
-run: |
-    # Install gpg secret key
-    cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
-    # Verify gpg secret key
-    gpg --list-secret-keys --keyid-format LONG

@@ -20,6 +20,8 @@ jobs:
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
+    - name: Install Secret Key
+      run:  cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import && gpg --list-secret-keys --keyid-format LONG 
     - uses: actions/checkout@v2
     - name: Set up JDK
       uses: actions/setup-java@v2
