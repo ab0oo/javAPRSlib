@@ -38,6 +38,4 @@ jobs:
     - name: Package with Maven
       run: mvn -B package
     - name: Install with Maven
-      run: mvn -B install
-    - name: Build with Ant
-      run: ant -noinput clean compile-library
+      run: mvn -B --no-transfer-progress -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} install
