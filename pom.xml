@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ab0oo.javaprslib</groupId>
   <artifactId>javAPRSlib</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.2</version>
   <packaging>jar</packaging>
 
   <name>Java APRS Library</name>
@@ -139,6 +139,23 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+        </configuration>
+        <executions>
+				  <execution>
+					  <id>attach-javadocs</id>
+					  <goals>
+						  <goal>jar</goal>
+					  </goals>
+				  </execution>
+			  </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>

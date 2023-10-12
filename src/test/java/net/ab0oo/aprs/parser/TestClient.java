@@ -68,6 +68,10 @@ public class TestClient {
         }
     }
 
+    
+    /** 
+     * @param fileName
+     */
     public void testFile(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String fromServer = br.readLine();

@@ -11,9 +11,10 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
+	 * @param msgBody byte array of on air message
 	 * parse an APRS object message
 	 * 
-	 * @return new ObjectPacket instance with the parsed data
+	 * builds an ObjectField instance with the parsed data
 	 */
 	public ObjectField(byte[] msgBody) throws Exception {
 		this.objectName = new String(msgBody, 1, 9).trim();
@@ -21,6 +22,15 @@ public class ObjectField extends APRSData {
 		this.setLastCursorPosition(10);
 	}
 
+	/**
+	 * 
+	 * @param objectName
+	 * @param live
+	 * @param position
+	 * @param comment
+	 * 
+	 * build an ObjectField with the parsed data
+	 */
 	public ObjectField(String objectName, boolean live, Position position, String comment) {
 		this.objectName = objectName;
 		this.live = live;
@@ -63,7 +73,7 @@ public class ObjectField extends APRSData {
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);
-		return String.format(";%-9s%c%s%s", this.objectName, live ? '*' : '_', comment);
+		return String.format(";%-9s%c%s", this.objectName, live ? '*' : '_', comment);
 	}
 
 	

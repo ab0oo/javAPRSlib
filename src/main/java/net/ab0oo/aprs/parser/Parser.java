@@ -123,10 +123,10 @@ public class Parser {
 
 	/**
 	 * 
-	 * @param source
-	 * @param dest
-	 * @param digis
-	 * @param body
+	 * @param source Source callsign
+	 * @param dest Destination callsing, may be part of a compressed postion
+	 * @param digis array of digipeaters this packet has passed through
+	 * @param body msg body of the on air message
 	 * @return
 	 * @throws Exception
 	 * 

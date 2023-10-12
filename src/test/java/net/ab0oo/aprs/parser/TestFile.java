@@ -13,6 +13,10 @@ public class TestFile {
         testParser("src/test/resources/cwop.txt");
     }
 
+    
+    /** 
+     * @param fileName
+     */
     public void testParser(String fileName) {
         int linecount = 0;
         int badPackets = 0;

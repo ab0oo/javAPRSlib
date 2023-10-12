@@ -139,6 +139,12 @@ public class Position implements Serializable {
 		this.symbolCode = symbolCode;
 	}
 	
+	
+	/** 
+	 * @param decimalDegree latitude or longitude to be encoded
+	 * @param isLatitude used to tell the algorithm the decimalDegree is a latitude
+	 * @return String
+	 */
 	public String getDMS(double decimalDegree, boolean isLatitude) {
 			int minFrac = (int)Math.round(decimalDegree*6000); ///< degree in 1/100s of a minute
 			boolean negative = (minFrac < 0);
@@ -168,6 +174,10 @@ public class Position implements Serializable {
 			}
 	}
 	
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
@@ -176,10 +186,18 @@ public class Position implements Serializable {
 		return sb.toString();
 	}
 	
+	
+	/** 
+	 * @return String
+	 */
 	public String toDecimalString() {
 		return df.format(latitude)+", "+df.format(longitude);
 	}
 
+	
+	/** 
+	 * @param val 
+	 */
 	public void setCsTField(String val) {
 		if(val == null || val == "") {
 			val = " sT";
@@ -187,10 +205,16 @@ public class Position implements Serializable {
 		csTField = val;
 	}
 
+	/** 
+	 * @return String
+	 */
 	public String getCsTField() {
 		return csTField;
 	}
 
+	/** 
+	 * @return String
+	 */
 	public String toCompressedString() {
 		long latbase = Math.round(380926 * (90-this.latitude));
 		long latchar1 = latbase / (91*91*91)+33;
@@ -211,6 +235,13 @@ public class Position implements Serializable {
 				""+(char)lonchar1+(char)lonchar2+(char)lonchar3+(char)lonchar4+symbolCode+csTField;
 	}
 
+	/** 
+	 * @param lat1 lattitude of starting point
+	 * @param lng1 longitude of starting point
+	 * @param lat2 latitude of ending point
+	 * @param lng2 longitude of ending point
+	 * @return float the distance between two geographic points in miles
+	 */
 	public static float distFrom(double lat1, double lng1, double lat2, double lng2) {
 		    double earthRadius = 3958.75;
 		    double dLat = Math.toRadians(lat2-lat1);
@@ -224,6 +255,10 @@ public class Position implements Serializable {
 		    return (float) dist;
     }
 	
+	/** 
+	 * @param position2 point to determine distance from
+	 * @return float the distance in miles from the position in this message and given position
+	 */
 	public float distance(Position position2) {
 		double lat1 = this.getLatitude();
 		double lat2 = position2.getLatitude();

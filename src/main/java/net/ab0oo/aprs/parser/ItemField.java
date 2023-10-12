@@ -8,9 +8,10 @@ public class ItemField extends APRSData {
 	private String objectName;
 
 	/**
-	 * parse an APRS item message
+	 * @param msgBody byte array of the on-air message
+	 * @throws Exception if it is unable to parse the item field from the msg
 	 * 
-	 * @return new ItemPacket instance with the parsed data
+	 * parse an APRS item message
 	 */
 	public ItemField(byte[] msgBody) throws Exception {
 		this.rawBytes = msgBody;
@@ -28,6 +29,10 @@ public class ItemField extends APRSData {
 		comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
 	}
 
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		if (rawBytes != null)

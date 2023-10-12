@@ -52,17 +52,15 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
         this.lastCursorPosition = cp;
     }
 
-    
-    /** 
-     * @param type
-     * @return String
+
+    /**
+     * @return String representation of this object:
      */
     @Override
     public abstract String toString();
 
     
     /** 
-     * @param type
      * @return boolean
      */
     public abstract boolean hasFault();

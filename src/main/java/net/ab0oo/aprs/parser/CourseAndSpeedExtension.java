@@ -56,16 +56,13 @@ public class CourseAndSpeedExtension extends DataExtension implements Serializab
 		this.speed = speed;
 	}
 	
-	/**
-	 * @param Returns the current speed in knots and course in degrees in a formatted string
-	 */
 	@Override
 	public String toString() {
 		return "Moving "+speed+" kts @ "+course+" deg";
 	}
 	
 	/**
-	 * @param Returns the current speed in mph and course in degrees in a formatted string
+	 * @return the current speed in mph and course in degrees in a formatted string
 	 */
 	@Override
 	public String toSAEString() {

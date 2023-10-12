@@ -144,14 +144,25 @@ public class PositionField extends APRSData {
 		// canMessage = msgCapable;
 	}
 
+	
+	/** 
+	 * @param val tells the encoder to compress this packet out output
+	 */
 	public void setCompressedFormat(boolean val) {
 		compressedFormat = val;
 	}
 
+	
+	/** 
+	 * @return boolean returns true if this packet is compressed
+	 */
 	public boolean getCompressedFormat() {
 		return compressedFormat;
 	}
 
+	/** 
+	 * @return boolean returns true if this packet has a valid symbol
+	 */
 	private boolean validSymTableCompressed(char c) {
 		if (c == '/' || c == '\\')
 			return true;

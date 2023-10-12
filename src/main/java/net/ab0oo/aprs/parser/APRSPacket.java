@@ -59,7 +59,12 @@ public class APRSPacket implements Serializable {
         this.aprsInformation = new InformationField(body);
     }
     
-    public static final String getBaseCall(String callsign) {
+    
+	/** 
+	 * @param callsign
+	 * @return String
+	 */
+	public static final String getBaseCall(String callsign) {
     	int sepIdx = callsign.indexOf('-');
     	if ( sepIdx > -1 ) {
     		return callsign.substring(0,sepIdx);
@@ -68,7 +73,12 @@ public class APRSPacket implements Serializable {
     	}
     }
     
-    public static final String getSsid(String callsign) {
+    
+	/** 
+	 * @param callsign
+	 * @return String
+	 */
+	public static final String getSsid(String callsign) {
     	int sepIdx = callsign.indexOf('-');
     	if ( sepIdx > -1 ) {
     		return callsign.substring(sepIdx+1);

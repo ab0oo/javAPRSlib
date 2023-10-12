@@ -155,7 +155,7 @@ public class InformationField implements Serializable {
 
 	
     /** 
-     * @return Map<APRSTypes, APRSData>
+     * @return Mapping of APRSTypes to APRSData
      */
     public Map<APRSTypes,APRSData> getAprsData() {
 		return this.dataFields;
@@ -194,7 +194,7 @@ public class InformationField implements Serializable {
 
     
     /** 
-     * @return Set<APRSTypes>
+     * @return Set of APRSTypes
      */
     public Set<APRSTypes> getTypes() {
         return dataFields.keySet();

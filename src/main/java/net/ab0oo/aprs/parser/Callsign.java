@@ -82,7 +82,11 @@ public class Callsign implements Serializable {
         this.ssid = ssid;
     }
 
-    @Override
+    
+	/** 
+	 * @return String
+	 */
+	@Override
     public String toString() {
         return callsign + (ssid == "" ? "" : "-" + ssid);
     }
