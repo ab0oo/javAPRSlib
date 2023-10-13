@@ -28,7 +28,7 @@ class PositionPacketTest {
 			@BeforeEach
 			void setUp() {
 				try {
-					timeField = TimeField.parse(body.getBytes(), 0);
+					timeField = new TimeField(body.getBytes(), 0);
 				} catch(Exception ex) {
 					System.err.println("Barfed parsing time field: "+ ex);
 					timeField = null;

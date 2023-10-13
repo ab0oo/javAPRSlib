@@ -6,6 +6,8 @@ public class ObjectField extends APRSData {
 	private static final long serialVersionUID = 1L;
 	protected String objectName;
 	protected boolean live = true;
+	protected TimeField timestamp;
+	protected PositionField position;
 
 	protected ObjectField() {
 	}
@@ -17,9 +19,13 @@ public class ObjectField extends APRSData {
 	 * builds an ObjectField instance with the parsed data
 	 */
 	public ObjectField(byte[] msgBody) throws Exception {
+		// first, we get the object name
 		this.objectName = new String(msgBody, 1, 9).trim();
 		this.live = (msgBody[10] == '*');
-		this.setLastCursorPosition(10);
+		// then we get the timestamp
+		this.timestamp = new TimeField(msgBody, 10);
+		this.position = new PositionField(msgBody, "FOO", 17);
+		this.setLastCursorPosition(37);
 	}
 
 	/**

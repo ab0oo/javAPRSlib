@@ -10,7 +10,7 @@ public class TestFile {
 
     @Test
     public void testParser() {
-        testParser("src/test/resources/cwop.txt");
+        testParser("src/test/resources/objects.txt");
     }
 
     

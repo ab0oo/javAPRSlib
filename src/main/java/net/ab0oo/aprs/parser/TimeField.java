@@ -17,18 +17,17 @@ public class TimeField extends APRSData {
     /** 
      * @param msgBody
      * @param startPos
-     * @return TimeField
+     * 
+     * Common constructor for a TimeField object.
      */
-    public static TimeField parse(byte[] msgBody, int startPos) {
-        TimeField tf = new TimeField();
+    public TimeField(byte[] msgBody, int startPos) {
         char dti=(char)msgBody[0];
         int cursor = startPos;
         byte timeIndicator = 'z';
         try {
             timeIndicator = msgBody[7];
         } catch ( IndexOutOfBoundsException iobe ) {
-            tf.hasFault = true;
-            return tf;
+            this.hasFault = true;
         }
         if (dti == '/' || dti == '@') {
             /*
@@ -61,7 +60,7 @@ public class TimeField extends APRSData {
                     c.set(Calendar.HOUR_OF_DAY, (short)(msgBody[3]-'0')*10 + ((short)msgBody[4]-'0'));
                     c.set(Calendar.MINUTE, (short)(msgBody[5]-'0')*10 + (short)(msgBody[6]-'0'));
                     c.set(Calendar.SECOND, 0);
-                    tf.reportedTimestamp = c;
+                    this.reportedTimestamp = c;
                     cursor += 7;
                     break;
                 }
@@ -71,13 +70,13 @@ public class TimeField extends APRSData {
                     // to extract the zulu time this packet was sent.
                     // TODO - load geospatial representations of all timezones, then use the location
                     // of this station to figure out what their "local" time is.  For now, we fake it.
-                    tf.reportedTimestamp = cb.build();
+                    this.reportedTimestamp = cb.build();
                     cursor += 7;
                     break;
                 }
                 case 'h': {
                     // HMS zulu time.
-                    tf.reportedTimestamp = cb.build();
+                    this.reportedTimestamp = cb.build();
                     cursor += 7;
                     break;
                 }
@@ -92,19 +91,18 @@ public class TimeField extends APRSData {
                 case '8':
                 case '9': {
                     // this is for the funky case of MHDM format, always in Zulu.
-                    tf.reportedTimestamp = cb.build();
+                    this.reportedTimestamp = cb.build();
                     cursor += 8;
                     break;								
                 }
                 default: {
-                    tf.reportedTimestamp = cb.build();
-                    tf.reportedTimestamp.setTimeInMillis(0);
+                    this.reportedTimestamp = cb.build();
+                    this.reportedTimestamp.setTimeInMillis(0);
                     cursor += 7;
                 }
             }
         }
-        tf.setLastCursorPosition(cursor);
-        return tf;
+        setLastCursorPosition(cursor);
     }
 
     

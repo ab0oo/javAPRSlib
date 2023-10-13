@@ -25,7 +25,9 @@
 
 package net.ab0oo.aprs.parser;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 /**
  * 
  * @author johng
@@ -153,7 +155,7 @@ public class Parser {
         	case '@':
 				// These have timestamps, so we need to parse those, advance the cursor, and then look for
 				// the position data
-				TimeField timeField = TimeField.parse(msgBody, cursor);
+				TimeField timeField = new TimeField(msgBody, cursor);
 				infoField.addAprsData(APRSTypes.T_TIMESTAMP, timeField);
 				cursor = timeField.getLastCursorPosition();
 				PositionField pf = new PositionField(msgBody, dest, cursor+1);
@@ -196,10 +198,8 @@ public class Parser {
 					ObjectField of = new ObjectField(msgBody);
     				infoField.addAprsData(APRSTypes.T_OBJECT, of);
 					cursor = of.getLastCursorPosition();
-					PositionField posField = new PositionField(msgBody,dest, cursor +1 );
-					infoField.addAprsData(APRSTypes.T_POSITION, posField);
-					cursor = posField.getLastCursorPosition();
-
+					byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
+					packet.setComment(new String(slice, StandardCharsets.UTF_8));
     			} else {
     				System.err.println("Object packet body too short for valid object");
     				packet.setHasFault(true); // too short for an object
