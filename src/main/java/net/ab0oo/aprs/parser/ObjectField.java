@@ -25,7 +25,7 @@ public class ObjectField extends APRSData {
 		// then we get the timestamp
 		this.timestamp = new TimeField(msgBody, 10);
 		this.position = new PositionField(msgBody, "FOO", 17);
-		this.setLastCursorPosition(37);
+		this.setLastCursorPosition(36);
 	}
 
 	/**

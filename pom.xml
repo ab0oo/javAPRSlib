@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.ab0oo.javaprslib</groupId>
   <artifactId>javAPRSlib</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <packaging>jar</packaging>
 
   <name>Java APRS Library</name>
