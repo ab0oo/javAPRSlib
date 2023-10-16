@@ -34,4 +34,5 @@ package net.ab0oo.aprs.parser;
  */
 public abstract class DataExtension {
 	public abstract String toSAEString();
+	public abstract APRSExtensions getType();
 }

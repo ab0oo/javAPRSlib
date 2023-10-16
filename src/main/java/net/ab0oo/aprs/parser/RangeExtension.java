@@ -48,7 +48,14 @@ public class RangeExtension extends DataExtension implements Serializable {
 		return range;
 	}
 	
-	
+	/**
+	 * @return Enum indicating the data type extention
+	*/
+	@Override
+	public APRSExtensions getType() {
+		return APRSExtensions.T_RADIORANGE;
+	}
+
 	/** 
 	 * @return String
 	 */

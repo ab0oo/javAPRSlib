@@ -68,4 +68,12 @@ public class CourseAndSpeedExtension extends DataExtension implements Serializab
 	public String toSAEString() {
 		return "Moving "+Utilities.ktsToMph(speed)+" mph @ "+course+" deg";
 	}
+
+	/**
+	 * @return Enum indicating the data type extention
+	*/
+	@Override
+	public APRSExtensions getType() {
+		return APRSExtensions.T_COURSESPEED;
+	}
 }

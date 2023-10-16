@@ -82,6 +82,13 @@ public class PHGExtension extends DataExtension implements Serializable {
 		this.directivity = directivityCodes[directivity];
 	}
 	
+	/**
+	 * @return Enum indicating the data type extention
+	*/
+	@Override
+	public APRSExtensions getType() {
+		return APRSExtensions.T_PHG;
+	}
 	
 	/** 
 	 * @return String

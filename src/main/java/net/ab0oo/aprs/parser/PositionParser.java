@@ -36,13 +36,6 @@ import java.util.regex.Pattern;
 public class PositionParser {
     private static Pattern commaSplit = Pattern.compile(",");
 
-    
-    /** 
-     * @param msgBody
-     * @param cursor
-     * @return Position
-     * @throws Exception
-     */
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
         Calendar.Builder cb = new Calendar.Builder();
         Calendar date = cb.build();

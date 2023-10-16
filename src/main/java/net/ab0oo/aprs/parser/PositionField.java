@@ -196,6 +196,20 @@ public class PositionField extends APRSData {
 		this.position = position;
 	}
 
+	/**
+	 * @return DataExtension returns any data extension found in this packet
+	 */
+	public DataExtension getExtension() {
+		return extension;
+	}
+
+	/**
+	 * @param e data extension to add to this position
+	 */
+	public void setExtension( DataExtension e) {
+		this.extension = e;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("---POSITION---\n");
