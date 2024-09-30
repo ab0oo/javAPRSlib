@@ -27,7 +27,8 @@ public class TimeField extends APRSData {
         try {
             timeIndicator = msgBody[7];
         } catch ( IndexOutOfBoundsException iobe ) {
-            this.hasFault = true;
+            this.setHasFault( true );
+            this.setFaultReason("Index out of bounds parsing time field");
         }
         if (dti == '/' || dti == '@') {
             /*
@@ -141,16 +142,6 @@ public class TimeField extends APRSData {
         return -1;
     }
 
-    
-    /** 
-     * @return boolean
-     */
-    @Override
-    public boolean hasFault() {
-        return this.hasFault;
-    }
-
-    
     /** 
      * @param o
      * @return boolean

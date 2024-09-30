@@ -25,40 +25,44 @@ import java.util.ArrayList;
 /**
  * 
  * @author johng
- * This class represents a single digipeater in a TNC2-format VIA string.
+ *         This class represents a single digipeater in a TNC2-format VIA
+ *         string.
  * 
  */
 public class Digipeater extends Callsign {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private boolean used;
-    
+
     public Digipeater(String call) {
-	super(call.replaceAll("\\*", ""));
-        if ( call.indexOf("*") >= 0 ) {
-		setUsed(true);
-	}
-    }
-    public Digipeater(byte[] data, int offset) {
-	    super(data, offset);
-	    this.used = (data[offset + 6] & 0x80) == 0x80;
+        super(call.replaceAll("\\*", ""));
+        if (call.indexOf("*") >= 0) {
+            setUsed(true);
+        }
     }
 
-    /** parse a comma-separated list of digipeaters
+    public Digipeater(byte[] data, int offset) {
+        super(data, offset);
+        this.used = (data[offset + 6] & 0x80) == 0x80;
+    }
+
+    /**
+     * parse a comma-separated list of digipeaters
+     * 
      * @return the list of digipeaters as an array
      */
     public static ArrayList<Digipeater> parseList(String digiList, boolean includeFirst) {
-	String[] digiTemp = digiList.split(",");
-	ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
-	boolean includeNext = includeFirst;
-	// for now, '*' is set for all digis with used bit.
-	// however, only the last used digi should have a '*'
-	for (String digi : digiTemp) {
-		String digiTrim = digi.trim();
-		if (digiTrim.length() > 0 && includeNext)
-			digis.add(new Digipeater(digiTrim));
-		includeNext = true;
-	}
-	return digis;
+        String[] digiTemp = digiList.split(",");
+        ArrayList<Digipeater> digis = new ArrayList<Digipeater>();
+        boolean includeNext = includeFirst;
+        // for now, '*' is set for all digis with used bit.
+        // however, only the last used digi should have a '*'
+        for (String digi : digiTemp) {
+            String digiTrim = digi.trim();
+            if (digiTrim.length() > 0 && includeNext)
+                digis.add(new Digipeater(digiTrim));
+            includeNext = true;
+        }
+        return digis;
     }
 
     /**
@@ -74,25 +78,23 @@ public class Digipeater extends Callsign {
     public void setUsed(boolean used) {
         this.used = used;
     }
-    
-    
-    /** 
+
+    /**
      * @return String
      */
     @Override
     public String toString() {
-        return super.toString() + ( isUsed() ? "*":"");
+        return super.toString() + (isUsed() ? "*" : "");
     }
 
-    
-    /** 
+    /**
      * @return byte[]
      * @throws IllegalArgumentException
      */
     @Override
     public byte[] toAX25() throws IllegalArgumentException {
         byte[] ax25 = super.toAX25();
-	ax25[6] |= (isUsed()?0x80:0);
-	return ax25;
+        ax25[6] |= (isUsed() ? 0x80 : 0);
+        return ax25;
     }
 }

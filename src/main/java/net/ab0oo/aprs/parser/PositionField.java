@@ -41,7 +41,7 @@ public class PositionField extends APRSData {
 		super(msgBody);
 		positionSource = "Unknown";
 		char packetType = (char) msgBody[0];
-		this.hasFault = false;
+		this.setHasFault(false);
 		try {
 			switch (packetType) {
 				case '\'':
@@ -49,7 +49,7 @@ public class PositionField extends APRSData {
 					// (char)packet.length >= 9 ?
 					this.type = APRSTypes.T_POSITION;
 					this.position = PositionParser.parseMICe(msgBody, destinationField);
-					this.extension = PositionParser.parseMICeExtension(msgBody, destinationField);
+					this.extension = DataExtension.parseMICeExtension(msgBody, destinationField);
 					this.positionSource = "MICe";
 					cursor = 10;
 					if (cursor < msgBody.length
@@ -68,8 +68,8 @@ public class PositionField extends APRSData {
 				case '/':
 				case '@':
 					if (msgBody.length < 10) { // Too short!
-						this.hasFault = true;
-						this.comment += " Packet too short.";
+						this.setHasFault(true);
+						this.setFaultReason("Position packet too short");
 					} else {
 
 						// Normal or compressed location packet, with or without
@@ -81,7 +81,7 @@ public class PositionField extends APRSData {
 						if (validSymTableCompressed(posChar)) { /* [\/\\A-Za-j] */
 							// compressed position packet
 							this.position = PositionParser.parseCompressed(msgBody, cursor);
-							this.extension = PositionParser.parseCompressedExtension(msgBody, cursor);
+							this.extension = DataExtension.parseCompressedExtension(msgBody, cursor);
 							this.positionSource = "Compressed";
 							cursor += 13;
 						} else if ('0' <= posChar && posChar <= '9') {
@@ -91,18 +91,20 @@ public class PositionField extends APRSData {
 							} catch (Exception ex) {
 								this.comment = ex.getMessage();
 								System.err.println(ex);
-								hasFault = true;
+								this.setFaultReason("Failed to parse uncompressed position");
+								this.setHasFault(true);
 							}
 							try {
-								this.extension = PositionParser.parseUncompressedExtension(msgBody, cursor);
+								this.extension = DataExtension.parseUncompressedExtension(msgBody, cursor);
 							} catch (ArrayIndexOutOfBoundsException oobex) {
 								this.extension = null;
 							}
 							this.positionSource = "Uncompressed";
-							cursor += 19;
+							cursor += 17;
 						} else {
 							this.positionSource = "Who knows...";
-							hasFault = true;
+							this.setHasFault(true);
+							this.setFaultReason("No one really knows...");
 						}
 						break;
 					}
@@ -112,7 +114,8 @@ public class PositionField extends APRSData {
 						this.position = PositionParser.parseNMEA(msgBody);
 						this.positionSource = "NMEA";
 					} else {
-						hasFault = true;
+						this.setHasFault(true);
+						this.setFaultReason("Unable to parse NMEA position");
 					}
 					break;
 
@@ -127,8 +130,10 @@ public class PositionField extends APRSData {
 			this.setLastCursorPosition(cursor);
 			compressedFormat = false;
 		} catch (Exception ex) {
-			this.hasFault = true;
+			this.setHasFault(true);
+			this.setFaultReason(" Invalid position format");
 			this.comment = this.comment + " INVALID position format.";
+			System.err.println(ex);
 		}
 	}
 
@@ -245,11 +250,6 @@ public class PositionField extends APRSData {
         }
         return -1;
     }
-
-	@Override
-	public boolean hasFault() {
-		return this.hasFault;
-	}
 
 	@Override
 	public boolean equals(Object o) {

@@ -6,7 +6,7 @@ package net.ab0oo.aprs.parser;
  *
  * AVRS is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation; either version 2 of the License,
+ * by the Free Software Foundation; either version 2 of the Licensqe,
  * or (at your option) any later version.
  *
  * AVRS is distributed in the hope that it will be useful, but
@@ -23,10 +23,11 @@ package net.ab0oo.aprs.parser;
 public abstract class APRSData implements java.io.Serializable, java.lang.Comparable<APRSData> {
     private static final long serialVersionUID = 1L;
     protected APRSTypes type;
-    protected boolean hasFault;
     private int lastCursorPosition = 0;
     protected byte[] rawBytes;
     protected boolean canMessage = false;
+    private boolean hasFault;
+	private String faultReason = "";
     protected String comment;
 
     public APRSData() {}
@@ -59,13 +60,6 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
     @Override
     public abstract String toString();
 
-    
-    /** 
-     * @return boolean
-     */
-    public abstract boolean hasFault();
-
-    
     /** 
      * @param type
      */
@@ -73,7 +67,36 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
         this.type = type;
     }
 
-    
+    /**
+     * 
+     * @return boolean if this packet has faults during decoding
+     */
+    public final boolean hasFault() {
+        return this.hasFault;
+    }
+
+    /**
+     * 
+     * @param _faulted boolean
+     */
+    public final void setHasFault(boolean _faulted) {
+        this.hasFault = _faulted;
+    }
+
+    /**
+	 * @param reason Set the reason this packet failed to parse
+	 */
+	public final void setFaultReason(String reason) {
+		this.faultReason = reason;
+	}
+
+	/**
+	 * @return reason the reason this packet failed to parse
+	 */
+	public final String getFaultReason() {
+		return faultReason;
+	}
+   
     /** 
      * @return APRSTypes
      */

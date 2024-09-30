@@ -28,6 +28,8 @@ package net.ab0oo.aprs.parser;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  * 
  * @author johng
@@ -38,7 +40,8 @@ import java.util.Arrays;
  * further parsing of the message.  This class parses raw TNC2 packets and returns instances of APRSPackets
  */
 public class Parser {
-	
+    private static final Pattern altitudePattern = Pattern.compile(".*/A=(\\d{6}).*");
+
 	
 	/** 
 	 * @param args
@@ -144,8 +147,6 @@ public class Parser {
 		if ( (dti >='A' && dti <= 'S') || 
 		     (dti >='U' && dti <= 'Z') ||
 			 (dti >='0' && dti <= '9') ) {
-			packet.setHasFault(true);
-			packet.setComment("Invalid DTI");
 			return packet;
 		}
 		InformationField infoField = packet.getAprsInformation();
@@ -160,13 +161,20 @@ public class Parser {
 				cursor = timeField.getLastCursorPosition();
 				PositionField pf = new PositionField(msgBody, dest, cursor+1);
 				infoField.addAprsData(APRSTypes.T_POSITION,pf);
+				infoField.setDataExtension(pf.getExtension());
 				cursor = pf.getLastCursorPosition();
 				if ( pf.getPosition().getSymbolCode() == '_' ) {
-					// this is a weather packet, so pull the weather info from it
+					// this is a weather station, but it might NOT be transmitting WEATHER DATA
 					WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor);
 					wf.setType(APRSTypes.T_WX);
 					infoField.addAprsData(APRSTypes.T_WX, wf);
 					cursor = wf.getLastCursorPosition();
+				} else {
+					byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
+					Matcher matcher = altitudePattern.matcher(new String(slice));
+					if (matcher.matches()) {
+						pf.getPosition().setAltitude(Integer.parseInt(matcher.group(1)));
+					}
 				}
 				break;
 	    	case '!':
@@ -178,31 +186,41 @@ public class Parser {
         			// Ultimeter II weather packet
         		} else {
 					// these are non-timestamped packets with position.
-					PositionField posField = new PositionField(msgBody, dest, cursor+1);
-					cursor = posField.getLastCursorPosition();
-					infoField.addAprsData(APRSTypes.T_POSITION, posField );
-					if ( posField.getPosition().getSymbolCode() == '_' && msgBody.length > 20) {
+					pf = new PositionField(msgBody, dest, cursor+1);
+					cursor = pf.getLastCursorPosition();
+					infoField.addAprsData(APRSTypes.T_POSITION, pf );
+					infoField.setDataExtension(pf.getExtension());
+					if ( pf.getPosition().getSymbolCode() == '_' && msgBody.length > 20) {
 						// with weather...
 						WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor + 1);
 						infoField.addAprsData(APRSTypes.T_WX, wf);
 						cursor = wf.getLastCursorPosition();
+					} else {
+						byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
+						Matcher matcher = altitudePattern.matcher(new String(slice));
+						if (matcher.matches()) {
+							pf.getPosition().setAltitude(Integer.parseInt(matcher.group(1)));
+						}
 					}
         		}
     			break;
         	case ':':
-        		infoField = new MessagePacket(msgBody,dest);
-        		break;
+        		infoField.addAprsData(APRSTypes.T_MESSAGE, new MessagePacket(msgBody,dest));
+				break;
     		case ';':
+				ObjectField of;
     			if (msgBody.length > 29) {
     				//System.out.println("Parsing an OBJECT");
-					ObjectField of = new ObjectField(msgBody);
+					of = new ObjectField(msgBody);
     				infoField.addAprsData(APRSTypes.T_OBJECT, of);
 					cursor = of.getLastCursorPosition();
 					byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
 					packet.setComment(new String(slice, StandardCharsets.UTF_8));
     			} else {
+					of = new ObjectField("null", false, null, "foo");
     				System.err.println("Object packet body too short for valid object");
-    				packet.setHasFault(true); // too short for an object
+    				of.setHasFault(true); // too short for an object
+					of.setFaultReason("Too short for an object");
     			}
     			break;
     		case '>':
@@ -227,7 +245,8 @@ public class Parser {
     				//System.out.println("Parsing TELEMETRY");
     				//parseTelem(bodyBytes);
     			} else {
-    				packet.setHasFault(true); // too short
+//    				packet.setHasFault(true); // too short
+//					packet.setFaultReason("Packet too short for telemetry packet");
 	   			}
     			break;
     		case '#': // Peet Bros U-II Weather Station
@@ -245,7 +264,8 @@ public class Parser {
     			break;
 
     		default:
-    			packet.setHasFault(true); // UNKNOWN!
+//    			packet.setHasFault(true); // UNKNOWN!
+//				packet.setFaultReason("Unknown fault reason.  Sorry.");
     			break;
 
         }

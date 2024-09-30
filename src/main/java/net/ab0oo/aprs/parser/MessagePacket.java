@@ -20,7 +20,7 @@
  */
 package net.ab0oo.aprs.parser;
 
-public class MessagePacket extends InformationField {
+public class MessagePacket extends APRSData {
 	private static final long serialVersionUID = 1L;
     private String messageBody;
     private String messageNumber;
@@ -32,7 +32,7 @@ public class MessagePacket extends InformationField {
         super(bodyBytes);
         String message = new String(bodyBytes);
         if ( message.length() < 2) {
-            this.hasFault = true;
+            this.setHasFault(true);
             return;
         }
         int msgSpc = message.indexOf(':', 2);
@@ -68,7 +68,6 @@ public class MessagePacket extends InformationField {
     	this.messageNumber = messageNumber;
     	if ( messageBody.equals("ack") ) isAck = true;
     	if ( messageBody.equals("rej") ) isRej = true;
-    	super.setDataTypeIdentifier(':');
     }
     
     /**

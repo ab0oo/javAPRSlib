@@ -71,6 +71,21 @@ public class ObjectField extends APRSData {
 		this.live = live;
 	}
 
+	public TimeField getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(TimeField timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public PositionField getPosition() {
+		return position;
+	}
+
+	public void setPosition(PositionField position) {
+		this.position = position;
+	}
 	
 	/** 
 	 * @return String
@@ -97,16 +112,6 @@ public class ObjectField extends APRSData {
 		}
 		return -1;
 	}
-
-	
-	/** 
-	 * @return boolean
-	 */
-	@Override
-	public boolean hasFault() {
-		return this.hasFault;
-	}
-
 	
 	/** 
 	 * @param o

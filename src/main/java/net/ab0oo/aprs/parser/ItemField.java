@@ -19,8 +19,11 @@ public class ItemField extends APRSData {
 		int name_length = body.indexOf("!") - 1;
 		if (name_length < 1 || name_length > 9) {
 			name_length = body.indexOf("_");
-			if (name_length < 1 || name_length > 9)
+			if (name_length < 1 || name_length > 9) {
+				setHasFault(true);
+				setFaultReason("Invalid ITEM packet, missing '!' or '_'.");
 				throw new Exception("Invalid ITEM packet, missing '!' or '_'.");
+			}
 			this.live = false;
 		} else
 			this.live = true;
@@ -49,11 +52,6 @@ public class ItemField extends APRSData {
 			return 0;
 		}
 		return -1;
-	}
-
-	@Override
-	public boolean hasFault() {
-		return this.hasFault;
 	}
 
 	@Override

@@ -39,7 +39,6 @@ public class InformationField implements Serializable {
     private final long createTimestamp = System.currentTimeMillis();
 	private char dataTypeIdentifier;
     protected byte[] rawBytes;
-	protected boolean hasFault = false;
     protected boolean canMessage = false;
     Map<APRSTypes,APRSData> dataFields;
     DataExtension extension = null;
@@ -131,7 +130,7 @@ public class InformationField implements Serializable {
 	 * @return the hasFault
 	 */
 	public boolean hasFault() {
-        boolean faultFound = this.hasFault;
+        boolean faultFound = false;
         for ( APRSData data : dataFields.values() )  {
             faultFound = faultFound | data.hasFault();
         }
@@ -145,6 +144,13 @@ public class InformationField implements Serializable {
 		return extension;
 	}
 
+    /**
+     * 
+     * @param _extension Set the data extension for this packet
+     */
+    public final void setDataExtension( DataExtension _extension ) {
+        this.extension = _extension;
+    }
     
     /** 
      * @return long

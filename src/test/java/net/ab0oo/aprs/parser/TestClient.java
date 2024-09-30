@@ -11,15 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class TestClient {
-    private static final String host = "192.168.1.11";
     private static final int port = 10152;
     private static final int MAX_LINES = 1000;
+    private static String host = "192.168.1.11";
     private static Map<APRSTypes, Integer> typeCounts = new HashMap<>();
     private static Map<Character, Integer> dtiCounts = new HashMap<>();
     private static int linecount = 0;
     private static int badPackets = 0;
 
-    public void testClient() {
+    public void testClient(String hostname) {
         Socket clientSocket = null;
         BufferedReader input = null;
         PrintWriter out = null;
@@ -27,23 +27,18 @@ public class TestClient {
         try {
             // set up a file for bad packets
             badPackets = new FileWriter("badpackets.txt");
-            clientSocket = new Socket(host, port);
+            clientSocket = new Socket(hostname, port);
             System.out.println(clientSocket.getLocalPort());
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println(input.readLine());
             System.out.println("Sending login.");
-            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 2.0.1");
+            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 3.0.6 filter t/w");
             String fromServer;
             while ( (null != input ) && (fromServer = input.readLine() ) != null && linecount <= MAX_LINES ) {
                 linecount++;
                 if ( fromServer.startsWith("#") ) { continue; }
-                System.out.println(fromServer);
                 APRSPacket p = processPacket(fromServer);
-                if ( p.getAprsInformation().containsType(APRSTypes.T_WX)) {
-                    WeatherField wf = (WeatherField)p.getAprsInformation().getAprsData(APRSTypes.T_WX);
-                    System.out.println( p.getSourceCall() +" temperature is "+ wf.getTemp());
-                }
                 if ( p.hasFault() ) {
                     badPackets.write(fromServer);
                     badPackets.write("\n");
@@ -114,11 +109,19 @@ public class TestClient {
         } catch ( Exception ex ) {
             System.err.println(ex.toString());
             ex.printStackTrace();
-            packet.setHasFault(true);
         }
         if ( packet.hasFault() ) {
             System.err.println("This packet failed to parse:  " + packetString);
+            System.err.println("Fault reason: "+ packet.getFaultReason());
             badPackets++;
+        }
+        if ( packet.getAprsInformation().containsType(APRSTypes.T_WX)) {
+            WeatherField wf = (WeatherField)packet.getAprsInformation().getAprsData(APRSTypes.T_WX);
+            //System.out.println(packetString);
+            //System.out.println(wf);
+        }
+        if ( null != packet.getAprsInformation().getExtension() ) {
+            System.out.println("Found extension "+ packet.getAprsInformation().getExtension().getType());
         }
         return packet;
     }
@@ -130,7 +133,10 @@ public class TestClient {
         }
         TestClient tc = new TestClient();
         if ( fileName.equals("remote")) {
-            tc.testClient();
+            if ( args.length > 1 ) {
+                host = args[1];
+            }
+            tc.testClient(host);
         } else {
             tc.testFile(fileName);
         }

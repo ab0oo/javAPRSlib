@@ -29,7 +29,7 @@ public class TestFile {
                     try {
                         packet = Parser.parse(fromServer);
                     } catch (Exception ex) {
-                        packet.setHasFault(true);
+                        System.err.println("Error parsing packet");
                     }
                     if (packet.hasFault()) {
                         System.out.println(fromServer);

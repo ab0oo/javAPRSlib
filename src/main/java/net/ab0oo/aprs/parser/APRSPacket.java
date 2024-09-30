@@ -39,10 +39,9 @@ public class APRSPacket implements Serializable {
     private ArrayList<Digipeater> digipeaters;
     private char dti;
     private InformationField aprsInformation;
-    private boolean hasFault;
 	private String comment;
 
-    static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
+	static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
     public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, byte[] body) {
 		receivedTimestamp = new Date(System.currentTimeMillis());
@@ -178,20 +177,6 @@ public class APRSPacket implements Serializable {
     }
 
 	/**
-	 * @return the hasFault
-	 */
-	public boolean hasFault() {
-		return ( this.hasFault | aprsInformation.hasFault() );
-	}
-
-	/**
-	 * @param hasFault the hasFault to set
-	 */
-	public void setHasFault(boolean hasFault) {
-		this.hasFault = hasFault;
-	}
-
-	/**
 	 * @return the originalString
 	 */
 	public final String getOriginalString() {
@@ -209,12 +194,35 @@ public class APRSPacket implements Serializable {
 		this.aprsInformation = infoField;
 	}
 
-	public final void setComment(String comment) {
-		this.comment = comment;
+	/**
+	 * @return the hasFault
+	 */
+	public boolean hasFault() {
+		boolean fault = false;
+		for ( APRSData d : this.getAprsInformation().getAprsData().values() ) {
+			fault = fault | d.hasFault();
+		}
+		return fault;
 	}
 
-	public final String getComment() {
-		return this.comment;
+	/**
+	 * @return reason the reason this packet failed to parse
+	 */
+	public final String getFaultReason() {
+		String faultReason = "";
+		for ( APRSData d : this.getAprsInformation().getAprsData().values() ) {
+			faultReason = faultReason+=d.getFaultReason();
+		}
+		return faultReason;
+	}
+
+    public String getComment() {
+		return comment;
+	}
+
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Override
