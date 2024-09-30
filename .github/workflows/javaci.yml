@@ -37,5 +37,6 @@ jobs:
       run: mvn -B test
     - name: Package with Maven
       run: mvn -B package
-    - name: Install with Maven
-      run: mvn -B --no-transfer-progress -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} install
+#    This is disabled.  We want to run it for builds.  we want a separate integration for publishing.
+#    - name: Install with Maven
+#      run: mvn -B --no-transfer-progress -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} install
