@@ -190,7 +190,7 @@ public class Parser {
         		}
     			break;
         	case ':':
-        		infoField = new MessagePacket(msgBody,dest);
+        		packet.setInfoField(new MessagePacket(msgBody,dest));
         		break;
     		case ';':
     			if (msgBody.length > 29) {
