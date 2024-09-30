@@ -175,7 +175,7 @@
           <artifactId>javAPRSlib</artifactId>
           <version>3.0.6</version>
           <packaging>jar</packaging>
-          <file>${basedir}/target/${artifactId}-${project.version}.jar</file>
+          <file>${basedir}/target/${project.artifactId}-${project.version}.jar</file>
           <generatePom>true</generatePom>
         </configuration>
         <executions>
