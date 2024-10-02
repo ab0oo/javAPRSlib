@@ -33,11 +33,12 @@ public class TestClient {
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println(input.readLine());
             System.out.println("Sending login.");
-            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 3.0.6 filter t/w");
+            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 3.0.7");
             String fromServer;
             while ( (null != input ) && (fromServer = input.readLine() ) != null && linecount <= MAX_LINES ) {
                 linecount++;
                 if ( fromServer.startsWith("#") ) { continue; }
+                System.out.println(fromServer);
                 APRSPacket p = processPacket(fromServer);
                 if ( p.hasFault() ) {
                     badPackets.write(fromServer);
@@ -116,12 +117,11 @@ public class TestClient {
             badPackets++;
         }
         if ( packet.getAprsInformation().containsType(APRSTypes.T_WX)) {
-            WeatherField wf = (WeatherField)packet.getAprsInformation().getAprsData(APRSTypes.T_WX);
+            //WeatherField wf = (WeatherField)packet.getAprsInformation().getAprsData(APRSTypes.T_WX);
             //System.out.println(packetString);
-            //System.out.println(wf);
         }
         if ( null != packet.getAprsInformation().getExtension() ) {
-            System.out.println("Found extension "+ packet.getAprsInformation().getExtension().getType());
+//            System.out.println("Found extension "+ packet.getAprsInformation().getExtension().getType());
         }
         return packet;
     }

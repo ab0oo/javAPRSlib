@@ -70,22 +70,10 @@ public class Parser {
 		}
 	}
     
-    
 	/** 
-	 * @param rawPacket
-	 * @return APRSPacket
-	 */
-	public static APRSPacket parsePacket(byte[] rawPacket) {
-        //if ( packet.getDti() == '!' || packet.getDti() == '=' ) {
-            // !3449.94N/08448.56W_203/000g000t079P133h85b10149OD1
-        return new APRSPacket(null, null, null, null);
-    }
-    
-    
-	/** 
-	 * @param packet
-	 * @return APRSPacket
-	 * @throws Exception
+	 * @param packet inbound packet as a string
+	 * @return APRSPacket a fully parsed APRSPacket object
+	 * @throws Exception Generic "I failed"
 	 */
 	public static APRSPacket parse(final String packet) throws Exception {
         int cs = packet.indexOf('>');
@@ -103,9 +91,9 @@ public class Parser {
 
     
 	/** 
-	 * @param packet
-	 * @return APRSPacket
-	 * @throws Exception
+	 * @param packet inbound packet as a byte[]
+	 * @return APRSPacket fully parsed APRS packet object
+	 * @throws Exception Generic "I failed" ** TODO ** make this a meaningful exception
 	 */
 	public static APRSPacket parseAX25(byte[] packet) throws Exception {
 	    int pos = 0;
@@ -196,8 +184,17 @@ public class Parser {
 						infoField.addAprsData(APRSTypes.T_WX, wf);
 						cursor = wf.getLastCursorPosition();
 					} else {
-						byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
-						Matcher matcher = altitudePattern.matcher(new String(slice));
+						Matcher matcher;
+						try {
+							byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
+							matcher = altitudePattern.matcher(new String(slice));
+						} catch ( IllegalArgumentException iae ) {
+							BadData bd = new BadData();
+							String msg = "Wandered off the end of the msg body at cursor pos "+cursor;
+							bd.setFaultReason(msg);
+							infoField.addAprsData(APRSTypes.T_UNSPECIFIED, bd);
+							return packet;
+						}
 						if (matcher.matches()) {
 							pf.getPosition().setAltitude(Integer.parseInt(matcher.group(1)));
 						}
@@ -218,9 +215,10 @@ public class Parser {
 					packet.setComment(new String(slice, StandardCharsets.UTF_8));
     			} else {
 					of = new ObjectField("null", false, null, "foo");
-    				System.err.println("Object packet body too short for valid object");
+					String reason="Object packet body too short ("+msgBody.length+") for valid object";
+					System.err.println(reason);
     				of.setHasFault(true); // too short for an object
-					of.setFaultReason("Too short for an object");
+					of.setFaultReason(reason);
     			}
     			break;
     		case '>':
@@ -233,12 +231,9 @@ public class Parser {
 //				packet.setType(APRSTypes.T_QUERY);
     			break;
     		case ')':
-//				packet.setType(APRSTypes.T_ITEM);
-//    			if (msgBody.length > 18) {
-//				infoField = new ItemPacket(msgBody);
-//    			} else {
-//    				packet.hasFault = true; // too short
-//    			}
+				ItemField itemField = new ItemField(msgBody);
+				infoField.addAprsData(APRSTypes.T_ITEM, itemField);
+				cursor = itemField.getLastCursorPosition();
     			break;
     		case 'T':
     			if (msgBody.length > 18) {

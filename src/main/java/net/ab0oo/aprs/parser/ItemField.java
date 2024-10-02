@@ -30,6 +30,7 @@ public class ItemField extends APRSData {
 		this.objectName = new String(msgBody, 1, name_length).trim();
 		int cursor = name_length + 2;
 		comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
+		super.setLastCursorPosition(cursor);
 	}
 
 	

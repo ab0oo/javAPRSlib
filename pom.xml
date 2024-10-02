@@ -171,9 +171,9 @@
         <artifactId>maven-install-plugin</artifactId>
         <version>3.1.1</version>
         <configuration>
-          <groupId>net.ab0oo.aprs</groupId>
-          <artifactId>javAPRSlib</artifactId>
-          <version>3.0.6</version>
+	<groupId>${project.groupId}</groupId>
+	  <artifactId>${project.artifactId}</artifactId>
+	  <version>${project.version}</version>
           <packaging>jar</packaging>
           <file>${basedir}/target/${project.artifactId}-${project.version}.jar</file>
           <generatePom>true</generatePom>
@@ -196,6 +196,8 @@
           <extensions>true</extensions>
           <configuration>
             <publishingServerId>central</publishingServerId>
+             <autoPublish>true</autoPublish>
+             <waitUntil>published</waitUntil>
           </configuration>
         </plugin>
 
