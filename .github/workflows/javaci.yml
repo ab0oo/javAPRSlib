@@ -5,33 +5,32 @@ name: Java CI
 
 on:
   push:
-    branches: [ '**' ]
+    branches: ["**"]
   pull_request:
-    branches: [ '**' ]
+    branches: ["**"]
 
 jobs:
   build:
-
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        java: [ '17' ]
+        java: ["17"]
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'zulu'
-        cache: maven
-    - name: Clean with Maven
-      run: mvn -B clean
-    - name: Compile with Maven
-      run: mvn -B compile
-    - name: Test with Maven
-      run: mvn -B test
-    - name: Package with Maven
-      run: mvn -B package
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: "zulu"
+          cache: maven
+      - name: Clean with Maven
+        run: mvn -B clean
+      - name: Compile with Maven
+        run: mvn -B compile
+      - name: Test with Maven
+        run: mvn -B test
+      - name: Package with Maven
+        run: mvn -B package

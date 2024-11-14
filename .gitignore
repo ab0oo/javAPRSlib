@@ -11,3 +11,4 @@ target
 release.properties
 add_to_local_maven.sh
 pom.xml.releaseBackup
+.trunk
