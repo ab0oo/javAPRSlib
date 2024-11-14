@@ -1,28 +1,23 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
-
- * Please note that significant portions of this code were taken from the JAVA FAP
- * translation by Matti Aarnio at http://repo.ham.fi/websvn/java-aprs-fap/
- * 
  */
-
 package net.ab0oo.aprs.parser;
 
 import java.nio.charset.StandardCharsets;
@@ -30,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.ab0oo.UnparsablePacketException;
 /**
  * 
  * @author johng
@@ -77,6 +74,9 @@ public class Parser {
 	 */
 	public static APRSPacket parse(final String packet) throws Exception {
         int cs = packet.indexOf('>');
+		if ( cs < 0 ) {
+			throw new UnparsablePacketException("Not a valid AX25-style packet");
+		}
         String source = packet.substring(0,cs).toUpperCase();
         int ms = packet.indexOf(':');
         String digiList = packet.substring(cs+1,ms);
@@ -178,6 +178,10 @@ public class Parser {
 					cursor = pf.getLastCursorPosition();
 					infoField.addAprsData(APRSTypes.T_POSITION, pf );
 					infoField.setDataExtension(pf.getExtension());
+					if ( cursor >= msgBody.length ) {
+						// this is a position-only packet, time to leave
+						break;
+					}
 					if ( pf.getPosition().getSymbolCode() == '_' && msgBody.length > 20) {
 						// with weather...
 						WeatherField wf = WeatherParser.parseWeatherData(msgBody, cursor + 1);
@@ -189,6 +193,7 @@ public class Parser {
 							byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
 							matcher = altitudePattern.matcher(new String(slice));
 						} catch ( IllegalArgumentException iae ) {
+							iae.printStackTrace();
 							BadData bd = new BadData();
 							String msg = "Wandered off the end of the msg body at cursor pos "+cursor;
 							bd.setFaultReason(msg);
@@ -211,6 +216,11 @@ public class Parser {
 					of = new ObjectField(msgBody);
     				infoField.addAprsData(APRSTypes.T_OBJECT, of);
 					cursor = of.getLastCursorPosition();
+					if (cursor > msgBody.length - 1 ) {
+						System.err.println("Ran off the end:");
+						System.err.println(msgBody);
+						break;
+					}
 					byte[] slice = Arrays.copyOfRange(msgBody, cursor, msgBody.length-1);
 					packet.setComment(new String(slice, StandardCharsets.UTF_8));
     			} else {

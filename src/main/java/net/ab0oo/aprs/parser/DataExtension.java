@@ -1,20 +1,20 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
@@ -110,11 +110,13 @@ public abstract class DataExtension {
             // this message came from a GPGGA sentance, and therefore has altitude
             return null;
         }
-        int c = (char) msgBody[cursor + 10] - 33;
-        if (c + 33 == ' ') {
-            // another special case, where csT is ignored
+        if ((char) msgBody[cursor + 11] == ' ') {
+            // another special case, where cs is ignored
+            // we see this in Compressed Position packets with no cs
             return null;
         }
+        int c = (char) msgBody[cursor + 11] - 33;
+
         if (c < 90) {
             // this is a compressed course/speed value
             int s = (char) msgBody[cursor + 11] - 33;

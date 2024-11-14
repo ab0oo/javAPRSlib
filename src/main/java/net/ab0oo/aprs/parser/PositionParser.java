@@ -1,23 +1,23 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
- * 
+ *
  * Large segments of this code were taken from Matti Aarnio at 
  * http://repo.ham.fi/websvn/java-aprs-fap/
  * I appreciate the base work Matti did - JohnG
@@ -124,11 +124,11 @@ public class PositionParser {
             if (lath == 's' || lath == 'S')
                 latitude = 0.0F - latitude;
             else if (lath != 'n' && lath != 'N')
-                throw new Exception("Bad latitude sign character");
+                throw new UnparsablePositionException("Bad latitude sign character");
             if (lngh == 'w' || lngh == 'W')
                 longitude = 0.0F - longitude;
             else if (lngh != 'e' && lngh != 'E')
-                throw new Exception("Bad longitude sign character");
+                throw new UnparsablePositionException("Bad longitude sign character");
             Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
 //          TODO - figure out what I meant here...
 //            position.setTimestamp(date);
@@ -385,9 +385,9 @@ public class PositionParser {
             // message, group codes, and icon numbers. The EJ-41U does not analyze this
             // format but can re-structure it.
             // The data contains the following information:
-            // l $PNTS Starts the $PNTS sentence
-            // l version
-            // l the registered information. [0]=normal geographical location data.
+            // . $PNTS Starts the $PNTS sentence
+            // . version
+            // . the registered information. [0]=normal geographical location data.
             // This is the only data EJ-41U can re-structure. [s]=Initial position
             // for the course setting [E]=ending position for the course setting
             // [1]=the course data between initial and ending [P]=the check point
@@ -395,19 +395,19 @@ public class PositionParser {
             // is set OFF [R]=check data when the course data or check point
             // data is
             // received.
-            // l dd,mm,yyyy,hhmmss: Date and time indication.
-            // l Latitude in DMD followed by N or S
-            // l Longitude in DMD followed by E or W
-            // l Direction: Shown with the number 360 degrees divided by 64.
+            // . dd,mm,yyyy,hhmmss: Date and time indication.
+            // . Latitude in DMD followed by N or S
+            // . Longitude in DMD followed by E or W
+            // . Direction: Shown with the number 360 degrees divided by 64.
             // 00 stands for true north, 16 for east. Speed in Km/h
-            // l One of 15 characters [0] to [9], [A] to [E].
+            // . One of 15 characters [0] to [9], [A] to [E].
             // NTSMRK command determines this character when EJ-41U is used.
-            // l A short message up to 20 bites. Use NTSMSG command to determine
+            // . A short message up to 20 bites. Use NTSMSG command to determine
             // this message.
-            // l A group code: 3 letters with a combination of [0] to [9], [A] to [Z].
+            // . A group code: 3 letters with a combination of [0] to [9], [A] to [Z].
             // Use NTSGRP command to determine.
-            // l Status: [1] for usable information, [0] for non-usable information.
-            // l *hh<CR><LF> the check-sum and end of PNTS sentence.
+            // . Status: [1] for usable information, [0] for non-usable information.
+            // . *hh<CR><LF> the check-sum and end of PNTS sentence.
 
             lats = nmea[7];
             lath = nmea[8];

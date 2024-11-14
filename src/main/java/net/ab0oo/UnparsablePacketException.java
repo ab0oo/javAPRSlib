@@ -18,17 +18,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-package net.ab0oo.aprs.parser;
+/**
+ * Simple exception class used to indicate a Parser failure 
+ */
+package net.ab0oo;
 
-public class BadData extends APRSData {
+public class UnparsablePacketException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-    public BadData() {
-        super.setHasFault(true);
-    }
-
-    @Override
-    public String toString() {
-        return "Unable to decode this packet";
-    }
-    
+	public UnparsablePacketException(String ex) {
+		super(ex);
+	}
 }

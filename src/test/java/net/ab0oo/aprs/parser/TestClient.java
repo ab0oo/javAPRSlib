@@ -1,3 +1,23 @@
+/*
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
+ *
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
+ *
+ * AVRS is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * AVRS is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with AVRS; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
 package net.ab0oo.aprs.parser;
 
 import java.io.BufferedReader;
@@ -22,25 +42,26 @@ public class TestClient {
     public void testClient(String hostname) {
         Socket clientSocket = null;
         BufferedReader input = null;
-        PrintWriter out = null;
+        PrintWriter socketOut = null;
         FileWriter badPackets = null;
+        String fromServer = "";
         try {
             // set up a file for bad packets
-            badPackets = new FileWriter("badpackets.txt");
+            badPackets = new FileWriter("badpackets.txt", true);
             clientSocket = new Socket(hostname, port);
             System.out.println(clientSocket.getLocalPort());
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            socketOut = new PrintWriter(clientSocket.getOutputStream(), true);
             input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println(input.readLine());
-            System.out.println("Sending login.");
-            out.println("user ab0oo-x pass 19951 vers JavAPRSLib 3.0.7");
-            String fromServer;
+            socketOut.println("user ab0oo-x pass 19951 vers JavAPRSLib 3.0.7");
+            socketOut.println("filter t/poimqstunw");
             while ( (null != input ) && (fromServer = input.readLine() ) != null && linecount <= MAX_LINES ) {
-                linecount++;
-                if ( fromServer.startsWith("#") ) { continue; }
                 System.out.println(fromServer);
+                if ( fromServer.startsWith("#") ) continue;
+                linecount++;
                 APRSPacket p = processPacket(fromServer);
                 if ( p.hasFault() ) {
+                    badPackets.write(p.getFaultReason()+":\t");
                     badPackets.write(fromServer);
                     badPackets.write("\n");
                 }
@@ -48,8 +69,8 @@ public class TestClient {
             System.out.println("Disconnected after receiving "+linecount+" lines.");
         } catch ( Exception ex ) {
             System.err.println("Exception caught during socket communications: " + ex.toString());
+            System.err.println("Last input line was:  "+fromServer);
             ex.printStackTrace();
-            System.exit(1);
         } finally {
             try {
                 if ( null != badPackets ) {
@@ -57,8 +78,8 @@ public class TestClient {
                     badPackets.close();;
                 } 
                 if ( null != input ) input.close();
-                if ( null != out ) out.flush();
-                if ( null != out ) out.close();
+                if ( null != socketOut ) socketOut.flush();
+                if ( null != socketOut ) socketOut.close();
                 if ( null != clientSocket ) clientSocket.close();
             } catch ( Exception finalEx ) {}
         }
@@ -72,12 +93,13 @@ public class TestClient {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String fromServer = br.readLine();
             while (null != fromServer && linecount <= MAX_LINES) {
-                linecount++;
                 if (!fromServer.startsWith("#")) {
                     processPacket(fromServer);
+                    linecount++;
+                } else {
+                    System.out.println(fromServer.toString());
                 }
                 fromServer = br.readLine();
-                //System.out.println(packet.toString());
             }
         } catch (Exception ex) {
             System.err.println("Exception caught reading file: " + ex.toString());
@@ -91,37 +113,43 @@ public class TestClient {
         APRSPacket packet = new APRSPacket("N4NE-2","APRX29",null,";147.150SM*111111z3414.21N/08409.59Wr147.150MHz C141 R50m PHG7600 WB4GQX/R".getBytes());
         try {
             packet = Parser.parse( packetString );
-            Set<APRSTypes> types = packet.getAprsInformation().getTypes();
-            for ( APRSTypes type : types ) {
-                if ( typeCounts.containsKey(type)) {
-                    typeCounts.put(type, typeCounts.get(type) + 1);
-                } else {
-                    typeCounts.put(type, 1);
-                }
-            }
-            Character dti = packet.getAprsInformation().getDataTypeIdentifier();
-            if ( !packet.hasFault()) {
-                if ( dtiCounts.containsKey(dti) ) {
-                    dtiCounts.put(dti, dtiCounts.get(dti) + 1);
-                } else {
-                    dtiCounts.put(dti, 1);
-                }
-            }
         } catch ( Exception ex ) {
-            System.err.println(ex.toString());
-            ex.printStackTrace();
+            packet.setOriginalString(packetString);
+            InformationField infoField = new InformationField();
+            APRSData data = new BadData();
+            data.setFaultReason(ex.getMessage());
+            infoField.addAprsData(APRSTypes.T_UNSPECIFIED, data);
+            packet.setInfoField(new InformationField());
+            return packet;
         }
-        if ( packet.hasFault() ) {
+        Set<APRSTypes> types = packet.getAprsInformation().getTypes();
+        for ( APRSTypes type : types ) {
+            if ( typeCounts.containsKey(type)) {
+                typeCounts.put(type, typeCounts.get(type) + 1);
+            } else {
+                typeCounts.put(type, 1);
+            }
+        }
+        Character dti = packet.getAprsInformation().getDataTypeIdentifier();
+        if ( !packet.hasFault()) {
+            if ( dtiCounts.containsKey(dti) ) {
+                dtiCounts.put(dti, dtiCounts.get(dti) + 1);
+            } else {
+                dtiCounts.put(dti, 1);
+            }
+        }
+        if ( null != packet && packet.hasFault() ) {
             System.err.println("This packet failed to parse:  " + packetString);
             System.err.println("Fault reason: "+ packet.getFaultReason());
             badPackets++;
         }
         if ( packet.getAprsInformation().containsType(APRSTypes.T_WX)) {
-            //WeatherField wf = (WeatherField)packet.getAprsInformation().getAprsData(APRSTypes.T_WX);
-            //System.out.println(packetString);
+            // WeatherField wf = (WeatherField)packet.getAprsInformation().getAprsData(APRSTypes.T_WX);
+            // System.out.println(packetString);
+            // System.out.println(wf);
         }
         if ( null != packet.getAprsInformation().getExtension() ) {
-//            System.out.println("Found extension "+ packet.getAprsInformation().getExtension().getType());
+            // System.out.println("Found extension "+ packet.getAprsInformation().getExtension().getType());
         }
         return packet;
     }

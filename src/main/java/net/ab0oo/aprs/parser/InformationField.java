@@ -1,20 +1,20 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
@@ -66,6 +66,8 @@ public class InformationField implements Serializable {
     
     /** 
      * @return char
+     *
+     * Fetches the Data Type indicator (the first character of an AX25 information field)
      */
     public char getDataTypeIdentifier() {
         return dataTypeIdentifier;
@@ -74,6 +76,8 @@ public class InformationField implements Serializable {
     
     /** 
      * @param dti
+     *
+     * Sets the Data Type Indicator for a constructed packet
      */
     public void setDataTypeIdentifier(char dti) {
         this.dataTypeIdentifier = dti;
@@ -81,6 +85,8 @@ public class InformationField implements Serializable {
 
     /**
      * @return the rawBytes
+     *
+     * Returns a byte array of the current Information Field
      */
     public byte[] getRawBytes() {
 	    if (rawBytes != null)
@@ -94,6 +100,8 @@ public class InformationField implements Serializable {
      * @param start
      * @param end
      * @return byte[]
+     *
+     * Returns a slice of bytes from the current Information Field
      */
     public byte[] getBytes(int start, int end) {
         byte[] returnArray = new byte[end-start];
@@ -103,6 +111,8 @@ public class InformationField implements Serializable {
     
 	/**
 	 * @return the comment string which was embedded in the packet
+     *
+     * Returns the comment, which comes after all fixed, parsable data
 	 */
     public String getComment() {
         return comment;
@@ -111,6 +121,8 @@ public class InformationField implements Serializable {
     
     /** 
      * @return String
+     *
+     * Returns a pretty-printed string version of the Info Field
      */
     @Override
     public String toString() {
@@ -128,6 +140,8 @@ public class InformationField implements Serializable {
     }
 	/**
 	 * @return the hasFault
+     *
+     * Faulted packets are unable to be parsed for various reasons
 	 */
 	public boolean hasFault() {
         boolean faultFound = false;
@@ -139,14 +153,17 @@ public class InformationField implements Serializable {
 
 	/**
 	 * @return the extension
-	 */
+     *
+     * Returns the Data Extension from this Information Field
+     */
 	public final DataExtension getExtension() {
 		return extension;
 	}
 
     /**
-     * 
      * @param _extension Set the data extension for this packet
+     *
+     * Sets the data extension for constructed Information Fields
      */
     public final void setDataExtension( DataExtension _extension ) {
         this.extension = _extension;
@@ -154,6 +171,8 @@ public class InformationField implements Serializable {
     
     /** 
      * @return long
+     *
+     * Returns the epoch timestamp of the creation time of this Info Field
      */
     public final long getCreateTimestamp() {
         return this.createTimestamp;
@@ -171,6 +190,8 @@ public class InformationField implements Serializable {
     /** 
      * @param t
      * @return APRSData
+     *
+     * Returns the specified APRSData given the APRSType
      */
     public APRSData getAprsData(APRSTypes t) {
         if ( dataFields.containsKey(t)) {
@@ -183,6 +204,8 @@ public class InformationField implements Serializable {
     /** 
      * @param type
      * @param data
+     *
+     * Adds a new AprsData object to a constructed field
      */
     public void addAprsData(APRSTypes type, APRSData data) {
 		dataFields.put(type, data);
@@ -190,6 +213,7 @@ public class InformationField implements Serializable {
 
     
     /** 
+     * Used to determine if this Info Field contains a data of a specific APRSType
      * @param t
      * @return boolean
      */
@@ -200,6 +224,7 @@ public class InformationField implements Serializable {
 
     
     /** 
+     * Returns the set of APRSTypes in this packet
      * @return Set of APRSTypes
      */
     public Set<APRSTypes> getTypes() {
