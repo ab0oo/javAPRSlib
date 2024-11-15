@@ -25,7 +25,7 @@ import java.util.Objects;
 public class ItemField extends APRSData {
 	private static final long serialVersionUID = 1L;
 	private boolean live = true;
-	private String objectName;
+	private String itemName;
 
 	/**
 	 * @param msgBody byte array of the on-air message
@@ -47,12 +47,29 @@ public class ItemField extends APRSData {
 			this.live = false;
 		} else
 			this.live = true;
-		this.objectName = new String(msgBody, 1, name_length).trim();
+		this.itemName = new String(msgBody, 1, name_length).trim();
 		int cursor = name_length + 2;
 		comment = new String(msgBody, cursor, msgBody.length - cursor, "UTF-8").trim();
 		super.setLastCursorPosition(cursor);
 	}
 
+	/**
+	 * 
+	 * @return name of the item in this ItemField
+	 * This is the getter for the Item Name
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+	/**
+	 *
+	 * @param itemName the item name to set
+	 * This is the setter for the item name for this ItemField
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
 	
 	/** 
 	 * @return String
@@ -61,7 +78,7 @@ public class ItemField extends APRSData {
 	public String toString() {
 		if (rawBytes != null)
 			return new String(rawBytes);
-		return ")" + this.objectName + (live ? "!" : "_") + comment;
+		return ")" + this.itemName + (live ? "!" : "_") + comment;
 	}
 
 	@Override
@@ -83,12 +100,12 @@ public class ItemField extends APRSData {
 			return false;
 		}
 		ItemField itemField = (ItemField) o;
-		return live == itemField.live && Objects.equals(objectName, itemField.objectName);
+		return live == itemField.live && Objects.equals(itemName, itemField.itemName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(live, objectName);
+		return Objects.hash(live, itemName);
 	}
 
 }
