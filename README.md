@@ -24,6 +24,7 @@ All compiled code winds up in the "target" directory.
 You can invoke the parser from the command line:
 
     $ PKT="DO1GL-5>APDR11,TCPIP*,qAC,T2SP:=5206.  N/01138.  E$ Georg APRSdroid http://aprsdroid.org/"
+
     $ java -classpath target/javAPRSlib-<VERSION>.jar net.ab0oo.aprs.parser.Parser $PKT
 
 ```
@@ -49,6 +50,7 @@ Comment:  E$ Georg APRSdroid http://aprsdroid.org/
     Comment:
     Extension:  null
 ```
+
 
 ## Features
 

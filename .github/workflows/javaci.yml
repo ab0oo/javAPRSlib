@@ -5,38 +5,32 @@ name: Java CI
 
 on:
   push:
-    branches: [ '**' ]
+    branches: ["**"]
   pull_request:
-    branches: [ '**' ]
+    branches: ["**"]
 
 jobs:
   build:
-
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        java: [ '17' ]
+        java: ["17"]
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
-    - name: Install Secret Key
-      run:  cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import && gpg --list-secret-keys --keyid-format LONG 
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'zulu'
-        cache: maven
-    - name: Clean with Maven
-      run: mvn -B clean
-    - name: Compile with Maven
-      run: mvn -B compile
-    - name: Test with Maven
-      run: mvn -B test
-    - name: Package with Maven
-      run: mvn -B package
-#    This is disabled.  We want to run it for builds.  we want a separate integration for publishing.
-#    - name: Install with Maven
-#      run: mvn -B --no-transfer-progress -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} install
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: "zulu"
+          cache: maven
+      - name: Clean with Maven
+        run: mvn -B clean
+      - name: Compile with Maven
+        run: mvn -B compile
+      - name: Test with Maven
+        run: mvn -B test
+      - name: Package with Maven
+        run: mvn -B package

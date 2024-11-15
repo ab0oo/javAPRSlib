@@ -207,6 +207,7 @@ public class Parser {
         	case ':':
         		infoField.addAprsData(APRSTypes.T_MESSAGE, new MessagePacket(msgBody,dest));
 				break;
+
     		case ';':
 				ObjectField of;
     			if (msgBody.length > 29) {
