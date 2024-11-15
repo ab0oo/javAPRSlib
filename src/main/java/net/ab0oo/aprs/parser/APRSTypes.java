@@ -25,22 +25,67 @@
 package net.ab0oo.aprs.parser;
 
 public enum APRSTypes {
-    T_UNSPECIFIED,
+	/**
+	 * Unspecified messages
+	 */
+	T_UNSPECIFIED,
+	/**
+	 * Timestamp, Spec Ch 6
+	 */
 	T_TIMESTAMP,
+	/**
+	 * Position, Spec Ch 6, includes SYMBOL
+	 */
 	T_POSITION,
+	/*
+	 * Weather report, Spec Ch 12
+	 */
 	T_WX,
+	/**
+	 * Third party packets, Spec Ch 17
+	 */
 	T_THIRDPARTY,
+	/**
+	 * Query packets, Spec Ch 15
+	 */
 	T_QUERY,
+	/**
+	 * Object report, Spec Ch 11
+	 */
 	T_OBJECT,
+	/**
+	 * Item report, Spec Ch 11
+	 */
 	T_ITEM,
 	T_NORMAL,
+	/**
+	 * Object kill command, Spec Ch 11
+	 */
 	T_KILL,
+	/**
+	 * Station status message, Spec Ch 16
+	 */
 	T_STATUS,
+	/**
+	 * Station capabilities request/response, Spec Ch 15
+	 */
 	T_STATCAPA,
+	/**
+	 * Telemetry message, Spec Ch 13
+	 */
 	T_TELEMETRY,
+	/**
+	 * User defined format, Spec Ch 18
+	 */
 	T_USERDEF,
+	/**
+	 * Station-to-station message, Spec Ch 14
+	 */
 	T_MESSAGE,
-	T_NWS;  // Used on fap.getSubtype()
+	/**
+	 * Specific to FAP, ask Matti.  :)
+	 */
+	T_NWS; // Used on fap.getSubtype()
 
 	;
 }

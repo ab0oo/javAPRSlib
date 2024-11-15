@@ -21,11 +21,19 @@
 /**
  * Simple exception class used to indicate a Parser failure 
  */
-package net.ab0oo;
-
+package net.ab0oo.aprs.parser;
+/**
+ * 
+ * @author johng
+ * This is a simple Exception class for tagging unparsable packets.
+ */
 public class UnparsablePacketException extends Exception {
     private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * @param ex String to describe why the exception is being thrown
+	 */
 	public UnparsablePacketException(String ex) {
 		super(ex);
 	}

@@ -65,7 +65,7 @@ public class InformationField implements Serializable {
     
     
     /** 
-     * @return char
+     * @return char Data Type Indicator
      *
      * Fetches the Data Type indicator (the first character of an AX25 information field)
      */
@@ -75,7 +75,7 @@ public class InformationField implements Serializable {
 
     
     /** 
-     * @param dti
+     * @param dti Data Type Indicator
      *
      * Sets the Data Type Indicator for a constructed packet
      */
@@ -97,9 +97,9 @@ public class InformationField implements Serializable {
     
     
     /** 
-     * @param start
-     * @param end
-     * @return byte[]
+     * @param start start index
+     * @param end end index
+     * @return byte[] a new byte[] with the requested slice
      *
      * Returns a slice of bytes from the current Information Field
      */
@@ -120,7 +120,7 @@ public class InformationField implements Serializable {
     
     
     /** 
-     * @return String
+     * @return String String representation of this message component
      *
      * Returns a pretty-printed string version of the Info Field
      */
@@ -139,7 +139,7 @@ public class InformationField implements Serializable {
         return sb.toString();
     }
 	/**
-	 * @return the hasFault
+	 * @return boolean  True is packet has faults that should not be on-air
      *
      * Faulted packets are unable to be parsed for various reasons
 	 */
@@ -152,7 +152,8 @@ public class InformationField implements Serializable {
 	}
 
 	/**
-	 * @return the extension
+	 * @return DataExtension Each Information Field (i.e. on-air packet) can contain one data extension,
+     * the list of which can be found in the Spec, Ch 7.
      *
      * Returns the Data Extension from this Information Field
      */
@@ -170,7 +171,7 @@ public class InformationField implements Serializable {
     }
     
     /** 
-     * @return long
+     * @return long epoch timestamp of creation time
      *
      * Returns the epoch timestamp of the creation time of this Info Field
      */
@@ -180,7 +181,7 @@ public class InformationField implements Serializable {
 
 	
     /** 
-     * @return Mapping of APRSTypes to APRSData
+     * @return Map a Mapping of APRSTypes to APRSData
      */
     public Map<APRSTypes,APRSData> getAprsData() {
 		return this.dataFields;
@@ -188,8 +189,9 @@ public class InformationField implements Serializable {
 
     
     /** 
-     * @param t
-     * @return APRSData
+     * @param t APRSTypes type to fetch from the InformationField envelope
+     * @return APRSData any data that matches the type requested, null if the
+     * InformationField does not contain the requested type.
      *
      * Returns the specified APRSData given the APRSType
      */
@@ -202,8 +204,8 @@ public class InformationField implements Serializable {
 
 	
     /** 
-     * @param type
-     * @param data
+     * @param type APRSTypes enum to indicate the type of data being added
+     * @param data the data to be added to the InformationField envelope
      *
      * Adds a new AprsData object to a constructed field
      */
@@ -213,9 +215,10 @@ public class InformationField implements Serializable {
 
     
     /** 
+     * @param t the APRSTypes to check for
+     * @return boolean true if this object contains the given data type
+     *
      * Used to determine if this Info Field contains a data of a specific APRSType
-     * @param t
-     * @return boolean
      */
     public boolean containsType(APRSTypes t) {
         if ( dataFields.containsKey(t) ) return true;
@@ -224,8 +227,9 @@ public class InformationField implements Serializable {
 
     
     /** 
-     * Returns the set of APRSTypes in this packet
      * @return Set of APRSTypes
+     *
+     * Returns the set of APRSTypes in this packet
      */
     public Set<APRSTypes> getTypes() {
         return dataFields.keySet();
