@@ -22,20 +22,19 @@
  * Simple exception class used to indicate a Parser failure 
  */
 package net.ab0oo.aprs.parser;
-
 /**
+ * 
  * @author johng
  * This is a simple Exception class for tagging unparsable packets.
  */
-public class UnparsablePositionException extends Exception {
+public class UnparsablePacketException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-	
 	/**
 	 * 
 	 * @param ex String to describe why the exception is being thrown
 	 */
-	public UnparsablePositionException(String ex) {
+	public UnparsablePacketException(String ex) {
 		super(ex);
 	}
 }

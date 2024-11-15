@@ -1,3 +1,23 @@
+/*
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
+ *
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
+ *
+ * javAPRSlib is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * javAPRSlib is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
 package net.ab0oo.aprs.parser;
 
 import java.util.Objects;
@@ -45,6 +65,8 @@ public class ObjectField extends APRSData {
 
 	/**
 	 * @return the objectName
+	 *
+	 * Returns the name of the Object defined in this field
 	 */
 	public String getObjectName() {
 		return objectName;
@@ -52,28 +74,75 @@ public class ObjectField extends APRSData {
 
 	/**
 	 * @param objectName the objectName to set
+	 *
+	 * Sets the object name in a constructed object
 	 */
 	public void setObjectName(String objectName) {
 		this.objectName = objectName;
 	}
 
 	/**
-	 * @return the live
+	 * @return true if this object is marked as Live by the owner
+	 *
+	 * Live-ness state of the object, as sent by the originator
 	 */
 	public boolean isLive() {
 		return live;
 	}
 
 	/**
-	 * @param live the live to set
+	 * @param live marks whether the object is live
+	 *
+	 * When constructing an object, this flag indicates the object is live in the network
 	 */
 	public void setLive(boolean live) {
 		this.live = live;
 	}
 
+
+	/**
+	 * @return TimeField
+	 *
+	 * Fetches the APRS Time Field from the Object
+	 */
+	public TimeField getTimestamp() {
+		return timestamp;
+	}
+
+
+	/**
+	 * @param timestamp
+	 *
+	 * Sets the APRS-formatted Time Field for this generated packet
+	 */
+	public void setTimestamp(TimeField timestamp) {
+		this.timestamp = timestamp;
+	}
+
+
+	/**
+	 * @return PositionField
+	 *
+	 * Returns the APRS position of this object (includes symbol table/symbol)
+	 */
+	public PositionField getPosition() {
+		return position;
+	}
+
+
+	/**
+	 * @param position
+	 *
+	 * Sets the position for this object (includes symbol table/symbol)
+	 */
+	public void setPosition(PositionField position) {
+		this.position = position;
+	}
 	
 	/** 
 	 * @return String
+	 *
+	 * Returns a pretty-printed string of this Object
 	 */
 	@Override
 	public String toString() {
@@ -86,6 +155,8 @@ public class ObjectField extends APRSData {
 	/** 
 	 * @param o
 	 * @return int
+	 *
+	 * Allows two Object fields to be compared.
 	 */
 	@Override
 	public int compareTo(APRSData o) {
@@ -97,20 +168,12 @@ public class ObjectField extends APRSData {
 		}
 		return -1;
 	}
-
-	
-	/** 
-	 * @return boolean
-	 */
-	@Override
-	public boolean hasFault() {
-		return this.hasFault;
-	}
-
 	
 	/** 
 	 * @param o
 	 * @return boolean
+	 *
+	 * Returns true if the object passed in is the same as this object
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -126,6 +189,8 @@ public class ObjectField extends APRSData {
 	
 	/** 
 	 * @return int
+	 *
+	 * Calculates a hash for this particular object
 	 */
 	@Override
 	public int hashCode() {

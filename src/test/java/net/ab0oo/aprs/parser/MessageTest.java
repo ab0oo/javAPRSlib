@@ -23,30 +23,42 @@ public class MessageTest {
     @Test
     void messageTest() {
         InformationField field = validMessagePacket.getAprsInformation();
-        assertInstanceOf(MessagePacket.class, field,
+        APRSData mp = null;
+        if ( field.containsType(APRSTypes.T_MESSAGE) ) {
+            mp = field.getAprsData(APRSTypes.T_MESSAGE);
+        }
+        assertInstanceOf(MessagePacket.class, mp,
                 "Expecting the AprsInfo is instance of MessagePacket");
-        assertEquals("test ok", ((MessagePacket) field).getMessageBody());
-        assertEquals("1", ((MessagePacket) field).getMessageNumber());
-        assertFalse(((MessagePacket) field).isAck());
-        assertFalse(((MessagePacket) field).isRej());
+        assertEquals("test ok", ((MessagePacket) mp).getMessageBody());
+        assertEquals("1", ((MessagePacket) mp).getMessageNumber());
+        assertFalse(((MessagePacket) mp).isAck());
+        assertFalse(((MessagePacket) mp).isRej());
     }
 
     @Test
     void arcMessageTest() {
         InformationField field = validMessageAcceptPacket.getAprsInformation();
-        assertInstanceOf(MessagePacket.class, field,
+        APRSData mp = null;
+        if ( field.containsType(APRSTypes.T_MESSAGE) ) {
+            mp = field.getAprsData(APRSTypes.T_MESSAGE);
+        }
+        assertInstanceOf(MessagePacket.class, mp,
                 "Expecting the AprsInfo is instance of MessagePacket");
-        assertTrue(((MessagePacket) field).isAck());
-        assertFalse(((MessagePacket) field).isRej());
+        assertTrue(((MessagePacket) mp).isAck());
+        assertFalse(((MessagePacket) mp).isRej());
     }
 
     @Test
     void rejMessageTest() {
         InformationField field = validMessageRejectionPacket.getAprsInformation();
-        assertInstanceOf(MessagePacket.class, field,
+        APRSData mp = null;
+        if ( field.containsType(APRSTypes.T_MESSAGE) ) {
+            mp = field.getAprsData(APRSTypes.T_MESSAGE);
+        }
+        assertInstanceOf(MessagePacket.class, mp,
                 "Expecting the AprsInfo is instance of MessagePacket");
-        assertTrue(((MessagePacket) field).isRej());
-        assertFalse(((MessagePacket) field).isAck());
+        assertTrue(((MessagePacket) mp).isRej());
+        assertFalse(((MessagePacket) mp).isAck());
     }
 
 }

@@ -1,26 +1,26 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
 package net.ab0oo.aprs.parser;
 
-public class MessagePacket extends InformationField {
+public class MessagePacket extends APRSData {
 	private static final long serialVersionUID = 1L;
     private String messageBody;
     private String messageNumber;
@@ -32,7 +32,7 @@ public class MessagePacket extends InformationField {
         super(bodyBytes);
         String message = new String(bodyBytes);
         if ( message.length() < 2) {
-            this.hasFault = true;
+            this.setHasFault(true);
             return;
         }
         int msgSpc = message.indexOf(':', 2);
@@ -68,7 +68,6 @@ public class MessagePacket extends InformationField {
     	this.messageNumber = messageNumber;
     	if ( messageBody.equals("ack") ) isAck = true;
     	if ( messageBody.equals("rej") ) isRej = true;
-    	super.setDataTypeIdentifier(':');
     }
     
     /**

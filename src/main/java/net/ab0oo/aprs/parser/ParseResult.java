@@ -18,24 +18,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
-/**
- * Simple exception class used to indicate a Parser failure 
- */
+
 package net.ab0oo.aprs.parser;
 
-/**
- * @author johng
- * This is a simple Exception class for tagging unparsable packets.
- */
-public class UnparsablePositionException extends Exception {
+public class ParseResult {
+    private boolean hasFault;
+    private String faultString = "";
 
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 
-	 * @param ex String to describe why the exception is being thrown
-	 */
-	public UnparsablePositionException(String ex) {
-		super(ex);
-	}
+    public ParseResult( boolean _hasFault, String _faultString ) {
+        this.hasFault = _hasFault;
+        this.faultString = _faultString;
+    }
+    
+    /**
+     * return boolean true if a fault was detected during parsing
+     */
+    public boolean hasFault() {
+        return hasFault;
+    }
+
+    /**
+     * return String the root cause of any decoding faults
+     */
+    String getFaultString() {
+        return faultString;
+    }
 }

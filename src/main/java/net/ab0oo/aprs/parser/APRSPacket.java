@@ -1,20 +1,20 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
  */
@@ -39,10 +39,9 @@ public class APRSPacket implements Serializable {
     private ArrayList<Digipeater> digipeaters;
     private char dti;
     private InformationField aprsInformation;
-    private boolean hasFault;
 	private String comment;
 
-    static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
+	static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
     public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, byte[] body) {
 		receivedTimestamp = new Date(System.currentTimeMillis());
@@ -178,20 +177,6 @@ public class APRSPacket implements Serializable {
     }
 
 	/**
-	 * @return the hasFault
-	 */
-	public boolean hasFault() {
-		return ( this.hasFault | aprsInformation.hasFault() );
-	}
-
-	/**
-	 * @param hasFault the hasFault to set
-	 */
-	public void setHasFault(boolean hasFault) {
-		this.hasFault = hasFault;
-	}
-
-	/**
 	 * @return the originalString
 	 */
 	public final String getOriginalString() {
@@ -209,12 +194,35 @@ public class APRSPacket implements Serializable {
 		this.aprsInformation = infoField;
 	}
 
-	public final void setComment(String comment) {
-		this.comment = comment;
+	/**
+	 * @return the hasFault
+	 */
+	public boolean hasFault() {
+		boolean fault = false;
+		for ( APRSData d : this.getAprsInformation().getAprsData().values() ) {
+			fault = fault | d.hasFault();
+		}
+		return fault;
 	}
 
-	public final String getComment() {
-		return this.comment;
+	/**
+	 * @return reason the reason this packet failed to parse
+	 */
+	public final String getFaultReason() {
+		String faultReason = "";
+		for ( APRSData d : this.getAprsInformation().getAprsData().values() ) {
+			faultReason = faultReason+=d.getFaultReason();
+		}
+		return faultReason;
+	}
+
+    public String getComment() {
+		return comment;
+	}
+
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Override

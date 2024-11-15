@@ -1,7 +1,7 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
  * AVRS is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published

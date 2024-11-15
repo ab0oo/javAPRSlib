@@ -1,0 +1,49 @@
+Failed to parse uncompressed position:	SQ9KT-2>APLRG1,SP9MAI*,WIDE1*,QA2L9,QA2L9,qAR,SR9SRC-2:=5046.76NL01904.89
+Failed to parse uncompressed position:	BG4SOM-C>APDG02,TCPIP*,qAC,BG4SOM-CS:!12000.00ND04100.00E&RNG0001/A=000010 70cm Voice (D-Star) 439.45000MHz -5.0000MHz
+Failed to parse uncompressed position:	W1YK-1>APRS,WIDE,qAR,N3LEE-4:!4216.47B/07148.43W#PHG5350 W2, WIDE1-1, WPIWA
+Failed to parse uncompressed position:	WA1TFF-N>APDG03,TCPIP*,qAC,WA1TFF-NS:!4146.74ND71258100.00W&/A=00000070cm MMDVM Voice (C4FM) 438.80000MHz +0.0000MHz, WA1TFF_Pi-Star_ND
+Failed to parse uncompressed position:	E22EEO-7>EXPERT,HS3RXX-5*,qAR,E22KKC-6:!14�r��r�10036.26E[000/000/A=000000APRS DMR
+Failed to parse uncompressed position:	BH8TJP-10>AP51WG,TCPIP*,qAC,T2NANJING:!4013.936/11625.025r51WIFI WG1
+No one really knows...:	K4CCC-9>APRS,UNIONC*,WIDE2-1,qAO,KK4TRH-10:!!005B008202130C5027A602D9--------013E0340000E0057
+Failed to parse uncompressed position:	WICKI>APN382,WIDE2-1,qAR,HAPPYV:!4610.46N12358.67W#PHG5830/W1 Fill-In Wickiup Mtn/Nehalem Valley: KC7ILK-1
+Failed to parse uncompressed position:	I7WAN>APDPRS,TCPIP*,qAC,T2HUN:!4106.40N\1653.316EK/A=000098
+Failed to parse uncompressed position:	SPNR>APN391,qAR,N9MEC-8:!4550.66NF091252.01W#PHG5360/W2,WIn KC0WKP
+Failed to parse uncompressed position:	DF8BP>APRS,TCPIP*,qAC,T2SPAIN:!5209.425N/01031.088E- DF8BP @ home - QRV 145,500 MHz / 430,200 MHz
+Failed to parse uncompressed position:	CMRV>APRX29,TCPIP*,qAC,FIRST:!0.00/00000.00#W8VFR DigiGate 1D 03sats ACoff GPS-No fix 0000FT
+Failed to parse uncompressed position:	LU3EEA-N>APDG03,TCPIP*,qAC,LU3EEA-NS:!34636300.00SD58575400.00W&/A=00000070cm MMDVM Voice (C4FM) 434.56000MHz +0.0000MHz, LU3EEA_Pi-Star_ND
+Failed to parse uncompressed position:	EA5HJU-D>APDG03,TCPIP*,qAC,EA5HJU-DS:!373618.60ND05829.40W&/A=00000070cm MMDVM Voice (DMR) 431.20000MHz +0.0000MHz, APRS for DMRGateway
+Failed to parse uncompressed position:	UN1EAK-N>APDG03,TCPIP*,qAC,T2FINLAND:!52956500.00ND70195400.00E&/A=000000440 MMDVM Voice 438.60000MHz +0.0000MHz, UN1EAK_Pi-Star
+MicE Destination Call incorrect length:  UQ1WW62:	DB6JH-9>UQ1WW62,DB0WIZ-15,WIDE1,DB0DRI,WIDE2-1,qAS,DL1YPS-10:`<xl"bk/>RE-JH502            
+Failed to parse uncompressed position:	CMRV>APRX29,TCPIP*,qAC,FIRST:!0.00/00000.00#W8VFR DigiGate 02 satelites Fix:1D ACoff HDOP=99.99 Alt:0000Ft WiFi AuxOFF
+Failed to parse uncompressed position:	LU6HLE-H>APDG02,TCPIP*,qAC,LU6HLE-HS:!312057.00ND641444.40E&RNG0001/A=000010 70cm Voice (D-Star) 433.55000MHz +0.0000MHz
+Compressed position characters out of range:	OE8NDR-11>APMI06,TCPIP*,qAS,OE8NDR:@Greetings from Fritz-OE8NDR
+Failed to parse uncompressed position:	UN1EAK-N>APDG03,TCPIP*,qAC,T2FINLAND:!52956500.00ND70195400.00E&/A=000000440 MMDVM Voice 438.60000MHz +0.0000MHz, UN1EAK_Pi-Star
+Failed to parse uncompressed position:	F4ISA-R>APDG03,TCPIP*,qAC,F4ISA-RS:!49312500.00ND1511300.00E&/A=00000070cm MMDVM Voice (C4FM) 439.82500MHz -9.4000MHz, F4ISA_Pi-Star_RPT
+No one really knows...:	KW5KW-1>APMI06,TCPIP*,qAS,KW5KW:@141953/<time>z3432.66N/10218.10W#WX3in1Plus2.0/ Dimmitt
+ Invalid position format:	IZ6BXV>TRRW00,WIDE2-1,qAR,IR6AC-10:'*)l 
+Failed to parse uncompressed position:	EA5HJU-D>APDG03,TCPIP*,qAC,EA5HJU-DS:!373618.60ND05829.40W&/A=00000070cm MMDVM Voice (DMR) 431.20000MHz +0.0000MHz, APRS for DMRGateway
+No one really knows...:	ON7DS>APMI06,TCPIP*,qAC,T2BELGIUM:@141954z<5114.16N/0424.24E>\L ON9BD LightShip Westhinder 3
+Failed to parse uncompressed position:	PY6GF-D>APDG03,TCPIP*,qAC,PY6GF-DS:!40301900.00SD94384700.00W&/A=00000070cm MMDVM Voice (DMR) 438.95000MHz +0.0000MHz, APRS for DMRGateway
+Failed to parse uncompressed position:	DF2KO-1>APVRT7,TCPIP*,qAC,T2ROMANIA:!5053.74N/0654.44ErPHG1010APRS IGATE AVRT7 http://www.y027.com By AVRT7
+No one really knows...:	ON7DS>APMI06,TCPIP*,qAC,T2BELGIUM:@142009z<5114.16N/0424.24E>\L ON9BD LightShip Westhinder 3
+Failed to parse uncompressed position:	W0RAY-N>APDG03,TCPIP*,qAC,W0RAY-NS:!413517.99ND934624.02E&/A=00000070cm MMDVM Voice (C4FM) 431.57500MHz +0.0000MHz, W0RAY_Pi-Star_ND
+Failed to parse uncompressed position:	DG5NEK-B>APDG02,TCPIP*,qAC,DG5NEK-BS:!4399625000.00NW01012.35EiRNG0001/A=000010 70cm Voice (D-Star) 439.96250MHz -9.4000MHz, APRS for ircDDBGateway
+Failed to parse uncompressed position:	CMRV>APRX29,WIDE1-1,qAR,W8VFR-9:!0.00/00000.00#W8VFR DigiGate 1D 03sats ACoff GPS-No fix 0000FT
+Failed to parse uncompressed position:	F8FFP-2>APRS,TCPIP*,qAC,T2IRELAND:@201003z46.5347N/0062346Er/A=004015 F8FFP's  Meshtastic Test 
+Failed to parse uncompressed position:	SP6VXU-FM>APN100,TCPIP*,qAS,SP6VXU:=51.1143/17.0013nPHG1010
+Failed to parse uncompressed position:	LD8FS>APNX03,qAR,LA7F-10:!000.00NS00000.00E#PHG0000 
+Failed to parse uncompressed position:	OE3EIW-13>APMI08-13,TCPIP*,qAC,T2AUSTRIA:@<_>142025z4746.90N/01555.27E-WXEth2.0  
+Failed to parse uncompressed position:	IK5UIK-3>APMI04,TCPIP*,qAS,IK5UIK:@142025z4344.18N/long>-WX3in1Mini U=12.1V
+Failed to parse uncompressed position:	KF6RAL-8>APRS,WIDE1-1,WIDE2-2,qAO,KK7BCO-10:!33.25.40N/112.00.13W_NWS PHOENIX
+Failed to parse uncompressed position:	PE0HBE-B>APDG02,TCPIP*,qAC,PE0HBE-BS:!51580900.00ND6442700.00E&RNG0001/A=000010 70cm Voice (D-Star) 439.60000MHz +0.0000MHz
+Failed to parse uncompressed position:	SP5ZBA-11>APNV01,WIDE2-2,SP2-2,qAR,SR4DOS:!5232.65N/1943.30E#VP-Digi Plock 439.125 123.7
+Failed to parse uncompressed position:	TA2BXX-10>AESPG4,TCPIP*,qAC,T2TOKYO:=39.881N/32.68266E#73s de TA2BXX iGate and Digi
+No one really knows...:	K8JWL-13>APN391,KB8UVN-7*,WOOSTR*,WIDE2,qAR,WX8ASH-10:!!004F006E02132AF4277602BA038F01DE013E03AF003C0033
+Failed to parse uncompressed position:	I4TDK-D>APDG03,TCPIP*,qAC,I4TDK-DS:!4451.31ND103070600.00E&/A=00000070cm MMDVM Voice (DMR) 433.57500MHz +0.0000MHz, APRS for DMRGateway
+Failed to parse uncompressed position:	VK5ZX-N>APDG03,TCPIP*,qAC,VK5ZX-NS:!34265700.00SD138485800.00E&/A=00000070cm MMDVM Voice (C4FM) 441.06250MHz +0.0000MHz, VK5ZX_Pi-Star_ND
+Failed to parse uncompressed position:	IK5UIK-3>APMI04,WIDE2-3,qAR,IR5X:@142027z4344.18N/long>-WX3in1Mini U=12.1V
+Failed to parse uncompressed position:	AA5PD-N>APDG03,TCPIP*,qAC,AA5PD-NS:!28540.47ND04044.99E&/A=00000070cm MMDVM Voice (C4FM) 433.80000MHz +0.0000MHz, AA5PD_Pi-Star_ND
+Failed to parse uncompressed position:	SP9ITP-13>APMI01,TCPIP*,qAC,T2POLAND:@142030z5001.24N/_02002.89E-WX3IN1 216 m npm i 18 m npt
+Failed to parse uncompressed position:	KI5KMC-N>APDG03,TCPIP*,qAC,T2USANE:!2941300.00ND911800.00W&/A=000000440 MMDVM Voice 432.55000MHz +0.0000MHz, KI5KMC_Pi-Star
+Failed to parse uncompressed position:	TA2BXX-10>AESPG4,TCPIP*,qAC,T2TOKYO:=39.881N/32.68266E#73s de TA2BXX iGate and Digi
+No one really knows...:	G8WVW-3>APTT4,CQ0PSM-4*,WIDE1,ED7YAF-3,WIDE2,qAR,ZB2YN-3:/TinyTrak4 Alpha

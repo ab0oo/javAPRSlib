@@ -1,23 +1,23 @@
 /*
- * AVRS - http://avrs.sourceforge.net/
+ * javAPRSlib - https://github.com/ab0oo/javAPRSlib
  *
- * Copyright (C) 2011,2021 John Gorkos, AB0OO
+ * Copyright (C) 2011, 2024 John Gorkos, AB0OO
  *
- * AVRS is free software; you can redistribute it and/or modify
+ * javAPRSlib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
  *
- * AVRS is distributed in the hope that it will be useful, but
+ * javAPRSlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with AVRS; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  * USA
- * 
+ *
  * Large segments of this code were taken from Matti Aarnio at 
  * http://repo.ham.fi/websvn/java-aprs-fap/
  * I appreciate the base work Matti did - JohnG
@@ -31,13 +31,18 @@ import java.util.regex.Pattern;
 /**
  * This class will (eventually) decode any weather sub-packet in the APRS spec.
  * I've tried to make extensive use of rexexp matching here
+ * 
+ * samples:
+ * - @231049z3841.68N/11959.35W_114/002g007t047r000p000P000h57b10185.DsVP
+ * - !3748.51N/12112.44W_357/004g005t076V136P000h60b10133OTW1
+ * - _10231457c359s000g000t070r000p003P001h..b.....tU2k
  */
 
 public class WeatherParser {
     private static final Pattern dataPattern = Pattern
             .compile(".*(\\d{3})/(\\d{3})g(\\d{3})t(.{3})r(\\d{3})p(\\d{3})P(\\d{3})h(\\d{2})b(\\d{5})[\\.e].*");
-    private static final Pattern windPattern = Pattern.compile(".*(\\d{3})/(\\d{3}).*.");
-    private static final Pattern gustPattern = Pattern.compile(".*g(\\d{3}).*.");
+    private static final Pattern windPattern = Pattern.compile(".*(\\d{3})[/s](\\d{3}).*");
+    private static final Pattern gustPattern = Pattern.compile(".*g(\\d{3}).*");
     private static final Pattern tempPattern = Pattern.compile(".*t([-\\d]{3}).*");
     private static final Pattern rainPattern = Pattern.compile(".*r(\\d{3}).*");
     private static final Pattern rain24Pattern = Pattern.compile(".*p(\\d{3}).*");

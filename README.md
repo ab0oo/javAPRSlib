@@ -14,18 +14,6 @@ let us know and contribute patches, fixes and improvements.
 
 ## Usage instructions
 
-### When using `ant`
-
-Just run `ant` from the project directory. The compiled library is located as
-`bin/javAPRSlib.jar`.
-
-### When using `Eclipse`
-
-It's highly recommended that you use the m2e Maven plugin for eclipse. Importing this
-library as a maven project will create the appropriate build structure. The compiled library
-is available at target/javAPRSlib-0.0.1-SNAPSHOT.jar (obviously, the version number is subject
-to change).
-
 ### When using `Maven`
 
 Executing 'mvn compile' will build the library, executing 'mvn package' will create a JAR package.
@@ -36,14 +24,33 @@ All compiled code winds up in the "target" directory.
 You can invoke the parser from the command line:
 
     $ PKT="DO1GL-5>APDR11,TCPIP*,qAC,T2SP:=5206.  N/01138.  E$ Georg APRSdroid http://aprsdroid.org/"
-    $ java -classpath bin/javAPRSlib.jar net.ab0oo.aprs.parser.Parser $PKT
-    Packet parsed as a T_UNSPECIFIED
-    From:  DO1GL-5
-    To:  APDR11
-    Via: ,TCPIP*,qAC,T2SP
-    DTI: =
-    Valid?  true
-    =5206.  N/01138.  E$Georg APRSdroid http://aprsdroid.org/
+
+    $ java -classpath target/javAPRSlib-<VERSION>.jar net.ab0oo.aprs.parser.Parser $PKT
+
+```
+From:   DO1GL-5
+To:     APDR11
+Via:    TCPIP*,QAC,T2SP
+DTI:    =
+Valid:  true
+Data:   Raw Bytes:      =5206.  N/01138.  E$ Georg APRSdroid http://aprsdroid.org/
+Data Type Identifier: =
+Create Timestamp:       Thu Nov 14 13:38:32 PST 2024
+Comment:
+Class net.ab0oo.aprs.parser.PositionField
+---POSITION---
+Position Source Uncompressed
+Is Compressed:  false
+Latitude:       52.10833
+Longitude:      11.64167
+Comment:  E$ Georg APRSdroid http://aprsdroid.org/
+
+    Type:       net.ab0oo.aprs.parser.InformationField
+    Messaging:  false
+    Comment:
+    Extension:  null
+```
+
 
 ## Features
 

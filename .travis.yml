@@ -5,4 +5,4 @@ jdk:
   - openjdk8
   - openjdk11
 
-script: ./mvnw test -B && ./mvnw package -B && ant clean compile-library
+script: ./mvnw test -B && ./mvnw package -B

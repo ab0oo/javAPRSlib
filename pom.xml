@@ -1,12 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.ab0oo.javaprslib</groupId>
+  <groupId>net.ab0oo.aprs</groupId>
   <artifactId>javAPRSlib</artifactId>
-  <version>3.0.6</version>
+  <version>3.1.0</version>
   <packaging>jar</packaging>
 
   <name>Java APRS Library</name>
@@ -37,7 +36,6 @@
     <tag>HEAD</tag>
   </scm>
 
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -47,9 +45,9 @@
     <outputDirectory>target/classes</outputDirectory>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <testOutputDirectory>target/test-classes</testOutputDirectory>
-    <sourceDirectory>src/main/java</sourceDirectory>
+    <sourceDirectory>src/main/java/</sourceDirectory>
     <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
-    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <testSourceDirectory>src/test/java/</testSourceDirectory>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -98,27 +96,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.13</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <version>3.3.0</version>
@@ -127,10 +104,10 @@
         </configuration>
         <executions>
           <execution>
-          <id>attach-sources</id>
-          <goals>
+            <id>attach-sources</id>
+            <goals>
               <goal>jar-no-fork</goal>
-          </goals>
+            </goals>
           </execution>
           <execution>
             <id>attach-javadoc</id>
@@ -147,13 +124,13 @@
         <configuration>
         </configuration>
         <executions>
-				  <execution>
-					  <id>attach-javadocs</id>
-					  <goals>
-						  <goal>jar</goal>
-					  </goals>
-				  </execution>
-			  </executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -165,7 +142,7 @@
             <id>sign-artifacts</id>
             <phase>verify</phase>
             <goals>
-                <goal>sign</goal>
+              <goal>sign</goal>
             </goals>
             <configuration>
               <gpgArguments>
@@ -176,10 +153,56 @@
           </execution>
         </executions>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.8.2</version>
+      </plugin>
 
-    </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
 
-  </build>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+	<groupId>${project.groupId}</groupId>
+	  <artifactId>${project.artifactId}</artifactId>
+	  <version>${project.version}</version>
+          <packaging>jar</packaging>
+          <file>${basedir}/target/${project.artifactId}-${project.version}.jar</file>
+          <generatePom>true</generatePom>
+        </configuration>
+        <executions>
+          <execution>
+              <id>install-jar-lib</id>
+              <goals>
+                <goal>install-file</goal>
+              </goals>
+              <phase>install</phase>
+          </execution>
+        </executions>
+        </plugin>
+
+	<plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.6.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+             <autoPublish>true</autoPublish>
+             <waitUntil>published</waitUntil>
+          </configuration>
+        </plugin>
+
+  </plugins>
+</build>
 
   <distributionManagement>
     <snapshotRepository>
@@ -188,6 +211,7 @@
     </snapshotRepository>
     <repository>
       <id>ossrh</id>
+      <name>Central Repository OSSRH</name>
       <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
@@ -204,6 +228,12 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.10.0</version>
       <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-site-renderer -->
+    <dependency>
+      <groupId>org.apache.maven.doxia</groupId>
+      <artifactId>doxia-site-renderer</artifactId>
+      <version>2.0.0-M19</version>
     </dependency>
   </dependencies>
 
