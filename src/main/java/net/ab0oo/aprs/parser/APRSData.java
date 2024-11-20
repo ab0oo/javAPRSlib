@@ -20,16 +20,51 @@
  */
 package net.ab0oo.aprs.parser;
 
+/**
+ * This abstract class is the base for all of the basic building blocks of APRS on air packets
+ * it includes:
+ * - Items
+ * - Messages
+ * - Objects
+ * - Positions
+ * - Timestamps
+ * - Weather reports
+ *
+ * There is an additional BadPacket class used for indicating parser failures
+ */
 public abstract class APRSData implements java.io.Serializable, java.lang.Comparable<APRSData> {
     private static final long serialVersionUID = 1L;
+    /**
+     * A single APRS message can contain one or more pieces of APRSData
+     * The data type represented by this object is kept here
+     */
     protected APRSTypes type;
     private int lastCursorPosition = 0;
+    /**
+     * original byte representation of this message
+     */
     protected byte[] rawBytes;
+    /**
+     * flag indicating whether the station that created this APRS message can receive
+     * APRS messages
+     */
     protected boolean canMessage = false;
+    /**
+     * flag to indicate a particular component failed during parsing.  This
+     * does not necessarily mean the entire message is useless
+     */
     private boolean hasFault;
+    /**
+     * string indicating why parsing has failed.
+     */
 	private String faultReason = "";
+    /**
+     * all characters after the set parsable APRSData fields are "comments"
+     */
     protected String comment;
-
+    /**
+     * used primarily for setting up unit tests
+     */
     public APRSData() {}
 
     public APRSData(byte[] msgBody) {
@@ -39,7 +74,10 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     
     /** 
-     * @return int
+     * @return int last cursor position
+     * The cursor is used as various components are parsed.  It indicates the farthest point into a message
+     * (from left to right) that has been analyzed.  It can be assumed that everything to the left of the cursor
+     * has been parsed.
      */
     public int getLastCursorPosition() {
         return lastCursorPosition;
@@ -47,7 +85,9 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     
     /** 
-     * @param cp
+     * @param cp last cursor position
+     * This sets the deepest character into a message that has been analyzed and parsed.  Any additional
+     * parsing of this message body will start from this character position
      */
     public void setLastCursorPosition(int cp) {
         this.lastCursorPosition = cp;
@@ -85,6 +125,7 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     /**
 	 * @param reason Set the reason this packet failed to parse
+     * This string is set to give the upstream components some clue as to why this packet failed to parse
 	 */
 	public final void setFaultReason(String reason) {
 		this.faultReason = reason;
@@ -92,6 +133,7 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
 	/**
 	 * @return reason the reason this packet failed to parse
+     * Used by upstream components to tell the user why a packet failed to parse
 	 */
 	public final String getFaultReason() {
 		return faultReason;
@@ -106,6 +148,8 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     /** 
      * @return byte[] the raw bytes handed to this object
+     * All messages start as rawBytes, and the raw bytes of the message are passed around
+     * for good measure.
      */
     public byte[] getRawBytes() {
         return rawBytes;
@@ -113,14 +157,15 @@ public abstract class APRSData implements java.io.Serializable, java.lang.Compar
 
     /**
      * @param rawBytes set the raw bytes of the packet body
+     * set by the inbound message
      */
     public void setRawBytes(byte[] rawBytes) {
         this.rawBytes = rawBytes;
     }
 
     /** 
-     * @param o
-     * @return int
+     * @param o Object to compare to
+     * @return int returns 0 if identical, else != 0
      */
     @Override
     public int compareTo(APRSData o) {
