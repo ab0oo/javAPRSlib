@@ -38,7 +38,6 @@ public class APRSPacketTests {
 			@Test
 			@DisplayName("Then it should have no fault")
 			public void thenHasNoFault() {
-				System.out.println("Success!");
 				assertFalse(packet.hasFault());
 			}
 

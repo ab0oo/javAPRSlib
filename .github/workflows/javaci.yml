@@ -19,12 +19,12 @@ jobs:
 
     name: Java ${{ matrix.java }} Built and Test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: "zulu"
+          distribution: zulu
           cache: maven
       - name: Clean with Maven
         run: mvn -B clean

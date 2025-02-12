@@ -119,13 +119,20 @@ public class PositionParser {
         String posRpt = new String(msgBody, cursor, msgBody.length - cursor);
         final Pattern latLonPattern = Pattern.compile("(\\d{2,4}\\.\\d{2,5})([NnSs])(.)(\\d{3,5}\\.\\d{2,5})([EeWw])(.).*");
         Matcher matcher = latLonPattern.matcher(posRpt);
-        if ( matcher.matches() ) {
-            double latitude = Double.parseDouble(matcher.group(1));
+        boolean useMatcher = true;
+        if ( matcher.matches() && useMatcher ) {
+            String latitudeStr = matcher.group(1);
             char lath = matcher.group(2).charAt(0);
             char symbolTable = (char)matcher.group(3).charAt(0);
-            double longitude = Double.parseDouble(matcher.group(4));
+            String longitudeStr = matcher.group(4);
             char lngh = matcher.group(5).charAt(0);
             char symbolCode = (char)matcher.group(6).charAt(0);
+            int latDecimals = latitudeStr.indexOf(".")-2;
+//            System.out.println("Latitude String:  "+latitudeStr+", Lat Decimals:  "+latDecimals+", Latitude Str Length:  "+latitudeStr.length());
+            double latitude = parseDegMin(latitudeStr.toCharArray(), 0, latDecimals, latitudeStr.length(), true);
+            int lngDecimals = longitudeStr.indexOf(".")-2;
+//            System.out.println("Longitude String:  "+longitudeStr+", Lng Decimals:  "+lngDecimals+", Longitude Str Length:  "+longitudeStr.length());
+            double longitude = parseDegMin(longitudeStr.toCharArray(), 0, lngDecimals, longitudeStr.length(), true);
             if (lath == 's' || lath == 'S')
                 latitude = 0.0F - latitude;
             if (lngh == 'w' || lngh == 'W')
@@ -500,15 +507,16 @@ public class PositionParser {
         return new Position(lat, lng, 0, (char) msgBody[cursor + 0], (char) msgBody[cursor + 9]);
     }
 
-    private static double parseDegMin(char[] txt, int cursor, int degSize, int len, boolean decimalDot)
+    private static double  parseDegMin(char[] txt, int cursor, int degSize, int len, boolean decimalDot)
             throws Exception {
+//        System.out.println("Txt: "+new String(txt)+". cursor: "+cursor+", degSize: "+degSize+", len: "+len+", isDecimalDot? "+ decimalDot );
         if (txt == null || txt.length < cursor + degSize + 2)
             throw new Exception("Too short degmin data");
         double result = 0.0F;
         for (int i = 0; i < degSize; ++i) {
             char c = txt[cursor + i];
             if (c < '0' || c > '9')
-                throw new Exception("Bad input decimals:  " + c);
+                throw new Exception("Got " +c+ " while looking for 0-9");
             result = result * 10.0F + (c - '0');
         }
         double minFactor = 10.0F; // minutes factor, divide by 10.0F for every
@@ -522,10 +530,10 @@ public class PositionParser {
             if (decimalDot && i == 2) {
                 if (c == '.')
                     continue; // Skip it! (but only at this position)
-                throw new Exception("Expected decimal dot");
+                throw new Exception("Expected decimal dot at pos "+ i);
             }
             if (c < '0' || c > '9')
-                throw new Exception("Bad input decimals: " + c);
+                throw new Exception("Got " +c+ " while looking for 0-9");
             minutes += minFactor * (c - '0');
             minFactor *= 0.1D;
         }
