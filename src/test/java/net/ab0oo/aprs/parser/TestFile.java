@@ -6,8 +6,6 @@ import java.io.FileReader;
 import org.junit.jupiter.api.Test;
 
 public class TestFile {
-    private static final int MAX_LINES = 10;
-
     @Test
     public void testParser() {
         testParser("src/test/resources/objects.txt");
@@ -23,7 +21,7 @@ public class TestFile {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String fromServer = br.readLine();
             APRSPacket packet = new APRSPacket("AB0OO", "APRS", null, new byte[20]);
-            while (null != fromServer && linecount < MAX_LINES) {
+            while (null != fromServer ) {
                 linecount++;
                 if (!fromServer.startsWith("#")) {
                     try {
@@ -39,7 +37,7 @@ public class TestFile {
                     }
                 }
                 fromServer = br.readLine();
-                //System.out.println(packet.toString());
+                // System.out.println(packet.toString());
             }
         } catch (Exception ex) {
             System.err.println("Exception caught reading file: " + ex.toString());

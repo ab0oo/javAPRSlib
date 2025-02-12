@@ -68,6 +68,8 @@ public class WeatherField extends APRSData {
         sb.append("Rain since 00:00:\t" + this.rainSinceMidnight + "\n");
         sb.append("Humidity:\t" + this.humidity + "\n");
         sb.append("Pressure:\t" + this.pressure + "\n");
+        sb.append("Luminosity:\t" + this.luminosity + "\n" );
+        sb.append("Snowfall 24 hours:\t" + this.snowfallLast24Hours + "\n" );
         return sb.toString();
     }
 
@@ -217,7 +219,6 @@ public class WeatherField extends APRSData {
      */
     public void setLuminosity(Integer luminosity) {
         if ( luminosity < 0 ) luminosity = 0;
-        if ( luminosity < 999 ) luminosity = 999;
         this.luminosity = luminosity;
     }
 

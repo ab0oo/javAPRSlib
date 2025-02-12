@@ -26,6 +26,7 @@ package net.ab0oo.aprs.parser;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -112,29 +113,48 @@ public class PositionParser {
             posbuf[16] = '5';
             positionAmbiguity = 4;
         }
-
-        try {
-            double latitude = parseDegMin(posbuf, 0, 2, 7, true);
-            char lath = (char) posbuf[7];
-            char symbolTable = (char) posbuf[8];
-            double longitude = parseDegMin(posbuf, 9 , 3, 8, true);
-            char lngh = (char) posbuf[17];
-            char symbolCode = (char) posbuf[18];
-
+        // first, let's try to solve this with a regex pattern.  We can be slightly creative here, because
+        // unfortunately, the APRS world is full of idiots that cannot follow directions, and are more than
+        // happy to send all kinds of bad location data.
+        String posRpt = new String(msgBody, cursor, msgBody.length - cursor);
+        final Pattern latLonPattern = Pattern.compile("(\\d{2,4}\\.\\d{2,5})([NnSs])(.)(\\d{3,5}\\.\\d{2,5})([EeWw])(.).*");
+        Matcher matcher = latLonPattern.matcher(posRpt);
+        if ( matcher.matches() ) {
+            double latitude = Double.parseDouble(matcher.group(1));
+            char lath = matcher.group(2).charAt(0);
+            char symbolTable = (char)matcher.group(3).charAt(0);
+            double longitude = Double.parseDouble(matcher.group(4));
+            char lngh = matcher.group(5).charAt(0);
+            char symbolCode = (char)matcher.group(6).charAt(0);
             if (lath == 's' || lath == 'S')
                 latitude = 0.0F - latitude;
-            else if (lath != 'n' && lath != 'N')
-                throw new UnparsablePositionException("Bad latitude sign character");
             if (lngh == 'w' || lngh == 'W')
                 longitude = 0.0F - longitude;
-            else if (lngh != 'e' && lngh != 'E')
-                throw new UnparsablePositionException("Bad longitude sign character");
-            Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
-//          TODO - figure out what I meant here...
-//            position.setTimestamp(date);
-            return position;
-        } catch (Exception e) {
-            throw new Exception(e);
+            return new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+        } else {
+            try {
+                double latitude = parseDegMin(posbuf, 0, 2, 7, true);
+                char lath = (char) posbuf[7];
+                char symbolTable = (char) posbuf[8];
+                double longitude = parseDegMin(posbuf, 9 , 3, 8, true);
+                char lngh = (char) posbuf[17];
+                char symbolCode = (char) posbuf[18];
+
+                if (lath == 's' || lath == 'S')
+                    latitude = 0.0F - latitude;
+                else if (lath != 'n' && lath != 'N')
+                    throw new UnparsablePositionException("Bad latitude sign character");
+                if (lngh == 'w' || lngh == 'W')
+                    longitude = 0.0F - longitude;
+                else if (lngh != 'e' && lngh != 'E')
+                    throw new UnparsablePositionException("Bad longitude sign character");
+                Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+    //          TODO - figure out what I meant here...
+    //            position.setTimestamp(date);
+                return position;
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
         }
     }
 
