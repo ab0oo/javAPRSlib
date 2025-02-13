@@ -31,13 +31,15 @@ import java.util.regex.Pattern;
 /**
  * This class will (eventually) decode any weather sub-packet in the APRS spec.
  * I've tried to make extensive use of rexexp matching here
- * 
+ *
  * samples:
  * - @231049z3841.68N/11959.35W_114/002g007t047r000p000P000h57b10185.DsVP
  * - !3748.51N/12112.44W_357/004g005t076V136P000h60b10133OTW1
  * - _10231457c359s000g000t070r000p003P001h..b.....tU2k
+ *
+ * @author john
+ * @version $Id: $Id
  */
-
 public class WeatherParser {
     private static final Pattern dataPattern = Pattern
             .compile(".*(\\d{3})/(\\d{3})g(\\d{3})t(.{3})r(\\d{3})p(\\d{3})P(\\d{3})h(\\d{2})b(\\d{5})[\\.e].*");
@@ -49,20 +51,21 @@ public class WeatherParser {
     private static final Pattern rainMidnightPattern = Pattern.compile(".*P(\\d{3}).*");
     private static final Pattern humidityPattern = Pattern.compile(".*h(\\d{2}).*");
     private static final Pattern pressurePattern = Pattern.compile(".*b(\\d{5}).*");
-    private static final Pattern luminosityLowPattern = Pattern.compile(".*L(\\d{3}).*");
-    private static final Pattern luminosityHighPattern = Pattern.compile(".*l(\\d{3}).*");
-
+    private static final Pattern luminosityLowPattern = Pattern.compile(".*l(\\d{3}).*");
+    private static final Pattern luminosityHighPattern = Pattern.compile(".*L(\\d{3}).*");
+    private static final Pattern snow24Pattern = Pattern.compile(".*s(\\d{3}).*");
     
-    /** 
-     * @param msgBody
-     * @param cursor
+    /**
+     * <p>parseWeatherData.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
      * @return WeatherField
-     * @throws Exception
+     * @throws java.lang.Exception indicating a failure to parse the weather object
      */
     public static WeatherField parseWeatherData(byte[] msgBody, int cursor) throws Exception {
         WeatherField wf = new WeatherField();
         String wxReport = new String(msgBody, cursor, msgBody.length - cursor);
-        wf.setLastCursorPosition(cursor += 36);
         wf.setType(APRSTypes.T_WX);
         Matcher matcher = dataPattern.matcher(wxReport);
         if (matcher.matches()) {
@@ -81,50 +84,65 @@ public class WeatherParser {
             } catch (IllegalStateException ese) {
                 System.err.println("something failed in our matching expression");  
             }
+            wf.setLastCursorPosition(cursor += 36);
         } else {
             // we need to pick out the matches one by one
             matcher = windPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setWindDirection(Integer.parseInt(matcher.group(1)));
                 wf.setWindSpeed(Integer.parseInt(matcher.group(2)));
+                wf.setLastCursorPosition(cursor += 7);
             }
             matcher = gustPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setWindGust(Integer.parseInt(matcher.group(1)));
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = tempPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setTemp(Integer.parseInt(matcher.group(1)));
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = rainPattern.matcher(wxReport);
             matcher.find();
             if (matcher.matches()) {
                 wf.setRainLastHour(Double.parseDouble(matcher.group(1)) / 100);
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = rain24Pattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setRainLast24Hours(Double.parseDouble(matcher.group(1)) / 100);
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = rainMidnightPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setRainSinceMidnight(Double.parseDouble(matcher.group(1)) / 100);
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = humidityPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setHumidity(Double.parseDouble(matcher.group(1)));
+                wf.setLastCursorPosition(cursor += 3);
             }
             matcher = pressurePattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setPressure(Double.parseDouble(matcher.group(1)));
+                wf.setLastCursorPosition(cursor += 6);
             }
             matcher = luminosityLowPattern.matcher(wxReport);
             if (matcher.matches()) {
                 wf.setLuminosity(Integer.parseInt(matcher.group(1)));
+                wf.setLastCursorPosition(cursor += 4);
             }
             matcher = luminosityHighPattern.matcher(wxReport);
-            matcher.find();
             if (matcher.matches()) {
                 wf.setLuminosity(Integer.parseInt(matcher.group(1)) + 1000);
+                wf.setLastCursorPosition(cursor += 4);
+            }
+            matcher = snow24Pattern.matcher(wxReport);
+            if (matcher.matches()) {
+                wf.setSnowfallLast24Hours(Double.parseDouble((matcher.group(1))));
+                wf.setLastCursorPosition(cursor += 4);
             }
         }
         return wf;

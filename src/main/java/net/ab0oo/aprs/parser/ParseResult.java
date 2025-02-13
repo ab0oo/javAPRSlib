@@ -21,10 +21,22 @@
 
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>ParseResult class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class ParseResult {
     private boolean hasFault;
     private String faultString = "";
 
+    /**
+     * <p>Constructor for ParseResult.</p>
+     *
+     * @param _hasFault a boolean
+     * @param _faultString a {@link java.lang.String} object
+     */
     public ParseResult( boolean _hasFault, String _faultString ) {
         this.hasFault = _hasFault;
         this.faultString = _faultString;
@@ -32,6 +44,8 @@ public class ParseResult {
     
     /**
      * return boolean true if a fault was detected during parsing
+     *
+     * @return a boolean
      */
     public boolean hasFault() {
         return hasFault;

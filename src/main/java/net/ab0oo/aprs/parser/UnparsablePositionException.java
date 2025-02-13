@@ -24,15 +24,19 @@
 package net.ab0oo.aprs.parser;
 
 /**
+ * <p>UnparsablePositionException class.</p>
+ *
  * @author johng
  * This is a simple Exception class for tagging unparsable packets.
+ * @version $Id: $Id
  */
 public class UnparsablePositionException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * <p>Constructor for UnparsablePositionException.</p>
+	 *
 	 * @param ex String to describe why the exception is being thrown
 	 */
 	public UnparsablePositionException(String ex) {

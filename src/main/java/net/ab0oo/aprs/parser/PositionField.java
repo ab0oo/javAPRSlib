@@ -22,18 +22,51 @@ package net.ab0oo.aprs.parser;
 
 import java.util.Objects;
 
+/**
+ * <p>PositionField class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class PositionField extends APRSData {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * The Position set by the originating station for this item/object/station
+	 */
 	private Position position = new Position(0, 0);
+	/**
+	 * Internal meta-data indicating how this position was originally encoded (mic-e, compressed, uncompressed, etc)
+	 */
 	private String positionSource;
+	/**
+	 * Internal flag indicating of this position was originally compressed
+	 */
 	private boolean compressedFormat;
+	/**
+	 * an optional Data Extension, See Chap 7 of APRS Spec
+	 */
 	DataExtension extension = null;
 
+	/**
+	 * <p>Constructor for PositionField.</p>
+	 *
+	 * @param msgBody an array of {@link byte} objects
+	 * @param destinationField a {@link java.lang.String} object
+	 * @throws java.lang.Exception if any.
+	 */
 	public PositionField(byte[] msgBody, String destinationField) throws Exception {
 		System.err.println("Executing alternate constructor");
 		new PositionField(msgBody, destinationField, 0);
 	}
 
+	/**
+	 * <p>Constructor for PositionField.</p>
+	 *
+	 * @param msgBody an array of {@link byte} objects
+	 * @param destinationField a {@link java.lang.String} object
+	 * @param cursor a int
+	 * @throws java.lang.Exception if any.
+	 */
 	public PositionField(byte[] msgBody, String destinationField, int cursor) throws Exception {
 		super(msgBody);
 		positionSource = "Unknown";
@@ -141,6 +174,12 @@ public class PositionField extends APRSData {
 		}
 	}
 
+	/**
+	 * <p>Constructor for PositionField.</p>
+	 *
+	 * @param position a {@link net.ab0oo.aprs.parser.Position} object
+	 * @param comment a {@link java.lang.String} object
+	 */
 	public PositionField(Position position, String comment) {
 		this.position = position;
 		this.type = APRSTypes.T_POSITION;
@@ -148,13 +187,22 @@ public class PositionField extends APRSData {
 		compressedFormat = false;
 	}
 
+	/**
+	 * <p>Constructor for PositionField.</p>
+	 *
+	 * @param position a {@link net.ab0oo.aprs.parser.Position} object
+	 * @param comment a {@link java.lang.String} object
+	 * @param msgCapable a boolean
+	 */
 	public PositionField(Position position, String comment, boolean msgCapable) {
 		this(position, comment);
 		// canMessage = msgCapable;
 	}
 
 	
-	/** 
+	/**
+	 * <p>Setter for the field <code>compressedFormat</code>.</p>
+	 *
 	 * @param val tells the encoder to compress this packet out output
 	 */
 	public void setCompressedFormat(boolean val) {
@@ -162,7 +210,9 @@ public class PositionField extends APRSData {
 	}
 
 	
-	/** 
+	/**
+	 * <p>Getter for the field <code>compressedFormat</code>.</p>
+	 *
 	 * @return boolean returns true if this packet is compressed
 	 */
 	public boolean getCompressedFormat() {
@@ -192,6 +242,8 @@ public class PositionField extends APRSData {
 	 */
 
 	/**
+	 * <p>Getter for the field <code>position</code>.</p>
+	 *
 	 * @return the position
 	 */
 	public Position getPosition() {
@@ -199,6 +251,8 @@ public class PositionField extends APRSData {
 	}
 
 	/**
+	 * <p>Setter for the field <code>position</code>.</p>
+	 *
 	 * @param position the position to set
 	 */
 	public void setPosition(Position position) {
@@ -206,6 +260,8 @@ public class PositionField extends APRSData {
 	}
 
 	/**
+	 * <p>Getter for the field <code>extension</code>.</p>
+	 *
 	 * @return DataExtension returns any data extension found in this packet
 	 */
 	public DataExtension getExtension() {
@@ -213,12 +269,15 @@ public class PositionField extends APRSData {
 	}
 
 	/**
+	 * <p>Setter for the field <code>extension</code>.</p>
+	 *
 	 * @param e data extension to add to this position
 	 */
 	public void setExtension( DataExtension e) {
 		this.extension = e;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("---POSITION---\n");
@@ -230,20 +289,33 @@ public class PositionField extends APRSData {
 	}
 
 	/**
+	 * <p>Getter for the field <code>positionSource</code>.</p>
+	 *
 	 * @return the positionSource
 	 */
 	public String getPositionSource() {
 		return positionSource;
 	}
 
+	/**
+	 * <p>Setter for the field <code>positionSource</code>.</p>
+	 *
+	 * @param positionSource a {@link java.lang.String} object
+	 */
 	public void setPositionSource(String positionSource) {
 		this.positionSource = positionSource;
 	}
 
+	/**
+	 * <p>isCompressedFormat.</p>
+	 *
+	 * @return a boolean
+	 */
 	public boolean isCompressedFormat() {
 		return this.compressedFormat;
 	}
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(APRSData o) {
         if (this.hashCode() > o.hashCode()) {
@@ -255,6 +327,7 @@ public class PositionField extends APRSData {
         return -1;
     }
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -269,6 +342,7 @@ public class PositionField extends APRSData {
 				&& Objects.equals(extension, positionField.extension);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hash(position, positionSource, compressedFormat, extension);

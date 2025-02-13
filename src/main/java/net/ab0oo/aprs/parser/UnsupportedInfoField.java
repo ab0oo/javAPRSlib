@@ -20,13 +20,27 @@
  */
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>UnsupportedInfoField class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class UnsupportedInfoField extends InformationField {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * <p>Constructor for UnsupportedInfoField.</p>
+     */
     public UnsupportedInfoField() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for UnsupportedInfoField.</p>
+	 *
+	 * @param rawBytes an array of {@link byte} objects
+	 */
 	public UnsupportedInfoField(byte[] rawBytes) {
 		super(rawBytes);
 	}

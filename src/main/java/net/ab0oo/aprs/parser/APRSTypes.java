@@ -24,6 +24,12 @@
 
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>APRSTypes class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public enum APRSTypes {
 	/**
 	 * Unspecified messages
@@ -37,7 +43,7 @@ public enum APRSTypes {
 	 * Position, Spec Ch 6, includes SYMBOL
 	 */
 	T_POSITION,
-	/*
+	/**
 	 * Weather report, Spec Ch 12
 	 */
 	T_WX,
@@ -57,6 +63,9 @@ public enum APRSTypes {
 	 * Item report, Spec Ch 11
 	 */
 	T_ITEM,
+	/**
+	 * Normal APRS Message
+	 */
 	T_NORMAL,
 	/**
 	 * Object kill command, Spec Ch 11

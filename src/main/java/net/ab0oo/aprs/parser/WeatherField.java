@@ -24,23 +24,67 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+/**
+ * <p>WeatherField class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class WeatherField extends APRSData {
+    /**
+     * wind direction, in degrees, 0-359
+     */
     private Integer windDirection;
+    /**
+     * Sustained 1-minute wind speed, in MPH
+     */
     private Integer windSpeed;
+    /**
+     * Peak wind speed in last 5 minutes
+     */
     private Integer windGust;
+    /**
+     * temperature, in degrees F.  Temps below 0 are expressed as -01 to -99
+     */
     private Integer temp;
+    /**
+     * Rainfall, in hundredths of an inch, in the last hour
+     */
     private Double rainLastHour;
+    /**
+     * Rainfall, in hundredths of an inch, in the last 24 hours
+     */
     private Double rainLast24Hours;
+    /**
+     * Rainfall, in hundredths of an inch, since midnight local
+     */
     private Double rainSinceMidnight;
+    /**
+     * humidity, in %.  00 = 100% humidity
+     */
     private Double humidity;
+    /**
+     * Barometric Pressure, in tenths of millibars/tenths of hPascal
+     */
     private Double pressure;
+    /**
+     * Luminosity, in watts per square meter
+     */
     private Integer luminosity;
+    /**
+     * snowfall in last 24 hours, in inches
+     */
     private Double snowfallLast24Hours;
+    /**
+     * Raw rain counter ()
+     */
     private Integer rawRainCounter;
 
     /**
-     * @param d
-     * @param decimalPlace
+     * <p>round.</p>
+     *
+     * @param d a {@link java.lang.Double} object
+     * @param decimalPlace a int
      * @return Double
      */
     public static Double round(Double d, int decimalPlace) {
@@ -51,11 +95,7 @@ public class WeatherField extends APRSData {
         return bd.doubleValue();
     }
 
-    /**
-     * @return String returns a string object containing a pretty-printed WeatherField object
-     * 
-     * Use to provide a pretty-printed WeatherField object
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("---WEATHER---\n");
@@ -68,12 +108,16 @@ public class WeatherField extends APRSData {
         sb.append("Rain since 00:00:\t" + this.rainSinceMidnight + "\n");
         sb.append("Humidity:\t" + this.humidity + "\n");
         sb.append("Pressure:\t" + this.pressure + "\n");
+        sb.append("Luminosity:\t" + this.luminosity + "\n" );
+        sb.append("Snowfall 24 hours:\t" + this.snowfallLast24Hours + "\n" );
         return sb.toString();
     }
 
     /**
+     * <p>Getter for the field <code>windDirection</code>.</p>
+     *
      * @return Integer direction wind is blowing FROM
-     * 
+     *
      * Gets the wind direction from the WeatherField object
      */
     public Integer getWindDirection() {
@@ -81,8 +125,10 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>windDirection</code>.</p>
+     *
      * @param windDirection direction wind is blowing FROM
-     * 
+     *
      * Sets the wind direction in a new WeatherField object
      */
     public void setWindDirection(Integer windDirection) {
@@ -90,8 +136,10 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>windSpeed</code>.</p>
+     *
      * @return Integer sustained 1 minute wind speed in miles per hour
-     * 
+     *
      * Gets the sustained 1 minute wind speed from the object
      */
     public Integer getWindSpeed() {
@@ -99,8 +147,10 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>windSpeed</code>.</p>
+     *
      * @param windSpeed sustained 1 minute wind speed in miles per hour
-     * 
+     *
      * Sets the sustained 1 minute wind speed in a new object
      */
     public void setWindSpeed(Integer windSpeed) {
@@ -108,6 +158,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>windGust</code>.</p>
+     *
      * @return Integer gust (peak wind speed in last 5 minutes) in miles per hour
      */
     public Integer getWindGust() {
@@ -115,6 +167,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>windGust</code>.</p>
+     *
      * @param windGust gust (peak wind speed in last 5 minutes) in miles per hour
      */
     public void setWindGust(Integer windGust) {
@@ -122,6 +176,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>temp</code>.</p>
+     *
      * @return Integer temperature in degrees Fahrenheit
      */
     public Integer getTemp() {
@@ -129,6 +185,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>temp</code>.</p>
+     *
      * @param temp temperature in degrees Fahrenheit
      */
     public void setTemp(Integer temp) {
@@ -136,6 +194,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>rainLastHour</code>.</p>
+     *
      * @return Double rainfall in hundredths of an inch in the last hour
      */
     public Double getRainLastHour() {
@@ -143,6 +203,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>rainLastHour</code>.</p>
+     *
      * @param rainLastHour rainfall in hundredths of an inch in the last hour
      */
     public void setRainLastHour(Double rainLastHour) {
@@ -150,6 +212,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>rainLast24Hours</code>.</p>
+     *
      * @return Double rainfall in hundredths of an inch in the last 24 hours
      */
     public Double getRainLast24Hours() {
@@ -157,6 +221,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>rainLast24Hours</code>.</p>
+     *
      * @param rainLast24Hours rainfall in hundredths of an inch in the last 24 hours
      */
     public void setRainLast24Hours(Double rainLast24Hours) {
@@ -164,6 +230,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>rainSinceMidnight</code>.</p>
+     *
      * @return Double rainfall in hundredths of an inch since local midnight
      */
     public Double getRainSinceMidnight() {
@@ -171,6 +239,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>rainSinceMidnight</code>.</p>
+     *
      * @param rainSinceMidnight rainfall in hundredths of an inch since local midnight
      */
     public void setRainSinceMidnight(Double rainSinceMidnight) {
@@ -178,6 +248,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>humidity</code>.</p>
+     *
      * @return Double humidity in percent.  00 = 100%
      */
     public Double getHumidity() {
@@ -185,6 +257,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>humidity</code>.</p>
+     *
      * @param humidity humidity in percent.  00 = 100%
      */
     public void setHumidity(Double humidity) {
@@ -192,6 +266,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>pressure</code>.</p>
+     *
      * @return Double barometric pressure in 10th of millibars
      */
     public Double getPressure() {
@@ -199,6 +275,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>pressure</code>.</p>
+     *
      * @param pressure barometric pressure in 10th of millibars
      */
     public void setPressure(Double pressure) {
@@ -206,6 +284,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>luminosity</code>.</p>
+     *
      * @return Integer luminosity in watts per square meter (&lt;=999)
      */
     public Integer getLuminosity() {
@@ -213,15 +293,18 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>luminosity</code>.</p>
+     *
      * @param luminosity luminosity in watts per square meter (&lt;=999)
      */
     public void setLuminosity(Integer luminosity) {
         if ( luminosity < 0 ) luminosity = 0;
-        if ( luminosity < 999 ) luminosity = 999;
         this.luminosity = luminosity;
     }
 
     /**
+     * <p>Getter for the field <code>snowfallLast24Hours</code>.</p>
+     *
      * @return Double snowfall in inches in the last 24 hours
      */
     public Double getSnowfallLast24Hours() {
@@ -229,6 +312,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>snowfallLast24Hours</code>.</p>
+     *
      * @param snowfallLast24Hours snowfall in inches in the last 24 hours
      */
     public void setSnowfallLast24Hours(Double snowfallLast24Hours) {
@@ -236,6 +321,8 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>rawRainCounter</code>.</p>
+     *
      * @return Integer raw rain counter number
      */
     public Integer getRawRainCounter() {
@@ -243,16 +330,15 @@ public class WeatherField extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>rawRainCounter</code>.</p>
+     *
      * @param rawRainCounter raw rain counter number
      */
     public void setRawRainCounter(Integer rawRainCounter) {
         this.rawRainCounter = rawRainCounter;
     }
 
-    /**
-     * @param o object to compare to
-     * @return int
-     */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(APRSData o) {
         if (this.hashCode() > o.hashCode()) {
@@ -264,10 +350,7 @@ public class WeatherField extends APRSData {
         return -1;
     }
 
-    /**
-     * @param o object to compare to
-     * @return boolean
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -287,9 +370,7 @@ public class WeatherField extends APRSData {
                 && Objects.equals(rawRainCounter, weatherField.rawRainCounter);
     }
 
-    /**
-     * @return int
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return Objects.hash(windDirection, windSpeed, windGust, temp, rainLastHour, rainLast24Hours, rainSinceMidnight,

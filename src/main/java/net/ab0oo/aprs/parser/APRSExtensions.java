@@ -21,11 +21,32 @@
 
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>APRSExtensions class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public enum APRSExtensions {
+	/**
+	 * Catch-all for unspecified extensions
+	 */
     T_UNSPECIFIED,
+	/**
+	 * APRS Course and Speed Extension, Ch 7 of APRS Spec
+	 */
 	T_COURSESPEED,
+	/**
+	 * APRS Power, Effective Antenna Height. Gain and Directivity Extension, Ch 7 of APRS Spec
+	 */
 	T_PHG,
+	/**
+	 * APRS Range Circle Plot, Ch 7 of APRS Spec
+	 */
 	T_RADIORANGE,
+	/**
+	 * APRS Omni-DF Signal Strength, Ch 7 of APRS Spec
+	 */
 	T_DFSTRENGTH
 	;
 }

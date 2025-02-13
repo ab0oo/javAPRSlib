@@ -20,12 +20,22 @@
  */
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>BadData class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class BadData extends APRSData {
 
+    /**
+     * <p>Constructor for BadData.</p>
+     */
     public BadData() {
         super.setHasFault(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "Unable to decode this packet";

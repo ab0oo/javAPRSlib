@@ -23,55 +23,67 @@ package net.ab0oo.aprs.parser;
 import java.io.Serializable;
 
 /**
- * 
+ * <p>CourseAndSpeedExtension class.</p>
+ *
  * @author johng
- * 
+ * @version $Id: $Id
  */
 public class CourseAndSpeedExtension extends DataExtension implements Serializable {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * course over ground, in degrees 0-359
+	 */
 	private int course;
+	/**
+	 * speed over ground, indicated in miles per hour
+	 */
 	private int speed;
 	/**
+	 * <p>Getter for the field <code>course</code>.</p>
+	 *
 	 * @return the course in degrees true
 	 */
 	public int getCourse() {
 		return course;
 	}
 	/**
+	 * <p>Setter for the field <code>course</code>.</p>
+	 *
 	 * @param course the course to set in degrees true
 	 */
 	public void setCourse(int course) {
 		this.course = course;
 	}
 	/**
+	 * <p>Getter for the field <code>speed</code>.</p>
+	 *
 	 * @return the speed in knots
 	 */
 	public int getSpeed() {
 		return speed;
 	}
 	/**
+	 * <p>Setter for the field <code>speed</code>.</p>
+	 *
 	 * @param speed the speed to set in knots
 	 */
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "Moving "+speed+" kts @ "+course+" deg";
 	}
 	
-	/**
-	 * @return the current speed in mph and course in degrees in a formatted string
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toSAEString() {
 		return "Moving "+Utilities.ktsToMph(speed)+" mph @ "+course+" deg";
 	}
 
-	/**
-	 * @return Enum indicating the data type extention
-	*/
+	/** {@inheritDoc} */
 	@Override
 	public APRSExtensions getType() {
 		return APRSExtensions.T_COURSESPEED;

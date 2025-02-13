@@ -23,16 +23,26 @@ package net.ab0oo.aprs.parser;
 import java.util.ArrayList;
 
 /**
- * 
+ * <p>Digipeater class.</p>
+ *
  * @author johng
  *         This class represents a single digipeater in a TNC2-format VIA
  *         string.
- * 
+ * @version $Id: $Id
  */
 public class Digipeater extends Callsign {
     private static final long serialVersionUID = 1L;
+    /**
+     * flag indicating that this digipeater has seen and processed the message
+     * and has retransmitted it.
+     */
     private boolean used;
 
+    /**
+     * <p>Constructor for Digipeater.</p>
+     *
+     * @param call a {@link java.lang.String} object
+     */
     public Digipeater(String call) {
         super(call.replaceAll("\\*", ""));
         if (call.indexOf("*") >= 0) {
@@ -40,6 +50,12 @@ public class Digipeater extends Callsign {
         }
     }
 
+    /**
+     * <p>Constructor for Digipeater.</p>
+     *
+     * @param data an array of {@link byte} objects
+     * @param offset a int
+     */
     public Digipeater(byte[] data, int offset) {
         super(data, offset);
         this.used = (data[offset + 6] & 0x80) == 0x80;
@@ -47,8 +63,10 @@ public class Digipeater extends Callsign {
 
     /**
      * parse a comma-separated list of digipeaters
-     * 
+     *
      * @return the list of digipeaters as an array
+     * @param digiList a {@link java.lang.String} object
+     * @param includeFirst a boolean
      */
     public static ArrayList<Digipeater> parseList(String digiList, boolean includeFirst) {
         String[] digiTemp = digiList.split(",");
@@ -66,6 +84,8 @@ public class Digipeater extends Callsign {
     }
 
     /**
+     * <p>isUsed.</p>
+     *
      * @return the used
      */
     public boolean isUsed() {
@@ -73,24 +93,21 @@ public class Digipeater extends Callsign {
     }
 
     /**
+     * <p>Setter for the field <code>used</code>.</p>
+     *
      * @param used the used to set
      */
     public void setUsed(boolean used) {
         this.used = used;
     }
 
-    /**
-     * @return String
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return super.toString() + (isUsed() ? "*" : "");
     }
 
-    /**
-     * @return byte[]
-     * @throws IllegalArgumentException
-     */
+    /** {@inheritDoc} */
     @Override
     public byte[] toAX25() throws IllegalArgumentException {
         byte[] ax25 = super.toAX25();

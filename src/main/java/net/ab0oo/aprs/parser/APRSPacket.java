@@ -25,24 +25,62 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 /**
- * 
+ * <p>APRSPacket class.</p>
+ *
  * @author johng
  *  This class represents a complete APRS AX.25 packet, as found in a TNC2-style string:
- *  SOURCE>DESTIN,VIA,VIA:payload
+ *  SOURCE&gt;DESTIN,VIA,VIA:payload
+ * @version $Id: $Id
  */
 public class APRSPacket implements Serializable {
     private static final long serialVersionUID = 1L;
+	/**
+	 * an internal-use timestamp indicating when this packet object was instantiated
+	 */
 	private Date receivedTimestamp = null;
-    private String originalString;
+	/**
+	 * The original TNC2-format string that we're attempting to parse
+	 */
+	private String originalString;
+	/**
+	 * from the TNC2 format: the originating station of this message
+	 * Generally used to indicate the type and version of device that
+	 * originated th packet.  Can also be used to encode position in
+	 * Mic-E packets
+	 */
 	private String sourceCall;
+	/**
+	 * from the TNC2 format:  the destination of this APRS packet.
+	 */
     private String destinationCall;
+	/**
+	 * from the TNC2 format:  the list of digipeaters that have handled this message
+	 */
     private ArrayList<Digipeater> digipeaters;
+	/**
+	 * the data type identifier, per Chap 5 of the APRS Spec
+	 */
     private char dti;
+	/**
+	 * The base APRSInformation object, which is everything after the ":"
+	 * character trailing all digipeaters in the TNC2 packet format
+	 */
     private InformationField aprsInformation;
+	/**
+	 * hard saying.  Might be the comment from the packet?  I hate commenting my code...
+	 */
 	private String comment;
 
 	static final String REGEX_PATH_ALIASES = "^(WIDE|TRACE|RELAY)\\d*$";
     
+    /**
+     * <p>Constructor for APRSPacket.</p>
+     *
+     * @param source a {@link java.lang.String} object
+     * @param destination a {@link java.lang.String} object
+     * @param digipeaters a {@link java.util.ArrayList} object
+     * @param body an array of {@link byte} objects
+     */
     public APRSPacket( String source, String destination, ArrayList<Digipeater> digipeaters, byte[] body) {
 		receivedTimestamp = new Date(System.currentTimeMillis());
         this.sourceCall=source.toUpperCase();
@@ -59,8 +97,10 @@ public class APRSPacket implements Serializable {
     }
     
     
-	/** 
-	 * @param callsign
+	/**
+	 * <p>getBaseCall.</p>
+	 *
+	 * @param callsign the initiating callsign of this APRS Packet
 	 * @return String
 	 */
 	public static final String getBaseCall(String callsign) {
@@ -73,8 +113,10 @@ public class APRSPacket implements Serializable {
     }
     
     
-	/** 
-	 * @param callsign
+	/**
+	 * <p>getSsid.</p>
+	 *
+	 * @param callsign the complete callsign, including SSID, you want to extract the SSID from
 	 * @return String
 	 */
 	public static final String getSsid(String callsign) {
@@ -86,6 +128,11 @@ public class APRSPacket implements Serializable {
     	}
     }
     
+    /**
+     * <p>getIgate.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getIgate() {
     	for ( int i=0; i<digipeaters.size(); i++) {
     		Digipeater d = digipeaters.get(i);
@@ -109,6 +156,8 @@ public class APRSPacket implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>sourceCall</code>.</p>
+     *
      * @return the source
      */
     public String getSourceCall() {
@@ -116,6 +165,8 @@ public class APRSPacket implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>destinationCall</code>.</p>
+     *
      * @return the destination
      */
     public String getDestinationCall() {
@@ -123,17 +174,26 @@ public class APRSPacket implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>digipeaters</code>.</p>
+     *
      * @return the digipeaters
      */
     public ArrayList<Digipeater> getDigipeaters() {
         return digipeaters;
     }
     
+    /**
+     * <p>Setter for the field <code>digipeaters</code>.</p>
+     *
+     * @param newDigis a {@link java.util.ArrayList} object
+     */
     public void setDigipeaters(ArrayList<Digipeater> newDigis) {
 	    digipeaters = newDigis;
     }
 
     /**
+     * <p>getLastUsedDigi.</p>
+     *
      * @return the last digipeater in the path marked as used (with '*') or null.
      */
     public String getLastUsedDigi() {
@@ -146,6 +206,11 @@ public class APRSPacket implements Serializable {
         return null;
     }
 
+    /**
+     * <p>getDigiString.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDigiString() {
         StringBuilder sb = new StringBuilder();
 		boolean first=true;
@@ -160,6 +225,8 @@ public class APRSPacket implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>dti</code>.</p>
+     *
      * @return the dti
      */
     public char getDti() {
@@ -167,16 +234,25 @@ public class APRSPacket implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>aprsInformation</code>.</p>
+     *
      * @return the aprsInformation
      */
     public InformationField getAprsInformation() {
         return aprsInformation;
     }
+    /**
+     * <p>isAprs.</p>
+     *
+     * @return a boolean
+     */
     public boolean isAprs() {
     	return true;
     }
 
 	/**
+	 * <p>Getter for the field <code>originalString</code>.</p>
+	 *
 	 * @return the originalString
 	 */
 	public final String getOriginalString() {
@@ -184,17 +260,26 @@ public class APRSPacket implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>originalString</code>.</p>
+	 *
 	 * @param originalString the originalString to set
 	 */
 	public final void setOriginalString(String originalString) {
 		this.originalString = originalString;
 	}
 
+		/**
+		 * <p>setInfoField.</p>
+		 *
+		 * @param infoField a {@link net.ab0oo.aprs.parser.InformationField} object
+		 */
 		public void setInfoField(InformationField infoField) {
 		this.aprsInformation = infoField;
 	}
 
 	/**
+	 * <p>hasFault.</p>
+	 *
 	 * @return the hasFault
 	 */
 	public boolean hasFault() {
@@ -206,6 +291,8 @@ public class APRSPacket implements Serializable {
 	}
 
 	/**
+	 * <p>getFaultReason.</p>
+	 *
 	 * @return reason the reason this packet failed to parse
 	 */
 	public final String getFaultReason() {
@@ -216,15 +303,26 @@ public class APRSPacket implements Serializable {
 		return faultReason;
 	}
 
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getComment() {
 		return comment;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>comment</code>.</p>
+	 *
+	 * @param comment a {@link java.lang.String} object
+	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("-------------------------------\n");
@@ -234,6 +332,12 @@ public class APRSPacket implements Serializable {
 		return sb.toString();
 	}
 
+	/**
+	 * <p>toAX25Frame.</p>
+	 *
+	 * @return an array of {@link byte} objects
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public byte[] toAX25Frame() throws IllegalArgumentException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		// write AX.25 header
@@ -264,6 +368,11 @@ public class APRSPacket implements Serializable {
 		return baos.toByteArray();
 	}
 
+	/**
+	 * <p>getRecevedTimestamp.</p>
+	 *
+	 * @return a {@link java.util.Date} object
+	 */
 	public Date getRecevedTimestamp() {
 		return this.receivedTimestamp;
 	}

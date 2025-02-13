@@ -20,7 +20,8 @@
  */
 package net.ab0oo.aprs.parser;
 /**
- * 
+ * <p>Abstract DataExtension class.</p>
+ *
  * @author johng
  * Abstract class that encapsulates the possible Data Extensions to APRS packets.  These include
  * Course and Speed
@@ -31,11 +32,30 @@ package net.ab0oo.aprs.parser;
  * Bearing and Number/Range/Quality
  * Area Objects
  * Wind Direction and Speed
+ * @version $Id: $Id
  */
 public abstract class DataExtension {
+	/**
+	 * <p>toSAEString.</p>
+	 *
+	 * @return a {@link java.lang.String} object
+	 */
 	public abstract String toSAEString();
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link net.ab0oo.aprs.parser.APRSExtensions} object
+	 */
 	public abstract APRSExtensions getType();
 
+	/**
+	 * <p>parseUncompressedExtension.</p>
+	 *
+	 * @param msgBody an array of {@link byte} objects
+	 * @param cursor a int
+	 * @return a {@link net.ab0oo.aprs.parser.DataExtension} object
+	 * @throws java.lang.Exception if any.
+	 */
 	public static DataExtension parseUncompressedExtension(byte[] msgBody, int cursor) throws Exception {
         DataExtension de = null;
         // since the symbol code is position (cursor + 18), we start looking for
@@ -78,6 +98,14 @@ public abstract class DataExtension {
         return de;
     }
 
+	/**
+	 * <p>parseMICeExtension.</p>
+	 *
+	 * @param msgBody an array of {@link byte} objects
+	 * @param destinationField a {@link java.lang.String} object
+	 * @return a {@link net.ab0oo.aprs.parser.CourseAndSpeedExtension} object
+	 * @throws java.lang.Exception if any.
+	 */
 	public static CourseAndSpeedExtension parseMICeExtension(byte msgBody[], String destinationField) throws Exception {
         CourseAndSpeedExtension cse = new CourseAndSpeedExtension();
         int sp = msgBody[1 + 3] - 28;
@@ -98,6 +126,14 @@ public abstract class DataExtension {
         return cse;
     }
 
+	/**
+	 * <p>parseCompressedExtension.</p>
+	 *
+	 * @param msgBody an array of {@link byte} objects
+	 * @param cursor a int
+	 * @return a {@link net.ab0oo.aprs.parser.DataExtension} object
+	 * @throws java.lang.Exception if any.
+	 */
 	public static DataExtension parseCompressedExtension(byte[] msgBody, int cursor) throws Exception {
         DataExtension de = null;
         if (msgBody[cursor + 9] == '_') {

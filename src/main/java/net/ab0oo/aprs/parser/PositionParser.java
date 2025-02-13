@@ -26,16 +26,27 @@ package net.ab0oo.aprs.parser;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This class with decode any of the Position formats specified in the APRS spec, including compressed, uncompressed,
  * and MicE encoded positions
+ *
+ * @author john
+ * @version $Id: $Id
  */
-
 public class PositionParser {
     private static Pattern commaSplit = Pattern.compile(",");
 
+    /**
+     * <p>parseUncompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
         Calendar.Builder cb = new Calendar.Builder();
         Calendar date = cb.build();
@@ -112,36 +123,77 @@ public class PositionParser {
             posbuf[16] = '5';
             positionAmbiguity = 4;
         }
-
-        try {
-            double latitude = parseDegMin(posbuf, 0, 2, 7, true);
-            char lath = (char) posbuf[7];
-            char symbolTable = (char) posbuf[8];
-            double longitude = parseDegMin(posbuf, 9 , 3, 8, true);
-            char lngh = (char) posbuf[17];
-            char symbolCode = (char) posbuf[18];
-
+        // first, let's try to solve this with a regex pattern.  We can be slightly creative here, because
+        // unfortunately, the APRS world is full of idiots that cannot follow directions, and are more than
+        // happy to send all kinds of bad location data.
+        String posRpt = new String(msgBody, cursor, msgBody.length - cursor);
+        final Pattern latLonPattern = Pattern.compile("(\\d{2,4}\\.\\d{2,5})([NnSs])(.)(\\d{3,5}\\.\\d{2,5})([EeWw])(.).*");
+        Matcher matcher = latLonPattern.matcher(posRpt);
+        boolean useMatcher = true;
+        if ( matcher.matches() && useMatcher ) {
+            String latitudeStr = matcher.group(1);
+            char lath = matcher.group(2).charAt(0);
+            char symbolTable = (char)matcher.group(3).charAt(0);
+            String longitudeStr = matcher.group(4);
+            char lngh = matcher.group(5).charAt(0);
+            char symbolCode = (char)matcher.group(6).charAt(0);
+            int latDecimals = latitudeStr.indexOf(".")-2;
+//            System.out.println("Latitude String:  "+latitudeStr+", Lat Decimals:  "+latDecimals+", Latitude Str Length:  "+latitudeStr.length());
+            double latitude = parseDegMin(latitudeStr.toCharArray(), 0, latDecimals, latitudeStr.length(), true);
+            int lngDecimals = longitudeStr.indexOf(".")-2;
+//            System.out.println("Longitude String:  "+longitudeStr+", Lng Decimals:  "+lngDecimals+", Longitude Str Length:  "+longitudeStr.length());
+            double longitude = parseDegMin(longitudeStr.toCharArray(), 0, lngDecimals, longitudeStr.length(), true);
             if (lath == 's' || lath == 'S')
                 latitude = 0.0F - latitude;
-            else if (lath != 'n' && lath != 'N')
-                throw new UnparsablePositionException("Bad latitude sign character");
             if (lngh == 'w' || lngh == 'W')
                 longitude = 0.0F - longitude;
-            else if (lngh != 'e' && lngh != 'E')
-                throw new UnparsablePositionException("Bad longitude sign character");
-            Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
-//          TODO - figure out what I meant here...
-//            position.setTimestamp(date);
-            return position;
-        } catch (Exception e) {
-            throw new Exception(e);
+            return new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+        } else {
+            try {
+                double latitude = parseDegMin(posbuf, 0, 2, 7, true);
+                char lath = (char) posbuf[7];
+                char symbolTable = (char) posbuf[8];
+                double longitude = parseDegMin(posbuf, 9 , 3, 8, true);
+                char lngh = (char) posbuf[17];
+                char symbolCode = (char) posbuf[18];
+
+                if (lath == 's' || lath == 'S')
+                    latitude = 0.0F - latitude;
+                else if (lath != 'n' && lath != 'N')
+                    throw new UnparsablePositionException("Bad latitude sign character");
+                if (lngh == 'w' || lngh == 'W')
+                    longitude = 0.0F - longitude;
+                else if (lngh != 'e' && lngh != 'E')
+                    throw new UnparsablePositionException("Bad longitude sign character");
+                Position position = new Position(latitude, longitude, positionAmbiguity, symbolTable, symbolCode);
+    //          TODO - figure out what I meant here...
+    //            position.setTimestamp(date);
+                return position;
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
         }
     }
 
+    /**
+     * <p>parseUncompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseUncompressed(byte[] msgBody) throws Exception {
         return parseUncompressed(msgBody, 1);
     }
 
+    /**
+     * <p>parseMICe.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param destinationCall a {@link java.lang.String} object
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseMICe(byte[] msgBody, final String destinationCall) throws Exception {
         // Check that the destination call exists and is
         // of the right size for mic-e
@@ -283,6 +335,13 @@ public class PositionParser {
         }
         return new Position((double) lat, (double) lng, posAmbiguity, (char) msgBody[1 + 7], (char) msgBody[1 + 6]);
     }
+    /**
+     * <p>parseNMEA.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseNMEA(byte[] msgBody) throws Exception {
         String[] nmea = commaSplit.split(new String(msgBody));
         String lats = null; // Strings of Lat/Lon
@@ -449,6 +508,14 @@ public class PositionParser {
         }
     }
 
+    /**
+     * <p>parseCompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseCompressed(byte[] msgBody, int cursor) throws Exception {
         // A compressed position is always 13 characters long.
         // Make sure we get at least 13 characters and that they are ok.
@@ -480,15 +547,16 @@ public class PositionParser {
         return new Position(lat, lng, 0, (char) msgBody[cursor + 0], (char) msgBody[cursor + 9]);
     }
 
-    private static double parseDegMin(char[] txt, int cursor, int degSize, int len, boolean decimalDot)
+    private static double  parseDegMin(char[] txt, int cursor, int degSize, int len, boolean decimalDot)
             throws Exception {
+//        System.out.println("Txt: "+new String(txt)+". cursor: "+cursor+", degSize: "+degSize+", len: "+len+", isDecimalDot? "+ decimalDot );
         if (txt == null || txt.length < cursor + degSize + 2)
             throw new Exception("Too short degmin data");
         double result = 0.0F;
         for (int i = 0; i < degSize; ++i) {
             char c = txt[cursor + i];
             if (c < '0' || c > '9')
-                throw new Exception("Bad input decimals:  " + c);
+                throw new Exception("Got " +c+ " while looking for 0-9");
             result = result * 10.0F + (c - '0');
         }
         double minFactor = 10.0F; // minutes factor, divide by 10.0F for every
@@ -502,10 +570,10 @@ public class PositionParser {
             if (decimalDot && i == 2) {
                 if (c == '.')
                     continue; // Skip it! (but only at this position)
-                throw new Exception("Expected decimal dot");
+                throw new Exception("Expected decimal dot at pos "+ i);
             }
             if (c < '0' || c > '9')
-                throw new Exception("Bad input decimals: " + c);
+                throw new Exception("Got " +c+ " while looking for 0-9");
             minutes += minFactor * (c - '0');
             minFactor *= 0.1D;
         }

@@ -21,13 +21,17 @@
 package net.ab0oo.aprs.parser;
 
 /**
+ * <p>Utilities class.</p>
+ *
  * @author johng
- * 
+ * @version $Id: $Id
  */
 public class Utilities {
 	
-	/** 
-	 * @param args
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects
 	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
@@ -37,8 +41,10 @@ public class Utilities {
 	}
 
 	
-	/** 
-	 * @param callSign
+	/**
+	 * <p>doHash.</p>
+	 *
+	 * @param callSign a {@link java.lang.String} object
 	 * @return int
 	 */
 	public static int doHash(String callSign) {
@@ -62,8 +68,10 @@ public class Utilities {
 	}
 	
 	
-	/** 
-	 * @param knots
+	/**
+	 * <p>ktsToMph.</p>
+	 *
+	 * @param knots a int
 	 * @return int
 	 */
 	public static int ktsToMph(int knots) {
@@ -71,8 +79,10 @@ public class Utilities {
 	}
 	
 	
-	/** 
-	 * @param knots
+	/**
+	 * <p>kntsToKmh.</p>
+	 *
+	 * @param knots a int
 	 * @return int
 	 */
 	public static int kntsToKmh(int knots) {
@@ -80,8 +90,10 @@ public class Utilities {
 	}
 	
 	
-	/** 
-	 * @param meters
+	/**
+	 * <p>metersToMiles.</p>
+	 *
+	 * @param meters a double
 	 * @return double
 	 */
 	public static double metersToMiles(double meters) {
@@ -89,8 +101,10 @@ public class Utilities {
 	}
 	
 	
-	/** 
-	 * @param meters
+	/**
+	 * <p>metersToKilometers.</p>
+	 *
+	 * @param meters a double
 	 * @return double
 	 */
 	public static double metersToKilometers(double meters) {
@@ -98,8 +112,10 @@ public class Utilities {
 	}
 	
 	
-	/** 
-	 * @param degrees
+	/**
+	 * <p>degressToCardinal.</p>
+	 *
+	 * @param degrees a double
 	 * @return String
 	 */
 	public static String degressToCardinal(double degrees) {
