@@ -24,21 +24,56 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Locale;
 /**
- * 
+ * <p>Position class.</p>
+ *
  * @author johng
  * This class represents a Position as specified by the APRS specification.  This includes
  * a symbol table and actual symbol, and a possible timestamp.
- *
+ * @version $Id: $Id
  */
 public class Position implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static DecimalFormat df = new DecimalFormat("0.00000");
-	private Double latitude = 0d, longitude = 0d;
+	/**
+	 * Latitude, expressed as degrees decimal.  Negative is Southern Hemisphere
+	 */
+	private Double latitude = 0d;
+	/**
+	 * Longitude, expressed as degrees decimal.  Negative is West of Prime Meridian
+	 */
+	private Double longitude = 0d;
+	/**
+	 * Altitude, in feet above MSL
+	 */
 	private Integer altitude = -1;
+	/**
+	 * indicates the degree of position ambiguity, lower numbers are more accurate
+	 */
 	private Integer positionAmbiguity;
-	private char symbolTable, symbolCode;
+	/**
+	 * The first half of the symbol tuple:  indicates which symbol table this symbol
+	 * should be derived from
+	 */
+	private char symbolTable;
+	/**
+	 * The second half of the symbol tuple:  indicates which symbol should represent the
+	 * originating station
+	 */
+	private char symbolCode;
+	/**
+	 * umm....
+	 */
 	private String csTField = " sT";
 	
+	/**
+	 * <p>Constructor for Position.</p>
+	 *
+	 * @param lat a double
+	 * @param lon a double
+	 * @param posAmb a int
+	 * @param symbolTable a char
+	 * @param symbolCode a char
+	 */
 	public Position(double lat, double lon, int posAmb, char symbolTable, char symbolCode) {
 		this.latitude = Math.round(lat * 100000) * 0.00001D;
 		this.longitude = Math.round(lon * 100000) * 0.00001D;
@@ -47,6 +82,12 @@ public class Position implements Serializable {
 		this.symbolCode = symbolCode;
 	}
 	
+	/**
+	 * <p>Constructor for Position.</p>
+	 *
+	 * @param lat a double
+	 * @param lon a double
+	 */
 	public Position(double lat, double lon) {
 		this.latitude = Math.round(lat * 100000) * 0.00001D;
 		this.longitude = Math.round(lon * 100000) * 0.00001D;
@@ -56,6 +97,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>latitude</code>.</p>
+	 *
 	 * @return the latitude
 	 */
 	public double getLatitude() {
@@ -63,6 +106,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>latitude</code>.</p>
+	 *
 	 * @param latitude the latitude to set
 	 */
 	public void setLatitude(double latitude) {
@@ -70,6 +115,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>longitude</code>.</p>
+	 *
 	 * @return the longitude
 	 */
 	public double getLongitude() {
@@ -77,6 +124,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>longitude</code>.</p>
+	 *
 	 * @param longitude the longitude to set
 	 */
 	public void setLongitude(double longitude) {
@@ -84,6 +133,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>altitude</code>.</p>
+	 *
 	 * @return the altitude
 	 */
 	public int getAltitude() {
@@ -91,6 +142,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>altitude</code>.</p>
+	 *
 	 * @param altitude the altitude to set
 	 */
 	public void setAltitude(int altitude) {
@@ -98,6 +151,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>positionAmbiguity</code>.</p>
+	 *
 	 * @return the positionAmbiguity
 	 */
 	public int getPositionAmbiguity() {
@@ -105,6 +160,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>positionAmbiguity</code>.</p>
+	 *
 	 * @param positionAmbiguity the positionAmbiguity to set
 	 */
 	public void setPositionAmbiguity(int positionAmbiguity) {
@@ -112,6 +169,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>symbolTable</code>.</p>
+	 *
 	 * @return the symbolTable
 	 */
 	public char getSymbolTable() {
@@ -119,6 +178,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>symbolTable</code>.</p>
+	 *
 	 * @param symbolTable the symbolTable to set
 	 */
 	public void setSymbolTable(char symbolTable) {
@@ -126,6 +187,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>symbolCode</code>.</p>
+	 *
 	 * @return the symbolCode
 	 */
 	public char getSymbolCode() {
@@ -133,6 +196,8 @@ public class Position implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>symbolCode</code>.</p>
+	 *
 	 * @param symbolCode the symbolCode to set
 	 */
 	public void setSymbolCode(char symbolCode) {
@@ -140,7 +205,9 @@ public class Position implements Serializable {
 	}
 	
 	
-	/** 
+	/**
+	 * <p>getDMS.</p>
+	 *
 	 * @param decimalDegree latitude or longitude to be encoded
 	 * @param isLatitude used to tell the algorithm the decimalDegree is a latitude
 	 * @return String
@@ -175,9 +242,7 @@ public class Position implements Serializable {
 	}
 	
 	
-	/** 
-	 * @return String
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
@@ -187,7 +252,9 @@ public class Position implements Serializable {
 	}
 	
 	
-	/** 
+	/**
+	 * <p>toDecimalString.</p>
+	 *
 	 * @return String
 	 */
 	public String toDecimalString() {
@@ -195,8 +262,10 @@ public class Position implements Serializable {
 	}
 
 	
-	/** 
-	 * @param val 
+	/**
+	 * <p>Setter for the field <code>csTField</code>.</p>
+	 *
+	 * @param val a {@link java.lang.String} object
 	 */
 	public void setCsTField(String val) {
 		if(val == null || val == "") {
@@ -205,14 +274,18 @@ public class Position implements Serializable {
 		csTField = val;
 	}
 
-	/** 
+	/**
+	 * <p>Getter for the field <code>csTField</code>.</p>
+	 *
 	 * @return String
 	 */
 	public String getCsTField() {
 		return csTField;
 	}
 
-	/** 
+	/**
+	 * <p>toCompressedString.</p>
+	 *
 	 * @return String
 	 */
 	public String toCompressedString() {
@@ -235,7 +308,9 @@ public class Position implements Serializable {
 				""+(char)lonchar1+(char)lonchar2+(char)lonchar3+(char)lonchar4+symbolCode+csTField;
 	}
 
-	/** 
+	/**
+	 * <p>distFrom.</p>
+	 *
 	 * @param lat1 lattitude of starting point
 	 * @param lng1 longitude of starting point
 	 * @param lat2 latitude of ending point
@@ -255,7 +330,9 @@ public class Position implements Serializable {
 		    return (float) dist;
     }
 	
-	/** 
+	/**
+	 * <p>distance.</p>
+	 *
 	 * @param position2 point to determine distance from
 	 * @return float the distance in miles from the position in this message and given position
 	 */
@@ -275,6 +352,7 @@ public class Position implements Serializable {
 	 * which if followed in a straight line along a great-circle arc will take you from the
 	 * start point to the end point.
 	 * </p>
+	 *
 	 * @param position2 end position
 	 * @return bearing in degrees
 	 */
@@ -290,6 +368,11 @@ public class Position implements Serializable {
 		return (float) ((Math.toDegrees(Math.atan2(y, x)) + 360) % 360);
 	}
 
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects
+	 */
 	public static void main(String[] args) {
 		Position pos = new Position(0,0);
 		pos.setLatitude(34.12558);

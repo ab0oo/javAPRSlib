@@ -22,21 +22,45 @@ package net.ab0oo.aprs.parser;
 
 import java.util.Objects;
 
+/**
+ * <p>ObjectField class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class ObjectField extends APRSData {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * The object name, as sent by the transmitting station
+	 */
 	protected String objectName;
+	/**
+	 * boolean flag indicating whether this object is live, or if it has been killed
+	 */
 	protected boolean live = true;
+	/**
+	 * creation/update timestamp, as sent by the originating station
+	 */
 	protected TimeField timestamp;
+	/**
+	 * The position of this object.
+	 */
 	protected PositionField position;
 
+	/**
+	 * <p>Constructor for ObjectField.</p>
+	 */
 	protected ObjectField() {
 	}
 
 	/**
+	 * <p>Constructor for ObjectField.</p>
+	 *
 	 * @param msgBody byte array of on air message
 	 * parse an APRS object message
-	 * 
+	 *
 	 * builds an ObjectField instance with the parsed data
+	 * @throws java.lang.Exception if any.
 	 */
 	public ObjectField(byte[] msgBody) throws Exception {
 		// first, we get the object name
@@ -49,12 +73,13 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
-	 * 
-	 * @param objectName
-	 * @param live
-	 * @param position
+	 * <p>Constructor for ObjectField.</p>
+	 *
+	 * @param objectName a {@link java.lang.String} object
+	 * @param live a boolean
+	 * @param position a {@link net.ab0oo.aprs.parser.Position} object
 	 * @param comment
-	 * 
+	 *
 	 * build an ObjectField with the parsed data
 	 */
 	public ObjectField(String objectName, boolean live, Position position, String comment) {
@@ -64,6 +89,8 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
+	 * <p>Getter for the field <code>objectName</code>.</p>
+	 *
 	 * @return the objectName
 	 *
 	 * Returns the name of the Object defined in this field
@@ -73,6 +100,8 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
+	 * <p>Setter for the field <code>objectName</code>.</p>
+	 *
 	 * @param objectName the objectName to set
 	 *
 	 * Sets the object name in a constructed object
@@ -82,6 +111,8 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
+	 * <p>isLive.</p>
+	 *
 	 * @return true if this object is marked as Live by the owner
 	 *
 	 * Live-ness state of the object, as sent by the originator
@@ -91,6 +122,8 @@ public class ObjectField extends APRSData {
 	}
 
 	/**
+	 * <p>Setter for the field <code>live</code>.</p>
+	 *
 	 * @param live marks whether the object is live
 	 *
 	 * When constructing an object, this flag indicates the object is live in the network
@@ -101,6 +134,8 @@ public class ObjectField extends APRSData {
 
 
 	/**
+	 * <p>Getter for the field <code>timestamp</code>.</p>
+	 *
 	 * @return TimeField
 	 *
 	 * Fetches the APRS Time Field from the Object
@@ -111,6 +146,8 @@ public class ObjectField extends APRSData {
 
 
 	/**
+	 * <p>Setter for the field <code>timestamp</code>.</p>
+	 *
 	 * @param timestamp
 	 *
 	 * Sets the APRS-formatted Time Field for this generated packet
@@ -121,6 +158,8 @@ public class ObjectField extends APRSData {
 
 
 	/**
+	 * <p>Getter for the field <code>position</code>.</p>
+	 *
 	 * @return PositionField
 	 *
 	 * Returns the APRS position of this object (includes symbol table/symbol)
@@ -131,6 +170,8 @@ public class ObjectField extends APRSData {
 
 
 	/**
+	 * <p>Setter for the field <code>position</code>.</p>
+	 *
 	 * @param position
 	 *
 	 * Sets the position for this object (includes symbol table/symbol)
@@ -139,11 +180,7 @@ public class ObjectField extends APRSData {
 		this.position = position;
 	}
 	
-	/** 
-	 * @return String
-	 *
-	 * Returns a pretty-printed string of this Object
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		if (rawBytes != null)
@@ -152,12 +189,7 @@ public class ObjectField extends APRSData {
 	}
 
 	
-	/** 
-	 * @param o
-	 * @return int
-	 *
-	 * Allows two Object fields to be compared.
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(APRSData o) {
 		if (this.hashCode() > o.hashCode()) {
@@ -169,12 +201,7 @@ public class ObjectField extends APRSData {
 		return -1;
 	}
 	
-	/** 
-	 * @param o
-	 * @return boolean
-	 *
-	 * Returns true if the object passed in is the same as this object
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -187,11 +214,7 @@ public class ObjectField extends APRSData {
 	}
 
 	
-	/** 
-	 * @return int
-	 *
-	 * Calculates a hash for this particular object
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hash(objectName, live);

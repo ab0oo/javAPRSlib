@@ -26,20 +26,24 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
- * 
+ * <p>Parser class.</p>
+ *
  * @author johng
  *This is the code parser for AX25 UI packets that are traditionally used in APRS networks, in TNC2
  * format.  TNC2 format is defined as:
  * SOURCE&gt;DESTIN,VIA,VIA:payload
  * In APRS packets, the first character of the payload is the Data Type Identifier, which is the key for
  * further parsing of the message.  This class parses raw TNC2 packets and returns instances of APRSPackets
+ * @version $Id: $Id
  */
 public class Parser {
     private static final Pattern altitudePattern = Pattern.compile(".*/A=(\\d{6}).*");
 
 	
-	/** 
-	 * @param args
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects
 	 */
 	public static void main( String[] args ) {
 		if ( args.length > 0 ) {
@@ -65,10 +69,12 @@ public class Parser {
 		}
 	}
     
-	/** 
+	/**
+	 * <p>parse.</p>
+	 *
 	 * @param packet inbound packet as a string
 	 * @return APRSPacket a fully parsed APRSPacket object
-	 * @throws Exception Generic "I failed"
+	 * @throws java.lang.Exception Generic "I failed"
 	 */
 	public static APRSPacket parse(final String packet) throws Exception {
         int cs = packet.indexOf('>');
@@ -88,10 +94,12 @@ public class Parser {
     }
 
     
-	/** 
+	/**
+	 * <p>parseAX25.</p>
+	 *
 	 * @param packet inbound packet as a byte[]
 	 * @return APRSPacket fully parsed APRS packet object
-	 * @throws Exception Generic "I failed" ** TODO ** make this a meaningful exception
+	 * @throws java.lang.Exception Generic "I failed" ** TODO ** make this a meaningful exception
 	 */
 	public static APRSPacket parseAX25(byte[] packet) throws Exception {
 	    int pos = 0;
@@ -112,19 +120,19 @@ public class Parser {
 	    return parseBody(source, dest, digis, body);
     }
 
-	/**
-	 * 
-	 * @param source Source callsign
-	 * @param dest Destination callsing, may be part of a compressed postion
-	 * @param digis array of digipeaters this packet has passed through
-	 * @param body msg body of the on air message
-	 * @return
-	 * @throws Exception
-	 * 
-	 * This is the core packet parser.  It parses the entire "body" of the APRS Packet,
-	 * starting with the Data Type Indicator in position 0.
-	 */
-
+    /**
+     * <p>parseBody.</p>
+     *
+     * @param source Source callsign
+     * @param dest Destination callsing, may be part of a compressed postion
+     * @param digis array of digipeaters this packet has passed through
+     * @param body msg body of the on air message
+     * @throws java.lang.Exception
+     *
+     * This is the core packet parser.  It parses the entire "body" of the APRS Packet,
+     * starting with the Data Type Indicator in position 0.
+     * @return a {@link net.ab0oo.aprs.parser.APRSPacket} object
+     */
     public static APRSPacket parseBody(String source, String dest, ArrayList<Digipeater> digis, String body) throws Exception {
 		APRSPacket packet = new APRSPacket(source,dest,digis, body.getBytes());
         byte[] msgBody = body.getBytes();

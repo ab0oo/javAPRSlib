@@ -20,14 +20,43 @@
  */
 package net.ab0oo.aprs.parser;
 
+/**
+ * <p>MessagePacket class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class MessagePacket extends APRSData {
 	private static final long serialVersionUID = 1L;
+    /**
+     * The body of the message, stripped of all meta data
+     */
     private String messageBody;
+    /**
+     * the self-assigned message number of the originating station
+     */
     private String messageNumber;
+    /**
+     * the intended recipient of the message, NOT the TNC2 "destination"
+     */
     private String targetCallsign ="";
+    /**
+     * flag indicating that this is an acknowledgement of a message sent by
+     * another station
+     */
     private boolean isAck = false;
+    /**
+     * flag set to indicate that this message was rejected by the recipient for
+     * some reason
+     */
     private boolean isRej = false;
     
+    /**
+     * <p>Constructor for MessagePacket.</p>
+     *
+     * @param bodyBytes an array of {@link byte} objects
+     * @param destCall a {@link java.lang.String} object
+     */
     public MessagePacket( byte[] bodyBytes, String destCall ) {
         super(bodyBytes);
         String message = new String(bodyBytes);
@@ -62,6 +91,13 @@ public class MessagePacket extends APRSData {
         }
     }
     
+    /**
+     * <p>Constructor for MessagePacket.</p>
+     *
+     * @param targetCallsign a {@link java.lang.String} object
+     * @param messageBody a {@link java.lang.String} object
+     * @param messageNumber a {@link java.lang.String} object
+     */
     public MessagePacket(String targetCallsign, String messageBody, String messageNumber) {
     	this.messageBody = messageBody;
     	this.targetCallsign = targetCallsign;
@@ -71,6 +107,8 @@ public class MessagePacket extends APRSData {
     }
     
     /**
+     * <p>Getter for the field <code>messageBody</code>.</p>
+     *
      * @return the messageBody
      */
     public String getMessageBody() {
@@ -78,6 +116,8 @@ public class MessagePacket extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>messageBody</code>.</p>
+     *
      * @param messageBody the messageBody to set
      */
     public void setMessageBody(String messageBody) {
@@ -85,6 +125,8 @@ public class MessagePacket extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>messageNumber</code>.</p>
+     *
      * @return the messageNumber
      */
     public String getMessageNumber() {
@@ -92,6 +134,8 @@ public class MessagePacket extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>messageNumber</code>.</p>
+     *
      * @param messageNumber the messageNumber to set
      */
     public void setMessageNumber(String messageNumber) {
@@ -99,6 +143,8 @@ public class MessagePacket extends APRSData {
     }
 
     /**
+     * <p>Getter for the field <code>targetCallsign</code>.</p>
+     *
      * @return the targetCallsign
      */
     public String getTargetCallsign() {
@@ -106,6 +152,8 @@ public class MessagePacket extends APRSData {
     }
 
     /**
+     * <p>Setter for the field <code>targetCallsign</code>.</p>
+     *
      * @param targetCallsign the targetCallsign to set
      */
     public void setTargetCallsign(String targetCallsign) {
@@ -113,6 +161,8 @@ public class MessagePacket extends APRSData {
     }
 
 	/**
+	 * <p>isAck.</p>
+	 *
 	 * @return the isAck
 	 */
 	public boolean isAck() {
@@ -120,6 +170,8 @@ public class MessagePacket extends APRSData {
 	}
 
 	/**
+	 * <p>setAck.</p>
+	 *
 	 * @param isAck the isAck to set
 	 */
 	public void setAck(boolean isAck) {
@@ -127,6 +179,8 @@ public class MessagePacket extends APRSData {
 	}
 
 	/**
+	 * <p>isRej.</p>
+	 *
 	 * @return the isRej
 	 */
 	public boolean isRej() {
@@ -134,6 +188,8 @@ public class MessagePacket extends APRSData {
 	}
 
 	/**
+	 * <p>setRej.</p>
+	 *
 	 * @param isRej the isRej to set
 	 */
 	public void setRej(boolean isRej) {
@@ -141,9 +197,7 @@ public class MessagePacket extends APRSData {
 	}
 
 	
-    /** 
-     * @return String
-     */
+	/** {@inheritDoc} */
     @Override
 	public String toString() {
 		if (rawBytes != null)

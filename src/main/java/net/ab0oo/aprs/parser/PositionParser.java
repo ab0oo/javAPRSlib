@@ -32,11 +32,21 @@ import java.util.regex.Pattern;
 /**
  * This class with decode any of the Position formats specified in the APRS spec, including compressed, uncompressed,
  * and MicE encoded positions
+ *
+ * @author john
+ * @version $Id: $Id
  */
-
 public class PositionParser {
     private static Pattern commaSplit = Pattern.compile(",");
 
+    /**
+     * <p>parseUncompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseUncompressed(byte[] msgBody, int cursor) throws Exception {
         Calendar.Builder cb = new Calendar.Builder();
         Calendar date = cb.build();
@@ -165,10 +175,25 @@ public class PositionParser {
         }
     }
 
+    /**
+     * <p>parseUncompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseUncompressed(byte[] msgBody) throws Exception {
         return parseUncompressed(msgBody, 1);
     }
 
+    /**
+     * <p>parseMICe.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param destinationCall a {@link java.lang.String} object
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseMICe(byte[] msgBody, final String destinationCall) throws Exception {
         // Check that the destination call exists and is
         // of the right size for mic-e
@@ -310,6 +335,13 @@ public class PositionParser {
         }
         return new Position((double) lat, (double) lng, posAmbiguity, (char) msgBody[1 + 7], (char) msgBody[1 + 6]);
     }
+    /**
+     * <p>parseNMEA.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseNMEA(byte[] msgBody) throws Exception {
         String[] nmea = commaSplit.split(new String(msgBody));
         String lats = null; // Strings of Lat/Lon
@@ -476,6 +508,14 @@ public class PositionParser {
         }
     }
 
+    /**
+     * <p>parseCompressed.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
+     * @return a {@link net.ab0oo.aprs.parser.Position} object
+     * @throws java.lang.Exception if any.
+     */
     public static Position parseCompressed(byte[] msgBody, int cursor) throws Exception {
         // A compressed position is always 13 characters long.
         // Make sure we get at least 13 characters and that they are ok.

@@ -22,15 +22,29 @@ package net.ab0oo.aprs.parser;
 
 import java.util.Objects;
 
+/**
+ * <p>ItemField class.</p>
+ *
+ * @author john
+ * @version $Id: $Id
+ */
 public class ItemField extends APRSData {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * flag indicating if this Item is "live" or has been killed
+	 */
 	private boolean live = true;
+	/**
+	 * String indicating the name of this item, as assigned by the originator
+	 */
 	private String itemName;
 
 	/**
+	 * <p>Constructor for ItemField.</p>
+	 *
 	 * @param msgBody byte array of the on-air message
-	 * @throws Exception if it is unable to parse the item field from the msg
-	 * 
+	 * @throws java.lang.Exception if it is unable to parse the item field from the msg
+	 *
 	 * parse an APRS item message
 	 */
 	public ItemField(byte[] msgBody) throws Exception {
@@ -54,7 +68,8 @@ public class ItemField extends APRSData {
 	}
 
 	/**
-	 * 
+	 * <p>Getter for the field <code>itemName</code>.</p>
+	 *
 	 * @return name of the item in this ItemField
 	 * This is the getter for the Item Name
 	 */
@@ -63,6 +78,7 @@ public class ItemField extends APRSData {
 	}
 
 	/**
+	 * <p>Setter for the field <code>itemName</code>.</p>
 	 *
 	 * @param itemName the item name to set
 	 * This is the setter for the item name for this ItemField
@@ -71,9 +87,7 @@ public class ItemField extends APRSData {
 		this.itemName = itemName;
 	}
 	
-	/** 
-	 * @return String
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		if (rawBytes != null)
@@ -81,6 +95,7 @@ public class ItemField extends APRSData {
 		return ")" + this.itemName + (live ? "!" : "_") + comment;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(APRSData o) {
 		if (this.hashCode() > o.hashCode()) {
@@ -92,6 +107,7 @@ public class ItemField extends APRSData {
 		return -1;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -103,6 +119,7 @@ public class ItemField extends APRSData {
 		return live == itemField.live && Objects.equals(itemName, itemField.itemName);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hash(live, itemName);

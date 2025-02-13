@@ -31,8 +31,14 @@ import java.util.TimeZone;
  * n.b. according to the spec, timestamps should really only be used for historical data, not
  * current data.  positions/objects/reports sent with no timestamp should be considered "current"
  * and those sent with a timestamp should be considered historical
+ *
+ * @author john
+ * @version $Id: $Id
  */
 public class TimeField extends APRSData {
+    /**
+     * a calendar object used to store the Time Field, as set by the originating station
+     */
     private Calendar reportedTimestamp;
 
     /**
@@ -43,10 +49,12 @@ public class TimeField extends APRSData {
         reportedTimestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
         
-    /** 
+    /**
+     * <p>Constructor for TimeField.</p>
+     *
      * @param msgBody char[] of the complete message body
      * @param startPos where to start looking for a time field in the msgBody
-     * 
+     *
      * Common constructor for a TimeField object.
      */
     public TimeField(byte[] msgBody, int startPos) {
@@ -136,7 +144,9 @@ public class TimeField extends APRSData {
     }
 
     
-    /** 
+    /**
+     * <p>Getter for the field <code>reportedTimestamp</code>.</p>
+     *
      * @return Calendar
      * returns the reported timestamp from the message
      */
@@ -145,10 +155,7 @@ public class TimeField extends APRSData {
     }
 
     
-    /** 
-     * @return String
-     * returns a string representation of the time field
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         SimpleDateFormat f = new SimpleDateFormat("dd HH:MM");          
@@ -158,11 +165,7 @@ public class TimeField extends APRSData {
     }
 
     
-    /** 
-     * @param o the object to compare to
-     * @return int
-     * returns 0 if the two objects are identical, else 1
-     */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(APRSData o) {
         if (this.hashCode() > o.hashCode()) {
@@ -174,10 +177,7 @@ public class TimeField extends APRSData {
         return -1;
     }
 
-    /** 
-     * @param o a TimeField object to be compared to
-     * @return boolean
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -190,9 +190,7 @@ public class TimeField extends APRSData {
     }
 
     
-    /** 
-     * @return int
-     */
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return Objects.hashCode(reportedTimestamp);

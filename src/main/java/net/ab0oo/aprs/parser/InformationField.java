@@ -26,27 +26,61 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 
+ * <p>InformationField class.</p>
+ *
  * @author johng
  *  This class represents the "payload" of a TNC2 style AX25 packet, stripped of the source call,
- *  destination call, and digi VIAs.  Note this class is abstract:  only subclasses of it may be 
+ *  destination call, and digi VIAs.  Note this class is abstract:  only subclasses of it may be
  *  instantiated.  Per the APRS spec, these classes include Position, Direction Finding, Objects
  *  and Items, Weather, Telemetry, Messages, Bulletins, Annoucements, Queries, Responses, Statuses,
  *  and User-defined Others.
+ * @version $Id: $Id
  */
 public class InformationField implements Serializable {
 	private static final long serialVersionUID = 1L;
+    /**
+     * Internal timer to indicate the creation time of this APRS data object
+     */
     private final long createTimestamp = System.currentTimeMillis();
+    /**
+     * The APRS Data Type Identifier, as found in the APRS Data Type Identifiers table
+     * In Chap 5 of the APRS Spec
+     */
 	private char dataTypeIdentifier;
+    /**
+     * An array of bytes containing the original TNC2-formatted message
+     */
     protected byte[] rawBytes;
+    /**
+     * Boolean flag indicating whether the station that sent this APRS
+     * message is message-receive capable
+     */
     protected boolean canMessage = false;
+    /**
+     * mapping of all APRSData fields found in this message
+     */
     Map<APRSTypes,APRSData> dataFields;
+    /**
+     * APRS data extension, if any
+     */
     DataExtension extension = null;
+    /**
+     * The final comment in this message, after all parsable APRSData fields
+     * have been extracted
+     */
 	protected String comment = "";
 
+    /**
+     * <p>Constructor for InformationField.</p>
+     */
     public InformationField() {
     }
     
+    /**
+     * <p>Constructor for InformationField.</p>
+     *
+     * @param rawBytes an array of {@link byte} objects
+     */
     public InformationField( byte[] rawBytes ) {
         if ( rawBytes.length < 1 ) {
             System.err.println("Parse error:  zero length information field");
@@ -64,7 +98,9 @@ public class InformationField implements Serializable {
     }
     
     
-    /** 
+    /**
+     * <p>Getter for the field <code>dataTypeIdentifier</code>.</p>
+     *
      * @return char Data Type Indicator
      *
      * Fetches the Data Type indicator (the first character of an AX25 information field)
@@ -74,7 +110,9 @@ public class InformationField implements Serializable {
     }
 
     
-    /** 
+    /**
+     * <p>Setter for the field <code>dataTypeIdentifier</code>.</p>
+     *
      * @param dti Data Type Indicator
      *
      * Sets the Data Type Indicator for a constructed packet
@@ -84,6 +122,8 @@ public class InformationField implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>rawBytes</code>.</p>
+     *
      * @return the rawBytes
      *
      * Returns a byte array of the current Information Field
@@ -96,7 +136,9 @@ public class InformationField implements Serializable {
     }
     
     
-    /** 
+    /**
+     * <p>getBytes.</p>
+     *
      * @param start start index
      * @param end end index
      * @return byte[] a new byte[] with the requested slice
@@ -109,21 +151,19 @@ public class InformationField implements Serializable {
         return returnArray;
     }
     
-	/**
-	 * @return the comment string which was embedded in the packet
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return the comment string which was embedded in the packet
      *
      * Returns the comment, which comes after all fixed, parsable data
-	 */
+     */
     public String getComment() {
         return comment;
     }
     
     
-    /** 
-     * @return String String representation of this message component
-     *
-     * Returns a pretty-printed string version of the Info Field
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -139,9 +179,11 @@ public class InformationField implements Serializable {
         return sb.toString();
     }
 	/**
+	 * <p>hasFault.</p>
+	 *
 	 * @return boolean  True is packet has faults that should not be on-air
-     *
-     * Faulted packets are unable to be parsed for various reasons
+	 *
+	 * Faulted packets are unable to be parsed for various reasons
 	 */
 	public boolean hasFault() {
         boolean faultFound = false;
@@ -152,16 +194,20 @@ public class InformationField implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>extension</code>.</p>
+	 *
 	 * @return DataExtension Each Information Field (i.e. on-air packet) can contain one data extension,
-     * the list of which can be found in the Spec, Ch 7.
-     *
-     * Returns the Data Extension from this Information Field
-     */
+	 * the list of which can be found in the Spec, Ch 7.
+	 *
+	 * Returns the Data Extension from this Information Field
+	 */
 	public final DataExtension getExtension() {
 		return extension;
 	}
 
     /**
+     * <p>setDataExtension.</p>
+     *
      * @param _extension Set the data extension for this packet
      *
      * Sets the data extension for constructed Information Fields
@@ -170,7 +216,9 @@ public class InformationField implements Serializable {
         this.extension = _extension;
     }
     
-    /** 
+    /**
+     * <p>Getter for the field <code>createTimestamp</code>.</p>
+     *
      * @return long epoch timestamp of creation time
      *
      * Returns the epoch timestamp of the creation time of this Info Field
@@ -180,7 +228,9 @@ public class InformationField implements Serializable {
     }
 
 	
-    /** 
+    /**
+     * <p>getAprsData.</p>
+     *
      * @return Map a Mapping of APRSTypes to APRSData
      */
     public Map<APRSTypes,APRSData> getAprsData() {
@@ -188,7 +238,9 @@ public class InformationField implements Serializable {
 	}
 
     
-    /** 
+    /**
+     * <p>getAprsData.</p>
+     *
      * @param t APRSTypes type to fetch from the InformationField envelope
      * @return APRSData any data that matches the type requested, null if the
      * InformationField does not contain the requested type.
@@ -203,7 +255,9 @@ public class InformationField implements Serializable {
     }
 
 	
-    /** 
+    /**
+     * <p>addAprsData.</p>
+     *
      * @param type APRSTypes enum to indicate the type of data being added
      * @param data the data to be added to the InformationField envelope
      *
@@ -214,7 +268,9 @@ public class InformationField implements Serializable {
 	}
 
     
-    /** 
+    /**
+     * <p>containsType.</p>
+     *
      * @param t the APRSTypes to check for
      * @return boolean true if this object contains the given data type
      *
@@ -226,7 +282,9 @@ public class InformationField implements Serializable {
     }
 
     
-    /** 
+    /**
+     * <p>getTypes.</p>
+     *
      * @return Set of APRSTypes
      *
      * Returns the set of APRSTypes in this packet

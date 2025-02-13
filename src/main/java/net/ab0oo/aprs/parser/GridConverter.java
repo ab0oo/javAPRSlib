@@ -20,22 +20,25 @@
  */
 package net.ab0oo.aprs.parser;
 /**
- * 
+ * <p>GridConverter class.</p>
+ *
  * @author johng
  * Incomplete, but a good start for a class to calculate grid squares from
  * latitude and longitude.  I'll finish this some time...
+ * @version $Id: $Id
  */
 public class GridConverter {
 	private static char[] field = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R' };
 
-/** 
- * @param ARGS
- */
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param ARGS an array of {@link java.lang.String} objects
+	 */
 //	private static char[] sub square = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 //			'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
 //			'v', 'w', 'x' };
-
 	public static void main( String[] ARGS ) {
 		double latitude = 0;
 		double longitude = 0;

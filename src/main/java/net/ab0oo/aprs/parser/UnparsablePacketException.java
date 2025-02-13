@@ -23,15 +23,18 @@
  */
 package net.ab0oo.aprs.parser;
 /**
- * 
+ * <p>UnparsablePacketException class.</p>
+ *
  * @author johng
  * This is a simple Exception class for tagging unparsable packets.
+ * @version $Id: $Id
  */
 public class UnparsablePacketException extends Exception {
     private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * <p>Constructor for UnparsablePacketException.</p>
+	 *
 	 * @param ex String to describe why the exception is being thrown
 	 */
 	public UnparsablePacketException(String ex) {

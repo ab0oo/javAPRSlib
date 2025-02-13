@@ -23,14 +23,21 @@ package net.ab0oo.aprs.parser;
 import java.io.Serializable;
 
 /**
- * @author johng
+ * <p>RangeExtension class.</p>
  *
+ * @author johng
+ * @version $Id: $Id
  */
 public class RangeExtension extends DataExtension implements Serializable {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * computed radio range, in miles, from the originating station
+	 */
 	private int range;
 	
 	/**
+	 * <p>Constructor for RangeExtension.</p>
+	 *
 	 * @param range range in miles
 	 * build a new Range extension, which tells other stations the range in miles of this station
 	 * n.b. the spec does not indicate if this is transmission range, receiver coverage, or
@@ -41,6 +48,8 @@ public class RangeExtension extends DataExtension implements Serializable {
 	}
 
 	/**
+	 * <p>Setter for the field <code>range</code>.</p>
+	 *
 	 * @param range the range to set
 	 */
 	public void setRange(int range) {
@@ -48,23 +57,21 @@ public class RangeExtension extends DataExtension implements Serializable {
 	}
 
 	/**
+	 * <p>Getter for the field <code>range</code>.</p>
+	 *
 	 * @return the range
 	 */
 	public int getRange() {
 		return range;
 	}
 	
-	/**
-	 * @return Enum indicating the data type extention
-	*/
+	/** {@inheritDoc} */
 	@Override
 	public APRSExtensions getType() {
 		return APRSExtensions.T_RADIORANGE;
 	}
 
-	/** 
-	 * @return String
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public String toSAEString() {
 		return "Range of "+range+" miles";

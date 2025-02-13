@@ -31,13 +31,15 @@ import java.util.regex.Pattern;
 /**
  * This class will (eventually) decode any weather sub-packet in the APRS spec.
  * I've tried to make extensive use of rexexp matching here
- * 
+ *
  * samples:
  * - @231049z3841.68N/11959.35W_114/002g007t047r000p000P000h57b10185.DsVP
  * - !3748.51N/12112.44W_357/004g005t076V136P000h60b10133OTW1
  * - _10231457c359s000g000t070r000p003P001h..b.....tU2k
+ *
+ * @author john
+ * @version $Id: $Id
  */
-
 public class WeatherParser {
     private static final Pattern dataPattern = Pattern
             .compile(".*(\\d{3})/(\\d{3})g(\\d{3})t(.{3})r(\\d{3})p(\\d{3})P(\\d{3})h(\\d{2})b(\\d{5})[\\.e].*");
@@ -53,11 +55,13 @@ public class WeatherParser {
     private static final Pattern luminosityHighPattern = Pattern.compile(".*L(\\d{3}).*");
     private static final Pattern snow24Pattern = Pattern.compile(".*s(\\d{3}).*");
     
-    /** 
-     * @param msgBody
-     * @param cursor
+    /**
+     * <p>parseWeatherData.</p>
+     *
+     * @param msgBody an array of {@link byte} objects
+     * @param cursor a int
      * @return WeatherField
-     * @throws Exception
+     * @throws java.lang.Exception indicating a failure to parse the weather object
      */
     public static WeatherField parseWeatherData(byte[] msgBody, int cursor) throws Exception {
         WeatherField wf = new WeatherField();
