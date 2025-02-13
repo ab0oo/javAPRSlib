@@ -30,6 +30,12 @@ public class RangeExtension extends DataExtension implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int range;
 	
+	/**
+	 * @param range range in miles
+	 * build a new Range extension, which tells other stations the range in miles of this station
+	 * n.b. the spec does not indicate if this is transmission range, receiver coverage, or
+	 * bidrectional.  Use at your own risk.
+	 */
 	public RangeExtension( int range ) {
 		this.setRange(range);
 	}

@@ -26,17 +26,26 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
+/**
+ * this class represents all of the various ways the time can be encoded into an APRS message
+ * n.b. according to the spec, timestamps should really only be used for historical data, not
+ * current data.  positions/objects/reports sent with no timestamp should be considered "current"
+ * and those sent with a timestamp should be considered historical
+ */
 public class TimeField extends APRSData {
     private Calendar reportedTimestamp;
 
+    /**
+     * build a new timefield set to the current UTC time
+     */
     public TimeField() {
         reportedTimestamp = Calendar.getInstance();
         reportedTimestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
         
     /** 
-     * @param msgBody
-     * @param startPos
+     * @param msgBody char[] of the complete message body
+     * @param startPos where to start looking for a time field in the msgBody
      * 
      * Common constructor for a TimeField object.
      */
@@ -129,6 +138,7 @@ public class TimeField extends APRSData {
     
     /** 
      * @return Calendar
+     * returns the reported timestamp from the message
      */
     public Calendar getReportedTimestamp() {
         return this.reportedTimestamp;
@@ -137,6 +147,7 @@ public class TimeField extends APRSData {
     
     /** 
      * @return String
+     * returns a string representation of the time field
      */
     @Override
     public String toString() {
@@ -148,8 +159,9 @@ public class TimeField extends APRSData {
 
     
     /** 
-     * @param o
+     * @param o the object to compare to
      * @return int
+     * returns 0 if the two objects are identical, else 1
      */
     @Override
     public int compareTo(APRSData o) {
@@ -163,7 +175,7 @@ public class TimeField extends APRSData {
     }
 
     /** 
-     * @param o
+     * @param o a TimeField object to be compared to
      * @return boolean
      */
     @Override
