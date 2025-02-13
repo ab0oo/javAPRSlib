@@ -154,7 +154,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
@@ -172,38 +172,38 @@
         <artifactId>maven-install-plugin</artifactId>
         <version>3.1.1</version>
         <configuration>
-	<groupId>${project.groupId}</groupId>
-	  <artifactId>${project.artifactId}</artifactId>
-	  <version>${project.version}</version>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>${project.artifactId}</artifactId>
+          <version>${project.version}</version>
           <packaging>jar</packaging>
           <file>${basedir}/target/${project.artifactId}-${project.version}.jar</file>
           <generatePom>true</generatePom>
         </configuration>
         <executions>
           <execution>
-              <id>install-jar-lib</id>
-              <goals>
-                <goal>install-file</goal>
-              </goals>
-              <phase>install</phase>
+            <id>install-jar-lib</id>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <phase>install</phase>
           </execution>
         </executions>
-        </plugin>
+      </plugin>
 
-	<plugin>
-          <groupId>org.sonatype.central</groupId>
-          <artifactId>central-publishing-maven-plugin</artifactId>
-          <version>0.6.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <publishingServerId>central</publishingServerId>
-             <autoPublish>true</autoPublish>
-             <waitUntil>published</waitUntil>
-          </configuration>
-        </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.6.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+          <autoPublish>true</autoPublish>
+          <waitUntil>published</waitUntil>
+        </configuration>
+      </plugin>
 
-  </plugins>
-</build>
+    </plugins>
+  </build>
 
   <distributionManagement>
     <snapshotRepository>

@@ -28,7 +28,7 @@ import java.util.Date;
  * 
  * @author johng
  *  This class represents a complete APRS AX.25 packet, as found in a TNC2-style string:
- *  SOURCE>DESTIN,VIA,VIA:payload
+ *  SOURCE&gt;DESTIN,VIA,VIA:payload
  */
 public class APRSPacket implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class APRSPacket implements Serializable {
     
     
 	/** 
-	 * @param callsign
+	 * @param callsign the initiating callsign of this APRS Packet
 	 * @return String
 	 */
 	public static final String getBaseCall(String callsign) {
@@ -74,7 +74,7 @@ public class APRSPacket implements Serializable {
     
     
 	/** 
-	 * @param callsign
+	 * @param callsign the complete callsign, including SSID, you want to extract the SSID from
 	 * @return String
 	 */
 	public static final String getSsid(String callsign) {
