@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: temerin
+          distribution: zulu
           cache: maven
       - name: Clean with Maven
         run: mvn -B clean
